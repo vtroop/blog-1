@@ -1,0 +1,803 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<meta name="google-site-verification" content="ozi5UMPx0UZR6p_LhY9QUf2XkOdP7WH7vjnMUnEuE8s" />
+<meta name="baidu-site-verification" content="28u1lswj4v" />
+  <meta charset="UTF-8">
+  
+    <title>简洁代码之道（1）：用多态替代条件语句 | ShareHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Yonah-潇">
+    
+
+    
+    <meta name="description" content="前言本文是我看了 谷歌简洁代码演讲系列 中的 多态和条件语句 的总结。大部分的条件语句是可以用多态代替的，本文将围绕以下问题开展：
+
+为什么要用多态替代条件语句
+多态和条件语句的使用场景
+如何用多态代替条件语句
+在哪里决定要创建什么子类
+什么情况下使用多态
+
+为什么要用多态替代条件语句
+没有 if 语句的函数更容易阅读。
+没有 if 语句的函数更容易测试。
+多态的系统更容易维护。
+
+多态和条件语句">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简洁代码之道（1）：用多态替代条件语句">
+<meta property="og:url" content="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/index.html">
+<meta property="og:site_name" content="ShareHub">
+<meta property="og:description" content="前言本文是我看了 谷歌简洁代码演讲系列 中的 多态和条件语句 的总结。大部分的条件语句是可以用多态代替的，本文将围绕以下问题开展：
+
+为什么要用多态替代条件语句
+多态和条件语句的使用场景
+如何用多态代替条件语句
+在哪里决定要创建什么子类
+什么情况下使用多态
+
+为什么要用多态替代条件语句
+没有 if 语句的函数更容易阅读。
+没有 if 语句的函数更容易测试。
+多态的系统更容易维护。
+
+多态和条件语句">
+<meta property="og:updated_time" content="2016-01-02T17:39:28.898Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简洁代码之道（1）：用多态替代条件语句">
+<meta name="twitter:description" content="前言本文是我看了 谷歌简洁代码演讲系列 中的 多态和条件语句 的总结。大部分的条件语句是可以用多态代替的，本文将围绕以下问题开展：
+
+为什么要用多态替代条件语句
+多态和条件语句的使用场景
+如何用多态代替条件语句
+在哪里决定要创建什么子类
+什么情况下使用多态
+
+为什么要用多态替代条件语句
+没有 if 语句的函数更容易阅读。
+没有 if 语句的函数更容易测试。
+多态的系统更容易维护。
+
+多态和条件语句">
+<meta name="twitter:creator" content="@Yonah_x">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ShareHub" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ShareHub" title="ShareHub"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ShareHub">ShareHub</a></h1>
+				<h2 class="blog-motto">悲观的意志,乐观的头脑</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/24/clean-code-polymorphism/" title="简洁代码之道（1）：用多态替代条件语句" itemprop="url">简洁代码之道（1）：用多态替代条件语句</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Yonah-潇" target="_blank" itemprop="author">Yonah-潇</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-24T07:54:43.000Z" itemprop="datePublished"> 发表于 2015-11-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3A_u4EC0_u4E48_u8981_u7528_u591A_u6001_u66FF_u4EE3_u6761_u4EF6_u8BED_u53E5"><span class="toc-number">2.</span> <span class="toc-text">为什么要用多态替代条件语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u591A_u6001_u548C_u6761_u4EF6_u8BED_u53E5_u7684_u4F7F_u7528_u573A_u666F"><span class="toc-number">3.</span> <span class="toc-text">多态和条件语句的使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4F7F_u7528_u591A_u6001_u7684_u573A_u666F"><span class="toc-number">3.1.</span> <span class="toc-text">使用多态的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4F7F_u7528_u6761_u4EF6_u8BED_u53E5_u7684_u573A_u666F"><span class="toc-number">3.2.</span> <span class="toc-text">使用条件语句的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5982_u4F55_u907F_u514D_u4F7F_u7528_if__u8BED_u53E5"><span class="toc-number">3.3.</span> <span class="toc-text">如何避免使用 if 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5982_u4F55_u7528_u591A_u6001_u4EE3_u66FF_u6761_u4EF6_u8BED_u53E5"><span class="toc-number">4.</span> <span class="toc-text">如何用多态代替条件语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u6761_u4EF6_u8BED_u53E5_u5B9E_u73B0_u7684_u7C7B"><span class="toc-number">4.1.</span> <span class="toc-text">条件语句实现的类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u591A_u6001_u5B9E_u73B0_u7684_u7C7B"><span class="toc-number">4.2.</span> <span class="toc-text">多态实现的类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">4.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5728_u54EA_u91CC_u51B3_u5B9A_u8981_u521B_u5EFA_u4EC0_u4E48_u5B50_u7C7B"><span class="toc-number">5.</span> <span class="toc-text">在哪里决定要创建什么子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4EC0_u4E48_u60C5_u51B5_u4E0B_u4F7F_u7528_u591A_u6001"><span class="toc-number">6.</span> <span class="toc-text">什么情况下使用多态</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?list=PL693EFD059797C21E" target="_blank" rel="external">谷歌简洁代码演讲系列</a> 中的 <a href="https://www.youtube.com/watch?v=4F72VULWFvc&amp;list=PL693EFD059797C21E&amp;index=1" target="_blank" rel="external">多态和条件语句</a> 的总结。大部分的条件语句是可以用多态代替的，本文将围绕以下问题开展：</p>
+<ul>
+<li>为什么要用多态替代条件语句</li>
+<li>多态和条件语句的使用场景</li>
+<li>如何用多态代替条件语句</li>
+<li>在哪里决定要创建什么子类</li>
+<li>什么情况下使用多态</li>
+</ul>
+<h2 id="u4E3A_u4EC0_u4E48_u8981_u7528_u591A_u6001_u66FF_u4EE3_u6761_u4EF6_u8BED_u53E5"><a href="#u4E3A_u4EC0_u4E48_u8981_u7528_u591A_u6001_u66FF_u4EE3_u6761_u4EF6_u8BED_u53E5" class="headerlink" title="为什么要用多态替代条件语句"></a>为什么要用多态替代条件语句</h2><ul>
+<li>没有 if 语句的函数更容易阅读。</li>
+<li>没有 if 语句的函数更容易测试。</li>
+<li>多态的系统更容易维护。</li>
+</ul>
+<h2 id="u591A_u6001_u548C_u6761_u4EF6_u8BED_u53E5_u7684_u4F7F_u7528_u573A_u666F"><a href="#u591A_u6001_u548C_u6761_u4EF6_u8BED_u53E5_u7684_u4F7F_u7528_u573A_u666F" class="headerlink" title="多态和条件语句的使用场景"></a>多态和条件语句的使用场景</h2><h3 id="u4F7F_u7528_u591A_u6001_u7684_u573A_u666F"><a href="#u4F7F_u7528_u591A_u6001_u7684_u573A_u666F" class="headerlink" title="使用多态的场景"></a>使用多态的场景</h3><ul>
+<li>当对象要根据不同的状态表现不同的行为时。</li>
+<li>当你需要在很多地方检查相同的条件时。</li>
+</ul>
+<h3 id="u4F7F_u7528_u6761_u4EF6_u8BED_u53E5_u7684_u573A_u666F"><a href="#u4F7F_u7528_u6761_u4EF6_u8BED_u53E5_u7684_u573A_u666F" class="headerlink" title="使用条件语句的场景"></a>使用条件语句的场景</h3><ul>
+<li>主要用于原始对象的比较：&lt;，&gt;，==，!=。</li>
+<li>其他</li>
+</ul>
+<p>这篇文章主要着重于如何避免 if 语句。</p>
+<h3 id="u5982_u4F55_u907F_u514D_u4F7F_u7528_if__u8BED_u53E5"><a href="#u5982_u4F55_u907F_u514D_u4F7F_u7528_if__u8BED_u53E5" class="headerlink" title="如何避免使用 if 语句"></a>如何避免使用 if 语句</h3><ul>
+<li>不要返回 null，而是返回一个空的对象，例如说空的链表。</li>
+<li>不要返回错误码，而是直接在运行时抛出异常。</li>
+</ul>
+<h2 id="u5982_u4F55_u7528_u591A_u6001_u4EE3_u66FF_u6761_u4EF6_u8BED_u53E5"><a href="#u5982_u4F55_u7528_u591A_u6001_u4EE3_u66FF_u6761_u4EF6_u8BED_u53E5" class="headerlink" title="如何用多态代替条件语句"></a>如何用多态代替条件语句</h2><p>如果你有一个条件语句，它根据对象的类型选择不同的行为。那么如何用多态来替代它呢？下面，我们来看一个例子。</p>
+<h3 id="u6761_u4EF6_u8BED_u53E5_u5B9E_u73B0_u7684_u7C7B"><a href="#u6761_u4EF6_u8BED_u53E5_u5B9E_u73B0_u7684_u7C7B" class="headerlink" title="条件语句实现的类"></a>条件语句实现的类</h3><pre><code>Class Update {
+    execute() {
+        if (FLAG_i18n_ENABLE) {
+            //DO A;
+        } else {
+            //DO B;
+        }
+    }
+    render() {
+        if (FLAG_i18n_ENABLE) {
+            //render A;
+        } else {
+            //render B;
+        }
+    }
+}
+</code></pre><p>上面的类根据 <code>FLAG_i18n_ENABLE</code> 来执行不同的操作。可能你以前就是这么写代码的，觉得这样写一点问题都没有。那么，我现在问你，怎么测试上面的类？</p>
+<p>下面我们来看看一般的测试方法。</p>
+<pre><code>void testExecuteDoA() {
+    FLAG_i18n_ENABLE = true;
+    Update u = new Update();
+    u.execute();
+    assertX();
+}
+void testExecuteDoB() {
+    FLAG_i18n_ENABLE = false;
+    Update u = new Update();
+    u.execute();
+    assertX();
+}
+</code></pre><p>看完上面的代码，你可能也觉得似曾相识，也觉得没什么问题。</p>
+<p>实际上，这样写的类有以下几个问题：</p>
+<ul>
+<li>大量的条件语句判断让代码可读性急剧下降。就好像你在高速公路上行驶的时候，开的正开心，前面一个此路不通的公示牌出现，于是你不得不走别的路。看代码也是同样道理，太多的分支语句会让读者晕头转向。</li>
+<li>条件语句的存在让测试更加困难。在写测试的时候，你不得不去考虑它的状态码。上面的类只有两个状态，如果有五个状态呢。光是搞清楚状态之间关系就已经够呛了。</li>
+</ul>
+<h3 id="u591A_u6001_u5B9E_u73B0_u7684_u7C7B"><a href="#u591A_u6001_u5B9E_u73B0_u7684_u7C7B" class="headerlink" title="多态实现的类"></a>多态实现的类</h3><p>那么，如何用多态来重写上面的类呢？</p>
+<p>我们可以分为两步来操作：</p>
+<ul>
+<li>让 <code>Update</code> 成为抽象类，方法也抽象。</li>
+<li>在子类中的重载方法实现条件语句的分支操作。</li>
+</ul>
+<p>代码如下</p>
+<pre><code>abstract class Update {
+    abstract execute();
+    abstract render();
+}
+
+class I18NUpdate extends Update {
+    execute() {
+        //Do A;
+    }
+    render() {
+        //render A;
+    }
+}
+
+class NonI18NUpdate extends Update {
+    execute() {
+        //Do B;
+    }
+    render() {
+        //render B;
+    }
+}
+</code></pre><p>测试方法：</p>
+<pre><code>void testExecuteDoA() {
+    Update u = new I18NUpdate();
+    u.execute();
+    assertX();
+}
+void testExecuteDoB() {
+    Update u = new NonI18NUpdate();
+    u.execute();
+    assertX();
+}
+</code></pre><p>用多态实现的类，通过继承抽象类，重写抽象方法的方式，避免使用了条件语句。在测试的时候，不需要关心它的状态码，子类本身就已经承载了状态信息。所以你可以看到，在测试的时候，代码非常的清晰易懂。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>使用多态实现的类有两个好处：</p>
+<ul>
+<li>我们可以通过增加新的子类来添加新的行为，而且不会影响到原来的代码。</li>
+<li>不同的操作和概念在不同的类中，容易理解和阅读。</li>
+</ul>
+<h2 id="u5728_u54EA_u91CC_u51B3_u5B9A_u8981_u521B_u5EFA_u4EC0_u4E48_u5B50_u7C7B"><a href="#u5728_u54EA_u91CC_u51B3_u5B9A_u8981_u521B_u5EFA_u4EC0_u4E48_u5B50_u7C7B" class="headerlink" title="在哪里决定要创建什么子类"></a>在哪里决定要创建什么子类</h2><p>咋一看上面的标题有点绕，我们来详细讨论一下问题的来源。上面我们讲了如何多态代替条件语句，但是有一个问题是无法回避的：我们怎么判断要创建哪一种子类？</p>
+<p>实际上，我们还是要依靠 <code>FLAG_i18n_ENABLE</code> 来决定实例化哪个子类，也就是说，我们仍然要用到条件语句。看到这里你可能就觉得：说到底还是要靠条件语句，博主忽悠人。此言差矣，这么说，条件语句的使用是必要不充分的。写程序你肯定要用到条件语句，但是用的太多会有前面我们说到的问题。把多态和条件语句结合，才是正道。</p>
+<p>我们回到前面的问题，既然条件语句无法避免，因为我们要根据条件决定使用哪个子类。我们先来对类做一个粗略的划分。</p>
+<ul>
+<li>负责业务逻辑的类：例如说我们上面的 <code>Update</code></li>
+<li>负责创建类的类：例如说工厂模式中的 <code>Factory</code></li>
+</ul>
+<p>通过上面的划分，我们可以把子类创建交给工厂类。</p>
+<pre><code>class Consumer {
+    Cosumer(Update u) {...}
+}
+
+class Factory {
+    Consumer build() {
+        Update u = FLAG_i18n_ENABLE
+                    ? new I18NUpdate()
+                    : new NonI18NUpdate;
+        return new Consumer(u);
+    }
+}
+</code></pre><p>现在我们可以回答上面的问题了：在工厂类中根据条件决定要创建哪个子类。这样处理有以下的好处：</p>
+<ul>
+<li>条件语句集中在了一个地方。</li>
+<li>没有多余的重复，除了工厂类，其他地方不需要用到条件语句。</li>
+<li>分离了职责和全局状态。</li>
+<li>相同的代码集中在一个地方。</li>
+<li>独立测试变得简单，而且能同时进行。</li>
+<li>在子类中可以清楚地看到实现的不同。</li>
+</ul>
+<h2 id="u4EC0_u4E48_u60C5_u51B5_u4E0B_u4F7F_u7528_u591A_u6001"><a href="#u4EC0_u4E48_u60C5_u51B5_u4E0B_u4F7F_u7528_u591A_u6001" class="headerlink" title="什么情况下使用多态"></a>什么情况下使用多态</h2><blockquote>
+<p>多态虽好，可不要滥用。 – Yonah潇</p>
+</blockquote>
+<ul>
+<li>类的行为根据状态进行变化的时候。</li>
+<li>同样的条件语句在多个地方出现的时候。</li>
+</ul>
+<p>最后，我只说一句：该用条件语句的时候不要强行用多态。</p>
+<p><em>参考资料</em><br><a href="https://www.youtube.com/watch?v=4F72VULWFvc&amp;list=PL693EFD059797C21E&amp;index=1" target="_blank" rel="external">多态和条件语句</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程实践/">编程实践</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/编程实践/">编程实践</a><a href="/tags/设计/">设计</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/" data-title="简洁代码之道（1）：用多态替代条件语句 | ShareHub" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/30/avoid-global-state/" title="简洁代码之道（2）：避免全局可变状态">
+  <strong>上一篇：</strong><br/>
+  <span>
+  简洁代码之道（2）：避免全局可变状态</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/21/IoC-and-DI/"  title="控制反转（IoC）与依赖注入（DI）">
+ <strong>下一篇：</strong><br/> 
+ <span>控制反转（IoC）与依赖注入（DI）
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/24/clean-code-polymorphism/" data-title="简洁代码之道（1）：用多态替代条件语句" data-url="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3A_u4EC0_u4E48_u8981_u7528_u591A_u6001_u66FF_u4EE3_u6761_u4EF6_u8BED_u53E5"><span class="toc-number">2.</span> <span class="toc-text">为什么要用多态替代条件语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u591A_u6001_u548C_u6761_u4EF6_u8BED_u53E5_u7684_u4F7F_u7528_u573A_u666F"><span class="toc-number">3.</span> <span class="toc-text">多态和条件语句的使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4F7F_u7528_u591A_u6001_u7684_u573A_u666F"><span class="toc-number">3.1.</span> <span class="toc-text">使用多态的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4F7F_u7528_u6761_u4EF6_u8BED_u53E5_u7684_u573A_u666F"><span class="toc-number">3.2.</span> <span class="toc-text">使用条件语句的场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5982_u4F55_u907F_u514D_u4F7F_u7528_if__u8BED_u53E5"><span class="toc-number">3.3.</span> <span class="toc-text">如何避免使用 if 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5982_u4F55_u7528_u591A_u6001_u4EE3_u66FF_u6761_u4EF6_u8BED_u53E5"><span class="toc-number">4.</span> <span class="toc-text">如何用多态代替条件语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u6761_u4EF6_u8BED_u53E5_u5B9E_u73B0_u7684_u7C7B"><span class="toc-number">4.1.</span> <span class="toc-text">条件语句实现的类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u591A_u6001_u5B9E_u73B0_u7684_u7C7B"><span class="toc-number">4.2.</span> <span class="toc-text">多态实现的类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">4.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5728_u54EA_u91CC_u51B3_u5B9A_u8981_u521B_u5EFA_u4EC0_u4E48_u5B50_u7C7B"><span class="toc-number">5.</span> <span class="toc-text">在哪里决定要创建什么子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4EC0_u4E48_u60C5_u51B5_u4E0B_u4F7F_u7528_u591A_u6001"><span class="toc-number">6.</span> <span class="toc-text">什么情况下使用多态</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Linux内核/" title="Linux内核">Linux内核<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux工具/" title="Linux工具">Linux工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/java/" title="java">java<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/个人随想/" title="个人随想">个人随想<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/理解链接/" title="理解链接">理解链接<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法学习/" title="算法学习">算法学习<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/虚拟化/" title="虚拟化">虚拟化<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/spice/" title="spice">spice<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/设计/" title="设计">设计<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分治法/" title="分治法">分治法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/减治法/" title="减治法">减治法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/知识管理/" title="知识管理">知识管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源代码分析/" title="源代码分析">源代码分析<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m XiaoHanSong, a student majoring in SE. <br/>
+			This is my blog for sharing my ideas.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/x-hansong" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		<a href="https://twitter.com/Yonah_x" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/xhansong" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		<a href="https://www.linkedin.com/in/xhansong" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:x.hansong.scut@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="Yonah-潇">Yonah-潇</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yonah"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+     
+  	  <script type="text/javascript">
+  		var duoshuo_user_ID = 7607035
+  	  </script>
+<script src="/js/ua-parser.min.js"></script>
+<script src="/js/hook-duoshuo.js"></script>
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256629854'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1256629854' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '084e2ef4b40406a66fd1'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</body>
+</html>

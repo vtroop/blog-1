@@ -1,0 +1,724 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<meta name="google-site-verification" content="ozi5UMPx0UZR6p_LhY9QUf2XkOdP7WH7vjnMUnEuE8s" />
+<meta name="baidu-site-verification" content="28u1lswj4v" />
+  <meta charset="UTF-8">
+  
+    <title>对抽象类与接口的一点思考 | ShareHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Yonah-潇">
+    
+
+    
+    <meta name="description" content="前言之前写了一篇文章 简洁代码之道（1）：用多态替代条件语句，有人问实现多态的时候为什么用抽象类而不是接口。当时写文章的时候并没有想到这个问题。后来仔细想想，这的确是个值得探讨的问题。多态可以用抽象类或者接口实现，重点是应该用哪个？更大问题是，接口和抽象类有什么本质的区别？下面我们将讨论以下的问题：
+
+抽象类和接口的对比
+从 java 容器类的设计讨论抽象类和接口的应用
+抽象类和接口的使用时机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对抽象类与接口的一点思考">
+<meta property="og:url" content="http://blog.xiaohansong.com/2015/12/02/abstract-class-and-interface/index.html">
+<meta property="og:site_name" content="ShareHub">
+<meta property="og:description" content="前言之前写了一篇文章 简洁代码之道（1）：用多态替代条件语句，有人问实现多态的时候为什么用抽象类而不是接口。当时写文章的时候并没有想到这个问题。后来仔细想想，这的确是个值得探讨的问题。多态可以用抽象类或者接口实现，重点是应该用哪个？更大问题是，接口和抽象类有什么本质的区别？下面我们将讨论以下的问题：
+
+抽象类和接口的对比
+从 java 容器类的设计讨论抽象类和接口的应用
+抽象类和接口的使用时机">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/full_container_taxonomy.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/ArrayList.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/AbtractList.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/InterfaceList.png">
+<meta property="og:updated_time" content="2016-01-02T17:39:28.897Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对抽象类与接口的一点思考">
+<meta name="twitter:description" content="前言之前写了一篇文章 简洁代码之道（1）：用多态替代条件语句，有人问实现多态的时候为什么用抽象类而不是接口。当时写文章的时候并没有想到这个问题。后来仔细想想，这的确是个值得探讨的问题。多态可以用抽象类或者接口实现，重点是应该用哪个？更大问题是，接口和抽象类有什么本质的区别？下面我们将讨论以下的问题：
+
+抽象类和接口的对比
+从 java 容器类的设计讨论抽象类和接口的应用
+抽象类和接口的使用时机">
+<meta name="twitter:creator" content="@Yonah_x">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ShareHub" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ShareHub" title="ShareHub"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ShareHub">ShareHub</a></h1>
+				<h2 class="blog-motto">悲观的意志,乐观的头脑</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/02/abstract-class-and-interface/" title="对抽象类与接口的一点思考" itemprop="url">对抽象类与接口的一点思考</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Yonah-潇" target="_blank" itemprop="author">Yonah-潇</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-02T13:55:47.000Z" itemprop="datePublished"> 发表于 2015-12-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u62BD_u8C61_u7C7B_u4E0E_u63A5_u53E3_u7684_u5BF9_u6BD4"><span class="toc-number">2.</span> <span class="toc-text">抽象类与接口的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4ECE_java__u5BB9_u5668_u7C7B_u7684_u8BBE_u8BA1_u8BA8_u8BBA_u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u5E94_u7528"><span class="toc-number">3.</span> <span class="toc-text">从 java 容器类的设计讨论抽象类和接口的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayList__u7C7B_u7EE7_u627F_u5173_u7CFB"><span class="toc-number">3.1.</span> <span class="toc-text">ArrayList 类继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7EAF_u62BD_u8C61_u7C7B_u5B9E_u73B0"><span class="toc-number">3.2.</span> <span class="toc-text">纯抽象类实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7EAF_u63A5_u53E3_u5B9E_u73B0"><span class="toc-number">3.3.</span> <span class="toc-text">纯接口实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">3.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u4F7F_u7528_u65F6_u673A"><span class="toc-number">4.</span> <span class="toc-text">抽象类和接口的使用时机</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇文章 <a href="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/">简洁代码之道（1）：用多态替代条件语句</a>，有人问实现多态的时候为什么用抽象类而不是接口。当时写文章的时候并没有想到这个问题。后来仔细想想，这的确是个值得探讨的问题。多态可以用抽象类或者接口实现，重点是应该用哪个？更大问题是，接口和抽象类有什么本质的区别？下面我们将讨论以下的问题：</p>
+<ul>
+<li>抽象类和接口的对比</li>
+<li>从 java 容器类的设计讨论抽象类和接口的应用</li>
+<li>抽象类和接口的使用时机</li>
+</ul>
+<h2 id="u62BD_u8C61_u7C7B_u4E0E_u63A5_u53E3_u7684_u5BF9_u6BD4"><a href="#u62BD_u8C61_u7C7B_u4E0E_u63A5_u53E3_u7684_u5BF9_u6BD4" class="headerlink" title="抽象类与接口的对比"></a>抽象类与接口的对比</h2><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>抽象类</th>
+<th>接口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> 默认的方法实现</td>
+<td>它可以有默认的方法实现</td>
+<td>接口完全是抽象的。它根本不存在方法的实现</td>
+<td></td>
+</tr>
+<tr>
+<td>实现</td>
+<td>子类使用extends关键字来继承抽象类。如果子类不是抽象类的话，它需要提供抽象类中所有声明的方法的实现。</td>
+<td>子类使用关键字implements来实现接口。它需要提供接口中所有声明的方法的实现</td>
+</tr>
+<tr>
+<td>构造器</td>
+<td>抽象类可以有构造器</td>
+<td>接口不能有构造器</td>
+</tr>
+<tr>
+<td>与正常Java类的区别</td>
+<td>除了你不能实例化抽象类之外，它和普通Java类没有任何区别</td>
+<td>接口是完全不同的类型</td>
+</tr>
+<tr>
+<td>访问修饰符</td>
+<td>抽象方法可以有public、protected和default这些修饰符</td>
+<td>接口方法默认修饰符是public。你不可以使用其它修饰符。</td>
+</tr>
+<tr>
+<td>main方法</td>
+<td>抽象方法可以有main方法并且我们可以运行它</td>
+<td>接口没有main方法，因此我们不能运行它。</td>
+</tr>
+<tr>
+<td>多继承</td>
+<td>抽象方法可以继承一个类和实现多个接口</td>
+<td>接口只可以继承一个或多个其它接口</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>它比接口速度要快</td>
+<td>接口是稍微有点慢的，因为它需要时间去寻找在类中实现的方法。</td>
+</tr>
+<tr>
+<td>添加新方法</td>
+<td>如果你往抽象类中添加新的方法，你可以给它提供默认的实现。因此你不需要改变你现在的代码。</td>
+<td>如果你往接口中添加方法，那么你必须改变实现该接口的类。</td>
+</tr>
+</tbody>
+</table>
+<p>抽象类和接口有不同，也有相似的地方。有些书把接口称作特殊的类，虽然不准确，但也有一定道理，接口能做的事情，抽象类也能做到，除了多重继承。正是因为这些相似的特性，让我们在使用它们的时候有了困惑：这里到底该用抽象类还是接口？</p>
+<h2 id="u4ECE_java__u5BB9_u5668_u7C7B_u7684_u8BBE_u8BA1_u8BA8_u8BBA_u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u5E94_u7528"><a href="#u4ECE_java__u5BB9_u5668_u7C7B_u7684_u8BBE_u8BA1_u8BA8_u8BBA_u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u5E94_u7528" class="headerlink" title="从 java 容器类的设计讨论抽象类和接口的应用"></a>从 java 容器类的设计讨论抽象类和接口的应用</h2><p>除了前面提到的一个问题：多态到底是用抽象类还是接口实现？我还看到有人评论说：现在都是提倡面向接口编程，使用抽象类的都被称为上世纪的老码农了。哈哈。看到这个说法我也是苦笑不得。不过，面向接口编程的确是一个趋势，java 8 已经支持接口实现默认方法和静态方法了，抽象类和接口之间的差异越来越小。闲话少说，我们开始讨论抽象类和接口的应用。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/full_container_taxonomy.png" alt="full_container_taxonomy"></p>
+<p>上图是 java 容器类的类继承关系。我们以容器类中 <code>ArrayList</code> 为例子来讨论抽象类和接口的应用。</p>
+<h3 id="ArrayList__u7C7B_u7EE7_u627F_u5173_u7CFB"><a href="#ArrayList__u7C7B_u7EE7_u627F_u5173_u7CFB" class="headerlink" title="ArrayList 类继承关系"></a>ArrayList 类继承关系</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/ArrayList.png" alt="ArrayList"></p>
+<p>上图是 <code>ArrayList</code> 的类继承关系。可以看到，<code>ArrayList</code> 的继承关系中既使用了抽象类，也使用了接口。</p>
+<ul>
+<li>最顶层的接口是 <code>Iterable</code>，表示这是可迭代的类型。所有容器类都是可迭代的，这是一个极高的抽象。</li>
+<li>第二层的接口是 <code>Collection</code>，这是单一元素容器的接口。集合，列表都属于此类。</li>
+<li>第三层的接口是 <code>List</code>，这是所有列表的接口。</li>
+</ul>
+<p>通过三个接口，我们可以找到容器类的三个抽象特性，实现这些接口就意味着拥有这些接口的特性。</p>
+<ul>
+<li><code>AbstractCollection</code> 实现了 <code>Collection</code> 中的部分方法。</li>
+<li><code>AbstractList</code> 实现了 <code>AbstractCollection</code> 和 <code>List</code> 中的部分方法。</li>
+</ul>
+<p>上面的抽象类提供了一些方法的默认实现，给具体类提供了复用代码。</p>
+<h3 id="u7EAF_u62BD_u8C61_u7C7B_u5B9E_u73B0"><a href="#u7EAF_u62BD_u8C61_u7C7B_u5B9E_u73B0" class="headerlink" title="纯抽象类实现"></a>纯抽象类实现</h3><p>如果我们像一个老码农一样，用抽象类来实现上面的接口会有怎样的效果？那么，类图可能变成这样。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/AbtractList.png" alt="AbtractList"></p>
+<p>抽象类在这里存在着一个很大的问题，它不能多继承，在抽象的层次上没有接口高，也没有接口灵活。例如说：</p>
+<pre><code>List + AbstractCollection -&gt; AbstractList
+Set  + AbstractCollection -&gt; AbstractSet
+</code></pre><p>单纯用抽象类无法实现像接口一样灵活的扩展。</p>
+<h3 id="u7EAF_u63A5_u53E3_u5B9E_u73B0"><a href="#u7EAF_u63A5_u53E3_u5B9E_u73B0" class="headerlink" title="纯接口实现"></a>纯接口实现</h3><p>如果我们像一个新码农一样，用纯接口来实现呢？</p>
+<p> <img src="http://7xjtfr.com1.z0.glb.clouddn.com/InterfaceList.png" alt="InterfaceList"></p>
+<p>这样写理论上没有问题，实际写代码的时候问题就来了。所有的接口都要提供实现，于是你不得不在各个实现类中重复代码。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>经过上面的讨论，我们得出两个结论：</p>
+<ul>
+<li>抽象类和接口并不能互相替代。</li>
+<li>抽象类和接口各有不可替代的作用。</li>
+</ul>
+<p>从容器类的类关系图中可以看到，接口主要是用来抽象类型的共性，例如说，容器的可迭代特性。抽象类主要是给具体实现类提供重用的代码，例如说，<code>List</code> 的一些默认方法。</p>
+<h2 id="u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u4F7F_u7528_u65F6_u673A"><a href="#u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u4F7F_u7528_u65F6_u673A" class="headerlink" title="抽象类和接口的使用时机"></a>抽象类和接口的使用时机</h2><p>那么，什么时候该用抽象类，什么时候该用接口呢？</p>
+<p>要解决上面的问题，我们先从弄清楚抽象类和接口之间的关系。首先，我们都知道类对事物的抽象，定义了事物的属性和行为。而抽象类是不完全的类，具有抽象方法。接口则比类的抽象层次更高。所以，我们可以这样理解它们之间的关系：<strong>类是对事物的抽象，抽象类是对类的抽象，接口是对抽象类的抽象。</strong></p>
+<p>从这个角度来看 java 容器类，你会发现，它的设计正体现了这种关系。不是吗？从 <code>Iterable</code> 接口，到 <code>AbstractList</code> 抽象类，再到 <code>ArrayList</code> 类。</p>
+<p>现在回答前面的问题：在设计类的时候，首先考虑用接口抽象出类的特性，当你发现某些方法可以复用的时候，可以使用抽象类来复用代码。简单说，<strong>接口用于抽象事物的特性，抽象类用于代码复用</strong>。</p>
+<p>当然，不是所有类的设计都要从接口到抽象类，再到类。程序设计本就没有绝对的范式可以遵循。上面的说法只是提供一个角度来理解抽象类和接口的关系，每个人都会有自己的理解，有人认为两者一点关系都没有，这也有道理。总之，模式和语法是死的，人是活的。</p>
+<p><em>参考资料</em><br><a href="http://www.importnew.com/12399.html" target="_blank" rel="external">Java抽象类与接口的区别</a><br><a href="https://bxbxbai.github.io/2014/07/20/understood_abstract_class_and_interface/.glb.clouddn.com/InterfaceList.png" target="_blank" rel="external">我如何理解Java中抽象类和接口</a><br><a href="http://www.uml.org.cn/mxdx/200904232.asp" target="_blank" rel="external">面向接口编程详解</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.xiaohansong.com/2015/12/02/abstract-class-and-interface/" data-title="对抽象类与接口的一点思考 | ShareHub" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/01/16/kownledge-Management/" title="程序员的知识管理">
+  <strong>上一篇：</strong><br/>
+  <span>
+  程序员的知识管理</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/30/avoid-global-state/"  title="简洁代码之道（2）：避免全局可变状态">
+ <strong>下一篇：</strong><br/> 
+ <span>简洁代码之道（2）：避免全局可变状态
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/12/02/abstract-class-and-interface/" data-title="对抽象类与接口的一点思考" data-url="http://blog.xiaohansong.com/2015/12/02/abstract-class-and-interface/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u62BD_u8C61_u7C7B_u4E0E_u63A5_u53E3_u7684_u5BF9_u6BD4"><span class="toc-number">2.</span> <span class="toc-text">抽象类与接口的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4ECE_java__u5BB9_u5668_u7C7B_u7684_u8BBE_u8BA1_u8BA8_u8BBA_u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u5E94_u7528"><span class="toc-number">3.</span> <span class="toc-text">从 java 容器类的设计讨论抽象类和接口的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayList__u7C7B_u7EE7_u627F_u5173_u7CFB"><span class="toc-number">3.1.</span> <span class="toc-text">ArrayList 类继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7EAF_u62BD_u8C61_u7C7B_u5B9E_u73B0"><span class="toc-number">3.2.</span> <span class="toc-text">纯抽象类实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7EAF_u63A5_u53E3_u5B9E_u73B0"><span class="toc-number">3.3.</span> <span class="toc-text">纯接口实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">3.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u4F7F_u7528_u65F6_u673A"><span class="toc-number">4.</span> <span class="toc-text">抽象类和接口的使用时机</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Linux内核/" title="Linux内核">Linux内核<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux工具/" title="Linux工具">Linux工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/java/" title="java">java<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/个人随想/" title="个人随想">个人随想<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/理解链接/" title="理解链接">理解链接<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法学习/" title="算法学习">算法学习<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/虚拟化/" title="虚拟化">虚拟化<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/spice/" title="spice">spice<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/设计/" title="设计">设计<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分治法/" title="分治法">分治法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/减治法/" title="减治法">减治法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/知识管理/" title="知识管理">知识管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源代码分析/" title="源代码分析">源代码分析<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m XiaoHanSong, a student majoring in SE. <br/>
+			This is my blog for sharing my ideas.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/x-hansong" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		<a href="https://twitter.com/Yonah_x" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/xhansong" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		<a href="https://www.linkedin.com/in/xhansong" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:x.hansong.scut@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="Yonah-潇">Yonah-潇</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yonah"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+     
+  	  <script type="text/javascript">
+  		var duoshuo_user_ID = 7607035
+  	  </script>
+<script src="/js/ua-parser.min.js"></script>
+<script src="/js/hook-duoshuo.js"></script>
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256629854'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1256629854' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '084e2ef4b40406a66fd1'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</body>
+</html>

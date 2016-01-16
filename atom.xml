@@ -1,0 +1,1418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[ShareHub]]></title>
+  <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://blog.xiaohansong.com/"/>
+  <updated>2016-01-16T05:14:23.413Z</updated>
+  <id>http://blog.xiaohansong.com/</id>
+  
+  <author>
+    <name><![CDATA[Yonah-潇]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[程序员的知识管理]]></title>
+    <link href="http://blog.xiaohansong.com/2016/01/16/kownledge-Management/"/>
+    <id>http://blog.xiaohansong.com/2016/01/16/kownledge-Management/</id>
+    <published>2016-01-16T05:01:51.000Z</published>
+    <updated>2016-01-16T05:14:23.413Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文从一个程序员的视角来讨论知识管理，包括以下几个方面：</p>
+<ul>
+<li>什么是知识管理</li>
+<li>为什么要管理知识</li>
+<li>如何管理知识</li>
+</ul>
+<h2 id="u4EC0_u4E48_u662F_u77E5_u8BC6_u7BA1_u7406"><a href="#u4EC0_u4E48_u662F_u77E5_u8BC6_u7BA1_u7406" class="headerlink" title="什么是知识管理"></a>什么是知识管理</h2><blockquote>
+<p>个人知识管理（Personal Knowledge Management）：一般指个人通过工具建立知识体系并不断完善，进行知识的收集、消化吸收和创新的过程。</p>
+</blockquote>
+<p>知识管理的范围很广，一般的知识管理方法可以参考这篇文章 <a href="http://www.jianshu.com/p/dbdac17eb9ff" target="_blank" rel="external">个人知识管理的方法</a>。</p>
+<h2 id="u4E3A_u4EC0_u4E48_u8981_u7BA1_u7406_u77E5_u8BC6"><a href="#u4E3A_u4EC0_u4E48_u8981_u7BA1_u7406_u77E5_u8BC6" class="headerlink" title="为什么要管理知识"></a>为什么要管理知识</h2><p>计算机行业的一个特点是新技术更新特别快，意味着程序员需要不停地学习，才能跟上行业的发展。所以，知识管理对程序员非常重要。有意识，成体系地管理知识能够：</p>
+<ul>
+<li><strong>更有效地学习新的知识。</strong><br>  如果我们已经建立好一个技术知识体系，新的技术也只是在其他技术上建立起来的，有了坚实基础，学习新技术就会更有效。</li>
+<li><strong>更好地掌握知识。</strong><br>  使用合适的工具，正确的方法，可以更好地掌握知识，让知识凝固在脑海，而不是流走。</li>
+<li><strong>节约时间成本。</strong><br>  程序员经常遇到同样的问题，例如说部署开发环境的时候，如果有把解决方案记录下来，就能省去重新解决问题的时间。</li>
+</ul>
+<h2 id="u5982_u4F55_u7BA1_u7406_u77E5_u8BC6"><a href="#u5982_u4F55_u7BA1_u7406_u77E5_u8BC6" class="headerlink" title="如何管理知识"></a>如何管理知识</h2><p>程序员的知识获取途径大部分来自于搜索引擎（值得一提的是，使用谷歌可以节约时间，少用百度），这与其他行业不同。主要原因是技术知识主要来源是互联网，例如说技术博客， Stackoverflow 等。因此，程序员的知识管理主要围绕互联网展开。</p>
+<p>我把程序员的知识管理分为三个过程：</p>
+<ul>
+<li><strong>知识积累</strong></li>
+<li><strong>碎片整理</strong></li>
+<li><strong>思考加工</strong></li>
+</ul>
+<h3 id="u77E5_u8BC6_u79EF_u7D2F"><a href="#u77E5_u8BC6_u79EF_u7D2F" class="headerlink" title="知识积累"></a>知识积累</h3><p>想想我们习以为常的知识积累方式有哪些？也许记笔记是我们最常用的一种。对于程序员来说，用笔记录笔记并不现实，我刚学 C++ 的时候就是把语法记在笔记上。实际上，这种做法是很低效的。更有效的方法是用笔记软件帮我们记录文章。例如说，印象笔记，有道笔记等。</p>
+<p>一开始我看到好的技术文章时，都是加书签存起来。后面发现这样不能离线访问，而且链接可能会失效。后来用上了笔记软件，于是我可以把文章保存到笔记中，随时可以翻出来看。可以说，笔记软件给知识积累带来了极大方便，同时可以分类管理不同的知识。</p>
+<p>知识积累难在养成积累的习惯。以前我解决某个问题，谷歌了很久找到一篇文章解决了问题。解决之后并没有记录下来，结果下一次遇到同样问题，我又浪费了很多时间搜索解决方法。重复多次之后，我意识到这是个严重的问题。所以逐渐养成了保存各种文章的习惯。这些网上积累下来的文章，成为了我知识体系的土壤。</p>
+<p>现在开始，<strong>使用笔记软件分门别类地保存网上看到的文章</strong>，这里要着重强调一下分类的重要性，好的分类可以节省你以后重新检索文章的时间，不要把时间浪费在不必要的劳动上。笔记软件一般都会提供浏览器插件，保存起来是很方便的。</p>
+<h3 id="u788E_u7247_u6574_u7406"><a href="#u788E_u7247_u6574_u7406" class="headerlink" title="碎片整理"></a>碎片整理</h3><p>我自己经常遇到这样的情况：要用到某个 Linux 命令的时候，经常大费周章地去搜索。有人说直接查 man 手册不是很快吗？确实查 man 手册比查搜索引擎要快，但是有两个问题：一是看了 man 手册的命令语法，我还得试试看；二是如果我不知道命令的名字怎么查 man。所以，最快的方法不是搜索引擎，也不是 man 手册，而是个人 wiki。</p>
+<p>与大家平常所知的 wiki 不同，个人 wiki 主要是用来记录知识碎片的，例如说：某个常用命令的语法，特定的软件配置等等。如果还是不理解，可以看看我的个人 <a href="http://wiki.xiaohansong.com/" target="_blank" rel="external">Wiki</a>。这些知识碎片是我们初步消化的知识，只不过因为太过碎片，不能够组成完整的知识体系。很多人以为把看到的文章保存到自己的笔记里面，就有一种已经掌握它的错觉，结果保存了成千上百的文章，却一篇都没认真看完。别人的文章是他的知识沉淀，并不是自己的。随时把文章中的精华提取整理到 wiki，才能初步消化知识，为后面的思考加工做准备。</p>
+<p>有人会问为什么不用笔记软件记录这些碎片化的知识呢？用 wiki 当然是有理由的：</p>
+<ol>
+<li><strong>笔记软件保存的主要是知识原料。</strong>我们从网上保存别人的文章到笔记，存下来的知识是别人的，你只是存下来而已，还没经过消化。我们上面把笔记软件定义为知识的仓库，如果把初步消化后的知识也存在那里，会造成一定的混乱。当然你一定要这么做也可以，但我有分层的思维定势，这算是职业病吧。</li>
+<li><strong>wiki 是随处可访问的。</strong>wiki 发布在互联网上，我们可以随时随地访问它。</li>
+<li><strong>wiki 是分享的。</strong>任何人都可以访问你的 wiki，分享自己的知识何乐而不为呢？</li>
+</ol>
+<p>那么如何制作自己的 wiki 呢？我自己用的是 <a href="http://simiki.org/" target="_blank" rel="external">Simiki</a>，具体用法查看 <a href="http://wiki.xiaohansong.com/tool/simiki.html" target="_blank" rel="external">Simiki-个人Wiki写作</a>。发布到互联网我用的是 Github Page，具体操作自行搜索。</p>
+<h3 id="u601D_u8003_u52A0_u5DE5"><a href="#u601D_u8003_u52A0_u5DE5" class="headerlink" title="思考加工"></a>思考加工</h3><p>写博客是最好的思考加工知识的方法。当年我也是被刘未鹏的 <a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/" target="_blank" rel="external">为什么你应该（从现在开始就）写博客</a> 和 <a href="http://mindhacks.cn/2009/02/09/writing-is-better-thinking/" target="_blank" rel="external">书写是为了更好的思考</a> 给带入坑的。写博客的好处我就不提了，看上面两篇文章就够洗脑了。下面我着重谈谈如何写好博客的一点个人经验。</p>
+<ol>
+<li><strong>博客少写纯操作指南类的文章。</strong>网上大部分博客写的都是纯操作指南类的文章，例如，如何搭建 LAMP 之类，可能作者自己都不清楚为什么要这么做。不是说纯操作指南类的文章不好，相反我觉得这种文章很重要，只是它的位置不对。它应该放在 wiki 中，因为纯操作指南类的文章只是描述步骤，关注点是怎么做，而不是为什么。写博客的关注点应该在为什么，讲清楚为什么要这么做。另外不要钻牛角尖，我说的是纯操作指南，不要以为只要是搭建环境之类的文章都不能写，这里的“纯”代表只给步骤，不提背后的原理。其实写得好的操作指南应该力求让读者知其然，知其所以然。</li>
+<li><strong>定期写文章。</strong> 万事开头难，动笔开始写作很难，一旦开始就停不下来了。养成定期写文章的习惯，至少确保一个月一篇的节奏。</li>
+<li><strong>自荐文章到各个技术头条。</strong>例如说：伯乐头条，开发者头条，极客头条等，有读者才有动力，同时也是保证自己写好文章的监督。</li>
+<li><strong>写博客的工具。</strong>我自己用的是托管在 Github Page 的 <a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo</a> 静态博客。搭建教程见 <a href="http://blog.xiaohansong.com/2015/06/17/%E7%94%A8hexo%E6%90%AD%E5%BB%BAgithub%E5%8D%9A%E5%AE%A2/">用hexo搭建github博客</a>。如果你有服务器的话，可以试试 wordpress，ghost 之类的博客软件。</li>
+<li><strong>把无法加工的知识写到 Wiki。</strong>例如说：git 的一些配置和用法，这些内容在官方文档都能找到，写在博客也只是搬运工，除非你有新的理解。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>以上是我摸打滚爬两年多积累的经验之谈，如果你有好的经验欢迎留言交流。一开始我是在 CSDN 写博客，只不过走了不少弯路，后来折腾 <a href="http://blog.xiaohansong.com/">个人博客</a>，最后又开了 <a href="http://wiki.xiaohansong.com/" target="_blank" rel="external">个人 Wiki</a>。逐渐形成了自己的知识管理方法。最后总结一下：</p>
+<ol>
+<li><strong>知识积累</strong>：使用笔记软件保存好的文章，积累知识。</li>
+<li><strong>碎片整理</strong>：在个人 wiki 上记录初步消化的知识碎片。</li>
+<li><strong>思考加工</strong>：对存在笔记和 wiki 中知识进行思考加工后写在博客。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文从一个程序员的视角来讨论知识管理，包括以下几个方面：</p>
+<ul>
+<li>什么是知识管理</l]]>
+    </summary>
+    
+      <category term="知识管理" scheme="http://blog.xiaohansong.com/tags/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="个人随想" scheme="http://blog.xiaohansong.com/categories/%E4%B8%AA%E4%BA%BA%E9%9A%8F%E6%83%B3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[对抽象类与接口的一点思考]]></title>
+    <link href="http://blog.xiaohansong.com/2015/12/02/abstract-class-and-interface/"/>
+    <id>http://blog.xiaohansong.com/2015/12/02/abstract-class-and-interface/</id>
+    <published>2015-12-02T13:55:47.000Z</published>
+    <updated>2016-01-02T17:39:28.897Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇文章 <a href="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/">简洁代码之道（1）：用多态替代条件语句</a>，有人问实现多态的时候为什么用抽象类而不是接口。当时写文章的时候并没有想到这个问题。后来仔细想想，这的确是个值得探讨的问题。多态可以用抽象类或者接口实现，重点是应该用哪个？更大问题是，接口和抽象类有什么本质的区别？下面我们将讨论以下的问题：</p>
+<ul>
+<li>抽象类和接口的对比</li>
+<li>从 java 容器类的设计讨论抽象类和接口的应用</li>
+<li>抽象类和接口的使用时机</li>
+</ul>
+<h2 id="u62BD_u8C61_u7C7B_u4E0E_u63A5_u53E3_u7684_u5BF9_u6BD4"><a href="#u62BD_u8C61_u7C7B_u4E0E_u63A5_u53E3_u7684_u5BF9_u6BD4" class="headerlink" title="抽象类与接口的对比"></a>抽象类与接口的对比</h2><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>抽象类</th>
+<th>接口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> 默认的方法实现</td>
+<td>它可以有默认的方法实现</td>
+<td>接口完全是抽象的。它根本不存在方法的实现</td>
+<td></td>
+</tr>
+<tr>
+<td>实现</td>
+<td>子类使用extends关键字来继承抽象类。如果子类不是抽象类的话，它需要提供抽象类中所有声明的方法的实现。</td>
+<td>子类使用关键字implements来实现接口。它需要提供接口中所有声明的方法的实现</td>
+</tr>
+<tr>
+<td>构造器</td>
+<td>抽象类可以有构造器</td>
+<td>接口不能有构造器</td>
+</tr>
+<tr>
+<td>与正常Java类的区别</td>
+<td>除了你不能实例化抽象类之外，它和普通Java类没有任何区别</td>
+<td>接口是完全不同的类型</td>
+</tr>
+<tr>
+<td>访问修饰符</td>
+<td>抽象方法可以有public、protected和default这些修饰符</td>
+<td>接口方法默认修饰符是public。你不可以使用其它修饰符。</td>
+</tr>
+<tr>
+<td>main方法</td>
+<td>抽象方法可以有main方法并且我们可以运行它</td>
+<td>接口没有main方法，因此我们不能运行它。</td>
+</tr>
+<tr>
+<td>多继承</td>
+<td>抽象方法可以继承一个类和实现多个接口</td>
+<td>接口只可以继承一个或多个其它接口</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>它比接口速度要快</td>
+<td>接口是稍微有点慢的，因为它需要时间去寻找在类中实现的方法。</td>
+</tr>
+<tr>
+<td>添加新方法</td>
+<td>如果你往抽象类中添加新的方法，你可以给它提供默认的实现。因此你不需要改变你现在的代码。</td>
+<td>如果你往接口中添加方法，那么你必须改变实现该接口的类。</td>
+</tr>
+</tbody>
+</table>
+<p>抽象类和接口有不同，也有相似的地方。有些书把接口称作特殊的类，虽然不准确，但也有一定道理，接口能做的事情，抽象类也能做到，除了多重继承。正是因为这些相似的特性，让我们在使用它们的时候有了困惑：这里到底该用抽象类还是接口？</p>
+<h2 id="u4ECE_java__u5BB9_u5668_u7C7B_u7684_u8BBE_u8BA1_u8BA8_u8BBA_u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u5E94_u7528"><a href="#u4ECE_java__u5BB9_u5668_u7C7B_u7684_u8BBE_u8BA1_u8BA8_u8BBA_u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u5E94_u7528" class="headerlink" title="从 java 容器类的设计讨论抽象类和接口的应用"></a>从 java 容器类的设计讨论抽象类和接口的应用</h2><p>除了前面提到的一个问题：多态到底是用抽象类还是接口实现？我还看到有人评论说：现在都是提倡面向接口编程，使用抽象类的都被称为上世纪的老码农了。哈哈。看到这个说法我也是苦笑不得。不过，面向接口编程的确是一个趋势，java 8 已经支持接口实现默认方法和静态方法了，抽象类和接口之间的差异越来越小。闲话少说，我们开始讨论抽象类和接口的应用。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/full_container_taxonomy.png" alt="full_container_taxonomy"></p>
+<p>上图是 java 容器类的类继承关系。我们以容器类中 <code>ArrayList</code> 为例子来讨论抽象类和接口的应用。</p>
+<h3 id="ArrayList__u7C7B_u7EE7_u627F_u5173_u7CFB"><a href="#ArrayList__u7C7B_u7EE7_u627F_u5173_u7CFB" class="headerlink" title="ArrayList 类继承关系"></a>ArrayList 类继承关系</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/ArrayList.png" alt="ArrayList"></p>
+<p>上图是 <code>ArrayList</code> 的类继承关系。可以看到，<code>ArrayList</code> 的继承关系中既使用了抽象类，也使用了接口。</p>
+<ul>
+<li>最顶层的接口是 <code>Iterable</code>，表示这是可迭代的类型。所有容器类都是可迭代的，这是一个极高的抽象。</li>
+<li>第二层的接口是 <code>Collection</code>，这是单一元素容器的接口。集合，列表都属于此类。</li>
+<li>第三层的接口是 <code>List</code>，这是所有列表的接口。</li>
+</ul>
+<p>通过三个接口，我们可以找到容器类的三个抽象特性，实现这些接口就意味着拥有这些接口的特性。</p>
+<ul>
+<li><code>AbstractCollection</code> 实现了 <code>Collection</code> 中的部分方法。</li>
+<li><code>AbstractList</code> 实现了 <code>AbstractCollection</code> 和 <code>List</code> 中的部分方法。</li>
+</ul>
+<p>上面的抽象类提供了一些方法的默认实现，给具体类提供了复用代码。</p>
+<h3 id="u7EAF_u62BD_u8C61_u7C7B_u5B9E_u73B0"><a href="#u7EAF_u62BD_u8C61_u7C7B_u5B9E_u73B0" class="headerlink" title="纯抽象类实现"></a>纯抽象类实现</h3><p>如果我们像一个老码农一样，用抽象类来实现上面的接口会有怎样的效果？那么，类图可能变成这样。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/AbtractList.png" alt="AbtractList"></p>
+<p>抽象类在这里存在着一个很大的问题，它不能多继承，在抽象的层次上没有接口高，也没有接口灵活。例如说：</p>
+<pre><code>List + AbstractCollection -&gt; AbstractList
+Set  + AbstractCollection -&gt; AbstractSet
+</code></pre><p>单纯用抽象类无法实现像接口一样灵活的扩展。</p>
+<h3 id="u7EAF_u63A5_u53E3_u5B9E_u73B0"><a href="#u7EAF_u63A5_u53E3_u5B9E_u73B0" class="headerlink" title="纯接口实现"></a>纯接口实现</h3><p>如果我们像一个新码农一样，用纯接口来实现呢？</p>
+<p> <img src="http://7xjtfr.com1.z0.glb.clouddn.com/InterfaceList.png" alt="InterfaceList"></p>
+<p>这样写理论上没有问题，实际写代码的时候问题就来了。所有的接口都要提供实现，于是你不得不在各个实现类中重复代码。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>经过上面的讨论，我们得出两个结论：</p>
+<ul>
+<li>抽象类和接口并不能互相替代。</li>
+<li>抽象类和接口各有不可替代的作用。</li>
+</ul>
+<p>从容器类的类关系图中可以看到，接口主要是用来抽象类型的共性，例如说，容器的可迭代特性。抽象类主要是给具体实现类提供重用的代码，例如说，<code>List</code> 的一些默认方法。</p>
+<h2 id="u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u4F7F_u7528_u65F6_u673A"><a href="#u62BD_u8C61_u7C7B_u548C_u63A5_u53E3_u7684_u4F7F_u7528_u65F6_u673A" class="headerlink" title="抽象类和接口的使用时机"></a>抽象类和接口的使用时机</h2><p>那么，什么时候该用抽象类，什么时候该用接口呢？</p>
+<p>要解决上面的问题，我们先从弄清楚抽象类和接口之间的关系。首先，我们都知道类对事物的抽象，定义了事物的属性和行为。而抽象类是不完全的类，具有抽象方法。接口则比类的抽象层次更高。所以，我们可以这样理解它们之间的关系：<strong>类是对事物的抽象，抽象类是对类的抽象，接口是对抽象类的抽象。</strong></p>
+<p>从这个角度来看 java 容器类，你会发现，它的设计正体现了这种关系。不是吗？从 <code>Iterable</code> 接口，到 <code>AbstractList</code> 抽象类，再到 <code>ArrayList</code> 类。</p>
+<p>现在回答前面的问题：在设计类的时候，首先考虑用接口抽象出类的特性，当你发现某些方法可以复用的时候，可以使用抽象类来复用代码。简单说，<strong>接口用于抽象事物的特性，抽象类用于代码复用</strong>。</p>
+<p>当然，不是所有类的设计都要从接口到抽象类，再到类。程序设计本就没有绝对的范式可以遵循。上面的说法只是提供一个角度来理解抽象类和接口的关系，每个人都会有自己的理解，有人认为两者一点关系都没有，这也有道理。总之，模式和语法是死的，人是活的。</p>
+<p><em>参考资料</em><br><a href="http://www.importnew.com/12399.html" target="_blank" rel="external">Java抽象类与接口的区别</a><br><a href="https://bxbxbai.github.io/2014/07/20/understood_abstract_class_and_interface/.glb.clouddn.com/InterfaceList.png" target="_blank" rel="external">我如何理解Java中抽象类和接口</a><br><a href="http://www.uml.org.cn/mxdx/200904232.asp" target="_blank" rel="external">面向接口编程详解</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇文章 <a href="http://blog.xiaohansong.com/2015/1]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[简洁代码之道（2）：避免全局可变状态]]></title>
+    <link href="http://blog.xiaohansong.com/2015/11/30/avoid-global-state/"/>
+    <id>http://blog.xiaohansong.com/2015/11/30/avoid-global-state/</id>
+    <published>2015-11-30T07:42:41.000Z</published>
+    <updated>2016-01-02T17:39:28.897Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?list=PL693EFD059797C21E" target="_blank" rel="external">谷歌简洁代码演讲系列</a> 中的 <a href="https://www.youtube.com/watch?v=-FRm3VPhseI&amp;index=4&amp;list=PL693EFD059797C21E" target="_blank" rel="external">全局状态与单例模式</a> 之后的总结。本文的主题是：避免全局可变状态。下面我们将围绕几个问题开展讨论：</p>
+<ul>
+<li>什么是全局状态</li>
+<li>如何设计好的单例模式</li>
+<li>如何设计好的 API</li>
+</ul>
+<h2 id="u5168_u5C40_u72B6_u6001"><a href="#u5168_u5C40_u72B6_u6001" class="headerlink" title="全局状态"></a>全局状态</h2><h3 id="u4EC0_u4E48_u662F_u5168_u5C40_u72B6_u6001"><a href="#u4EC0_u4E48_u662F_u5168_u5C40_u72B6_u6001" class="headerlink" title="什么是全局状态"></a>什么是全局状态</h3><blockquote>
+<p>Talk is cheap, show me the code. – Linus</p>
+</blockquote>
+<p>我们来用一个例子说明什么是全局状态。</p>
+<pre><code>class X {
+    X() {...}
+
+    public int doSomething() {...}
+}
+
+int a = new X().doSomething()
+int b = new X().doSomething()
+</code></pre><p>现在问题来了，<code>a</code> 等于 <code>b</code> 吗？事实上有两种可能的情况。</p>
+<p>第一种情况：<code>X</code> 类不受全局状态的影响，此时 <code>a == b</code></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/global_state1.png" alt="a==b"><br>当 <code>X</code> 被实例化时，它可能会同时创建多个其它对象，当它执行 <code>doSomething()</code> 的时候，得到的结果是一样。说明它是无状态的，每次执行都像 <code>1+1=2</code> 一样有一个确定的值。</p>
+<p>第二种情况：<code>X</code> 类受到全局状态的影响，此时 <code>a != b</code></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/global_state2.png" alt="a!=b"><br>如果 <code>X</code> 在执行 <code>doSomething()</code> 的时候，其中的 <code>Z</code> 变量受到全局状态 <code>GS</code> 的影响，此时 <code>a==b</code> 可能就不成立了。因为程序的执行依赖全局状态，同样的方法可能会得到不同的结果。</p>
+<h3 id="u5168_u5C40_u72B6_u6001_u7684_u7F3A_u70B9"><a href="#u5168_u5C40_u72B6_u6001_u7684_u7F3A_u70B9" class="headerlink" title="全局状态的缺点"></a>全局状态的缺点</h3><p>全局状态相当常见，因为写起来方便。“啊，有一个新的功能要加入，我们加一个全局变量，再加一个条件语句跳转到新的方法就行了。”然而，这种方便却让程序变得难以维护和测试。所以，有一定经验的程序员都会认为全局状态令人讨厌，会避免使用它。</p>
+<p>下面我们来列举全局状态的罪状：</p>
+<ul>
+<li>多次执行同一方法会产生不同的结果<ul>
+<li>测试无法给出一个可靠的结果</li>
+<li>测试的顺序会影响到结果</li>
+<li>不能并行进行测试</li>
+</ul>
+</li>
+<li>很难确定设置状态的位置</li>
+</ul>
+<p>总之，从测试的角度来看，全局状态是很可怕的东西。</p>
+<h3 id="u5168_u5C40_u72B6_u6001_u548C_u5168_u5C40_u53D8_u91CF_u7684_u533A_u522B"><a href="#u5168_u5C40_u72B6_u6001_u548C_u5168_u5C40_u53D8_u91CF_u7684_u533A_u522B" class="headerlink" title="全局状态和全局变量的区别"></a>全局状态和全局变量的区别</h3><ul>
+<li>全局状态不仅包括了全局变量，还包括系统的环境变量，以及人为的命令等。</li>
+<li>全局变量是在程序生命周期中全局可访问的变量，常用来表示全局状态。</li>
+</ul>
+<h2 id="u5355_u4F8B_u6A21_u5F0F"><a href="#u5355_u4F8B_u6A21_u5F0F" class="headerlink" title="单例模式"></a>单例模式</h2><p>有些程序员讨厌全局状态，却喜欢单例模式。但是，从某种意义上说，单例模式是另一种全局状态。当然我不是一棍子打死单例模式，应该说，写得不好的单例模式起到的作用就如同全局状态，让程序难以维护和测试。下面我们来讨论什么是好的单例模式，什么是坏的单例模式</p>
+<h3 id="u574F_u7684_u5355_u4F8B_u6A21_u5F0F"><a href="#u574F_u7684_u5355_u4F8B_u6A21_u5F0F" class="headerlink" title="坏的单例模式"></a>坏的单例模式</h3><p>下面是典型的单例模式实现。</p>
+<pre><code>class AppSetting {
+    private static AppSetting instance = new AppSetting();
+    private Object state1;
+    private Object state2;
+    private Object state3;
+    private AppSetting() {...}
+
+    public static AppSetting getInstance() {
+        return instance;
+    }
+}
+</code></pre><p>我们先来思考一个问题：这个类包括了多少个全局变量？你可能觉得只有一个 <code>instance</code>，事实上一共有4个。只要 <code>instance</code> 一直存在，它的成员变量也会一直存在。也就是说一共有四个全局变量：<code>state1, state2, state3, instance</code>。</p>
+<pre><code>class App {
+    int method() {
+        return AppSetting.getInstance().doX();
+    }
+}
+
+void testApp {
+    ???
+}
+</code></pre><p>想想我们怎么测试上面的代码。单例模式下，你没有缝隙进入到 <code>method()</code> 函数中测试。</p>
+<p>上面的单例模式存在一个很大的测试问题：测试无法覆盖所有的状态。因为状态是私有，同时它单例的。如果我们要测试三个状态怎么办，一个解决办法是在测试的时候把状态改为公有的。这看起来有点诡异，我们一方面又想用单例封装状态，一方面却在测试的时候要去修改代码让它的状态公有。可以说，这种单例模式给测试带来了极大的麻烦。</p>
+<h3 id="u597D_u7684_u5355_u4F8B_u6A21_u5F0F"><a href="#u597D_u7684_u5355_u4F8B_u6A21_u5F0F" class="headerlink" title="好的单例模式"></a>好的单例模式</h3><p>那么，什么是好的单例模式呢？看下面的代码。</p>
+<pre><code>class AppSetting {
+    private Object state1;
+    private Object state2;
+    private Object state3;
+    public AppSetting() {...}
+}
+</code></pre><p>第一眼看到这个代码，你可能觉得这哪里是单例模式，明明就是个普通的类。</p>
+<p>是的，它的确是个普通的类。在这里我们让它不再着重于类自身的单例。什么意思？想想单例模式的本质是什么，单例模式主要是类保证在程序的生命周期内只有一个实例，其它对象访问到的是同一个实例。我们来看看，这种模式对测试带来了怎样的便利。</p>
+<pre><code>class App {
+    AppSetting settings;
+    App(AppSetting settings) {
+        this.settings = settings;
+    }
+
+    int method() {
+        return settings.doX();
+    }
+}
+
+void testApp() {
+     new App(new AppSetting(...)).method();
+}
+</code></pre><p>每个测试我们可以提供一个不同的 <code>AppSetting</code> 来进行测试，相比上面的单例模式，测试得到了更多的控制。我们可以通过不同的 <code>AppSetting</code> 的构造函数，改变程序的状态来进行测试。</p>
+<p>看到这里，你可能有一个疑问：这样子写的代码根本就不是单例模式。的确，从类的实现上，<code>AppSetting</code> 的确不是单例模式的。这里我们强调的是逻辑上的单例，而不是代码实现上的单例。怎么理解？</p>
+<p>首先，单例模式的传统实现是由类来管理这个唯一的实例，也就是我们上面说的“坏的单例模式”，而“好的单例模式”则是由程序来控制类的唯一实例，例如说，Spring IoC 容器中的 Bean，在容器的生命周期中，Bean 默认是单例的。（详细的解释可以看这篇文章 <a href="http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/">控制反转（IoC）与依赖注入（DI）</a>）简单说，就是把单例类管理唯一实例的功能转移给外部容器，当你使用了 IoC 框架之后，你会发现，单例模式的实例完全可以通过容器管理，而不用我们写“坏的单例模式”。</p>
+<h2 id="u8BBE_u8BA1_u597D_u7684_API"><a href="#u8BBE_u8BA1_u597D_u7684_API" class="headerlink" title="设计好的 API"></a>设计好的 API</h2><p>全局状态同样会影响到 API 的好坏。</p>
+<h3 id="u574F_u7684_API"><a href="#u574F_u7684_API" class="headerlink" title="坏的 API"></a>坏的 API</h3><p>我们来看一个坏的 API。</p>
+<pre><code>testCharge() {
+    Database.connect();
+    OfflineQueue.start();
+    CreditCardProcessor.init();
+    CreditCard cc = new CreditCard(&quot;123&quot;);
+    cc.charge(100);
+}
+</code></pre><p>如果你对单例模式的坏处还没完全理解，或者你也喜欢写这样的代码，那么刷新编程观的时候到了。</p>
+<p>上面是一个信用卡测试消费的例子。在实例化 <code>CreditCard</code> 之前要有三个初始化操作（明显都是单例模式）。现在问题来了：如果你是新来的测试人员，让你去测试 <code>CreditCard</code>，你看了 API 文档之后，兴冲冲地写下一些代码。</p>
+<pre><code>testCharge() {
+    CreditCard cc = new CreditCard(&quot;123&quot;);
+    cc.charge(100);
+}
+</code></pre><p>现在满怀期待的运行，结果却是熟悉的 <code>NullPointerException</code>。为什么？新来的你当然不知道创建 <code>CreditCard</code> 之前要先连接数据库，启动离线队列，初始化信用卡处理器。所以你只能去问开发人员。现在你知道问题出在哪了吗？</p>
+<p>坏的单例模式让测试人员很难测试代码，因为你看了 API 之后只知道要实例化 <code>CreditCard</code>，然后调用 <code>charge</code>，完全不知道 <code>Database</code> 之类的全局状态是什么鬼。不要以为这只会为难到测试人员，六个月之后你就能体验到测试人员的痛苦。因此，全局状态让 API 有了误导性，让你以为做了正确的操作。</p>
+<p>当然，文档写的清楚可以解决这个问题，然而好的文档可遇不可求，所以我们要有更好的解决办法。</p>
+<h3 id="u597D_u7684_API"><a href="#u597D_u7684_API" class="headerlink" title="好的 API"></a>好的 API</h3><p>设计好的 API，可以从代码层面上解决上面的问题，所谓代码就是最好的注释。</p>
+<pre><code>testCharge() {
+    db = new Database(...);
+    queue = new OfflineQueue(db);
+    ccProc = new CreditCardProcessor(queue);
+    CreditCard cc = new CreditCard(&quot;123&quot;, ccProc);
+    cc.charge(100);
+}
+</code></pre><p>上面的代码通过<strong>让依赖参数化</strong>完美地解决上面的问题。现在，我们还是那个新来的测试人员，我们开始写测试代码。API 告诉我们，实例化 <code>CreditCard</code> 需要 <code>CreditCardProcessor</code> 作为参数，<code>CreditCardProcessor</code>需要 <code>OfflineQueue</code>，<code>OfflineQueue</code> 需要 <code>Database</code>。于是我们可以很清楚的写下上面的测试代码，不需要文档的辅助，我们也知道如何正确的使用 <code>CreditCard</code>。这就是好的 API 设计。</p>
+<p>如果我们要让上面的配置类单例化，只需要使用 IoC 容器进行管理即可，通过依赖注入的方式，可以使代码更加清晰，易测试。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>全局状态是大多数测试问题的根源。</li>
+<li>全局状态无法被测试控制，无法控制意味着无法进行彻底的测试。</li>
+<li>单例模式是封装了全局状态的常用形式。这也是我们不提倡使用单例模式的原因，推荐用容器管理的单例模式。</li>
+<li>全局状态会让 API 具有误导性。</li>
+</ul>
+<p><em>参考资料</em><br><a href="https://www.youtube.com/watch?v=-FRm3VPhseI&amp;index=4&amp;list=PL693EFD059797C21E" target="_blank" rel="external">全局状态与单例模式</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?lis]]>
+    </summary>
+    
+      <category term="编程实践" scheme="http://blog.xiaohansong.com/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
+    
+      <category term="设计" scheme="http://blog.xiaohansong.com/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+      <category term="编程实践" scheme="http://blog.xiaohansong.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[简洁代码之道（1）：用多态替代条件语句]]></title>
+    <link href="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/"/>
+    <id>http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/</id>
+    <published>2015-11-24T07:54:43.000Z</published>
+    <updated>2016-01-02T17:39:28.898Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?list=PL693EFD059797C21E" target="_blank" rel="external">谷歌简洁代码演讲系列</a> 中的 <a href="https://www.youtube.com/watch?v=4F72VULWFvc&amp;list=PL693EFD059797C21E&amp;index=1" target="_blank" rel="external">多态和条件语句</a> 的总结。大部分的条件语句是可以用多态代替的，本文将围绕以下问题开展：</p>
+<ul>
+<li>为什么要用多态替代条件语句</li>
+<li>多态和条件语句的使用场景</li>
+<li>如何用多态代替条件语句</li>
+<li>在哪里决定要创建什么子类</li>
+<li>什么情况下使用多态</li>
+</ul>
+<h2 id="u4E3A_u4EC0_u4E48_u8981_u7528_u591A_u6001_u66FF_u4EE3_u6761_u4EF6_u8BED_u53E5"><a href="#u4E3A_u4EC0_u4E48_u8981_u7528_u591A_u6001_u66FF_u4EE3_u6761_u4EF6_u8BED_u53E5" class="headerlink" title="为什么要用多态替代条件语句"></a>为什么要用多态替代条件语句</h2><ul>
+<li>没有 if 语句的函数更容易阅读。</li>
+<li>没有 if 语句的函数更容易测试。</li>
+<li>多态的系统更容易维护。</li>
+</ul>
+<h2 id="u591A_u6001_u548C_u6761_u4EF6_u8BED_u53E5_u7684_u4F7F_u7528_u573A_u666F"><a href="#u591A_u6001_u548C_u6761_u4EF6_u8BED_u53E5_u7684_u4F7F_u7528_u573A_u666F" class="headerlink" title="多态和条件语句的使用场景"></a>多态和条件语句的使用场景</h2><h3 id="u4F7F_u7528_u591A_u6001_u7684_u573A_u666F"><a href="#u4F7F_u7528_u591A_u6001_u7684_u573A_u666F" class="headerlink" title="使用多态的场景"></a>使用多态的场景</h3><ul>
+<li>当对象要根据不同的状态表现不同的行为时。</li>
+<li>当你需要在很多地方检查相同的条件时。</li>
+</ul>
+<h3 id="u4F7F_u7528_u6761_u4EF6_u8BED_u53E5_u7684_u573A_u666F"><a href="#u4F7F_u7528_u6761_u4EF6_u8BED_u53E5_u7684_u573A_u666F" class="headerlink" title="使用条件语句的场景"></a>使用条件语句的场景</h3><ul>
+<li>主要用于原始对象的比较：&lt;，&gt;，==，!=。</li>
+<li>其他</li>
+</ul>
+<p>这篇文章主要着重于如何避免 if 语句。</p>
+<h3 id="u5982_u4F55_u907F_u514D_u4F7F_u7528_if__u8BED_u53E5"><a href="#u5982_u4F55_u907F_u514D_u4F7F_u7528_if__u8BED_u53E5" class="headerlink" title="如何避免使用 if 语句"></a>如何避免使用 if 语句</h3><ul>
+<li>不要返回 null，而是返回一个空的对象，例如说空的链表。</li>
+<li>不要返回错误码，而是直接在运行时抛出异常。</li>
+</ul>
+<h2 id="u5982_u4F55_u7528_u591A_u6001_u4EE3_u66FF_u6761_u4EF6_u8BED_u53E5"><a href="#u5982_u4F55_u7528_u591A_u6001_u4EE3_u66FF_u6761_u4EF6_u8BED_u53E5" class="headerlink" title="如何用多态代替条件语句"></a>如何用多态代替条件语句</h2><p>如果你有一个条件语句，它根据对象的类型选择不同的行为。那么如何用多态来替代它呢？下面，我们来看一个例子。</p>
+<h3 id="u6761_u4EF6_u8BED_u53E5_u5B9E_u73B0_u7684_u7C7B"><a href="#u6761_u4EF6_u8BED_u53E5_u5B9E_u73B0_u7684_u7C7B" class="headerlink" title="条件语句实现的类"></a>条件语句实现的类</h3><pre><code>Class Update {
+    execute() {
+        if (FLAG_i18n_ENABLE) {
+            //DO A;
+        } else {
+            //DO B;
+        }
+    }
+    render() {
+        if (FLAG_i18n_ENABLE) {
+            //render A;
+        } else {
+            //render B;
+        }
+    }
+}
+</code></pre><p>上面的类根据 <code>FLAG_i18n_ENABLE</code> 来执行不同的操作。可能你以前就是这么写代码的，觉得这样写一点问题都没有。那么，我现在问你，怎么测试上面的类？</p>
+<p>下面我们来看看一般的测试方法。</p>
+<pre><code>void testExecuteDoA() {
+    FLAG_i18n_ENABLE = true;
+    Update u = new Update();
+    u.execute();
+    assertX();
+}
+void testExecuteDoB() {
+    FLAG_i18n_ENABLE = false;
+    Update u = new Update();
+    u.execute();
+    assertX();
+}
+</code></pre><p>看完上面的代码，你可能也觉得似曾相识，也觉得没什么问题。</p>
+<p>实际上，这样写的类有以下几个问题：</p>
+<ul>
+<li>大量的条件语句判断让代码可读性急剧下降。就好像你在高速公路上行驶的时候，开的正开心，前面一个此路不通的公示牌出现，于是你不得不走别的路。看代码也是同样道理，太多的分支语句会让读者晕头转向。</li>
+<li>条件语句的存在让测试更加困难。在写测试的时候，你不得不去考虑它的状态码。上面的类只有两个状态，如果有五个状态呢。光是搞清楚状态之间关系就已经够呛了。</li>
+</ul>
+<h3 id="u591A_u6001_u5B9E_u73B0_u7684_u7C7B"><a href="#u591A_u6001_u5B9E_u73B0_u7684_u7C7B" class="headerlink" title="多态实现的类"></a>多态实现的类</h3><p>那么，如何用多态来重写上面的类呢？</p>
+<p>我们可以分为两步来操作：</p>
+<ul>
+<li>让 <code>Update</code> 成为抽象类，方法也抽象。</li>
+<li>在子类中的重载方法实现条件语句的分支操作。</li>
+</ul>
+<p>代码如下</p>
+<pre><code>abstract class Update {
+    abstract execute();
+    abstract render();
+}
+
+class I18NUpdate extends Update {
+    execute() {
+        //Do A;
+    }
+    render() {
+        //render A;
+    }
+}
+
+class NonI18NUpdate extends Update {
+    execute() {
+        //Do B;
+    }
+    render() {
+        //render B;
+    }
+}
+</code></pre><p>测试方法：</p>
+<pre><code>void testExecuteDoA() {
+    Update u = new I18NUpdate();
+    u.execute();
+    assertX();
+}
+void testExecuteDoB() {
+    Update u = new NonI18NUpdate();
+    u.execute();
+    assertX();
+}
+</code></pre><p>用多态实现的类，通过继承抽象类，重写抽象方法的方式，避免使用了条件语句。在测试的时候，不需要关心它的状态码，子类本身就已经承载了状态信息。所以你可以看到，在测试的时候，代码非常的清晰易懂。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>使用多态实现的类有两个好处：</p>
+<ul>
+<li>我们可以通过增加新的子类来添加新的行为，而且不会影响到原来的代码。</li>
+<li>不同的操作和概念在不同的类中，容易理解和阅读。</li>
+</ul>
+<h2 id="u5728_u54EA_u91CC_u51B3_u5B9A_u8981_u521B_u5EFA_u4EC0_u4E48_u5B50_u7C7B"><a href="#u5728_u54EA_u91CC_u51B3_u5B9A_u8981_u521B_u5EFA_u4EC0_u4E48_u5B50_u7C7B" class="headerlink" title="在哪里决定要创建什么子类"></a>在哪里决定要创建什么子类</h2><p>咋一看上面的标题有点绕，我们来详细讨论一下问题的来源。上面我们讲了如何多态代替条件语句，但是有一个问题是无法回避的：我们怎么判断要创建哪一种子类？</p>
+<p>实际上，我们还是要依靠 <code>FLAG_i18n_ENABLE</code> 来决定实例化哪个子类，也就是说，我们仍然要用到条件语句。看到这里你可能就觉得：说到底还是要靠条件语句，博主忽悠人。此言差矣，这么说，条件语句的使用是必要不充分的。写程序你肯定要用到条件语句，但是用的太多会有前面我们说到的问题。把多态和条件语句结合，才是正道。</p>
+<p>我们回到前面的问题，既然条件语句无法避免，因为我们要根据条件决定使用哪个子类。我们先来对类做一个粗略的划分。</p>
+<ul>
+<li>负责业务逻辑的类：例如说我们上面的 <code>Update</code></li>
+<li>负责创建类的类：例如说工厂模式中的 <code>Factory</code></li>
+</ul>
+<p>通过上面的划分，我们可以把子类创建交给工厂类。</p>
+<pre><code>class Consumer {
+    Cosumer(Update u) {...}
+}
+
+class Factory {
+    Consumer build() {
+        Update u = FLAG_i18n_ENABLE
+                    ? new I18NUpdate()
+                    : new NonI18NUpdate;
+        return new Consumer(u);
+    }
+}
+</code></pre><p>现在我们可以回答上面的问题了：在工厂类中根据条件决定要创建哪个子类。这样处理有以下的好处：</p>
+<ul>
+<li>条件语句集中在了一个地方。</li>
+<li>没有多余的重复，除了工厂类，其他地方不需要用到条件语句。</li>
+<li>分离了职责和全局状态。</li>
+<li>相同的代码集中在一个地方。</li>
+<li>独立测试变得简单，而且能同时进行。</li>
+<li>在子类中可以清楚地看到实现的不同。</li>
+</ul>
+<h2 id="u4EC0_u4E48_u60C5_u51B5_u4E0B_u4F7F_u7528_u591A_u6001"><a href="#u4EC0_u4E48_u60C5_u51B5_u4E0B_u4F7F_u7528_u591A_u6001" class="headerlink" title="什么情况下使用多态"></a>什么情况下使用多态</h2><blockquote>
+<p>多态虽好，可不要滥用。 – Yonah潇</p>
+</blockquote>
+<ul>
+<li>类的行为根据状态进行变化的时候。</li>
+<li>同样的条件语句在多个地方出现的时候。</li>
+</ul>
+<p>最后，我只说一句：该用条件语句的时候不要强行用多态。</p>
+<p><em>参考资料</em><br><a href="https://www.youtube.com/watch?v=4F72VULWFvc&amp;list=PL693EFD059797C21E&amp;index=1" target="_blank" rel="external">多态和条件语句</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?lis]]>
+    </summary>
+    
+      <category term="编程实践" scheme="http://blog.xiaohansong.com/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
+    
+      <category term="设计" scheme="http://blog.xiaohansong.com/tags/%E8%AE%BE%E8%AE%A1/"/>
+    
+      <category term="编程实践" scheme="http://blog.xiaohansong.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[控制反转（IoC）与依赖注入（DI）]]></title>
+    <link href="http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/"/>
+    <id>http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/</id>
+    <published>2015-10-21T13:39:57.000Z</published>
+    <updated>2016-01-02T17:39:28.894Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Spring框架，它的核心就是IoC容器。要掌握Spring框架，就必须要理解控制反转的思想以及依赖注入的实现方式。下面，我们将围绕下面几个问题来探讨控制反转与依赖注入的关系以及在Spring中如何应用。</p>
+<ul>
+<li>什么是控制反转？</li>
+<li>什么是依赖注入？</li>
+<li>它们之间有什么关系？</li>
+<li>如何在Spring框架中应用依赖注入？</li>
+</ul>
+<h2 id="u4EC0_u4E48_u662F_u63A7_u5236_u53CD_u8F6C"><a href="#u4EC0_u4E48_u662F_u63A7_u5236_u53CD_u8F6C" class="headerlink" title="什么是控制反转"></a>什么是控制反转</h2><p>在讨论控制反转之前，我们先来看看软件系统中耦合的对象。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/%E9%BD%BF%E8%BD%AE_%E8%80%A6%E5%90%88%E5%85%B3%E7%B3%BB_full.jpg" alt="图1：软件系统中耦合的对象"><br>从图中可以看到，软件中的对象就像齿轮一样，协同工作，但是互相耦合，一个零件不能正常工作，整个系统就崩溃了。这是一个强耦合的系统。齿轮组中齿轮之间的啮合关系,与软件系统中对象之间的耦合关系非常相似。对象之间的耦合关系是无法避免的，也是必要的，这是协同工作的基础。现在，伴随着工业级应用的规模越来越庞大，对象之间的依赖关系也越来越复杂，经常会出现对象之间的多重依赖性关系，因此，架构师和设计师对于系统的分析和设计，将面临更大的挑战。对象之间耦合度过高的系统，必然会出现牵一发而动全身的情形。</p>
+<p>为了解决对象间耦合度过高的问题，软件专家Michael Mattson提出了IOC理论，用来实现对象之间的“解耦”。</p>
+<p><strong>控制反转（Inversion of Control）</strong>是一种是面向对象编程中的一种设计原则，用来减低计算机代码之间的耦合度。其基本思想是：借助于“第三方”实现具有依赖关系的对象之间的解耦。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/%E9%BD%BF%E8%BD%AE_%E8%A7%A3%E8%80%A6%E5%90%88_full.jpg" alt="图2：IOC解耦过程"><br>由于引进了中间位置的“第三方”，也就是IOC容器，使得A、B、C、D这4个对象没有了耦合关系，齿轮之间的传动全部依靠“第三方”了，全部对象的控制权全部上缴给“第三方”IOC容器，所以，IOC容器成了整个系统的关键核心，它起到了一种类似“粘合剂”的作用，把系统中的所有对象粘合在一起发挥作用，如果没有这个“粘合剂”，对象与对象之间会彼此失去联系，这就是有人把IOC容器比喻成“粘合剂”的由来。<br>我们再来看看，控制反转(IOC)到底为什么要起这么个名字？我们来对比一下：</p>
+<ol>
+<li>软件系统在没有引入IOC容器之前，如图1所示，对象A依赖于对象B，那么对象A在初始化或者运行到某一点的时候，自己必须主动去创建对象B或者使用已经创建的对象B。无论是创建还是使用对象B，控制权都在自己手上。</li>
+<li>软件系统在引入IOC容器之后，这种情形就完全改变了，如图2所示，由于IOC容器的加入，对象A与对象B之间失去了直接联系，所以，当对象A运行到需要对象B的时候，IOC容器会主动创建一个对象B注入到对象A需要的地方。</li>
+</ol>
+<p>通过前后的对比，我们不难看出来：对象A获得依赖对象B的过程,由主动行为变为了被动行为，控制权颠倒过来了，这就是“控制反转”这个名称的由来。</p>
+<p>控制反转不只是软件工程的理论，在生活中我们也有用到这种思想。再举一个现实生活的例子：<br>海尔公司作为一个电器制商需要把自己的商品分销到全国各地，但是发现，不同的分销渠道有不同的玩法，于是派出了各种销售代表玩不同的玩法，随着渠道越来越多，发现，每增加一个渠道就要新增一批人和一个新的流程，严重耦合并依赖各渠道商的玩法。实在受不了了，于是制定业务标准，开发分销信息化系统，只有符合这个标准的渠道商才能成为海尔的分销商。让各个渠道商反过来依赖自己标准。反转了控制，倒置了依赖。</p>
+<p>我们把海尔和分销商当作软件对象，分销信息化系统当作IOC容器，可以发现，在没有IOC容器之前，分销商就像图1中的齿轮一样，增加一个齿轮就要增加多种依赖在其他齿轮上，势必导致系统越来越复杂。开发分销系统之后，所有分销商只依赖分销系统，就像图2显示那样，可以很方便的增加和删除齿轮上去。</p>
+<h2 id="u4EC0_u4E48_u662F_u4F9D_u8D56_u6CE8_u5165"><a href="#u4EC0_u4E48_u662F_u4F9D_u8D56_u6CE8_u5165" class="headerlink" title="什么是依赖注入"></a>什么是依赖注入</h2><p><strong>依赖注入</strong>就是将实例变量传入到一个对象中去(Dependency injection means giving an object its instance variables)。</p>
+<h3 id="u4EC0_u4E48_u662F_u4F9D_u8D56"><a href="#u4EC0_u4E48_u662F_u4F9D_u8D56" class="headerlink" title="什么是依赖"></a>什么是依赖</h3><p>如果在 Class A 中，有 Class B 的实例，则称 Class A 对 Class B 有一个依赖。例如下面类 Human 中用到一个 Father 对象，我们就说类 Human 对类 Father 有一个依赖。</p>
+<pre><code>public class Human {
+    ...
+    Father father;
+    ...
+    public Human() {
+        father = new Father();
+    }
+}
+</code></pre><p>仔细看这段代码我们会发现存在一些问题：</p>
+<ol>
+<li>如果现在要改变 father 生成方式，如需要用new Father(String name)初始化 father，需要修改 Human 代码；</li>
+<li>如果想测试不同 Father 对象对 Human 的影响很困难，因为 father 的初始化被写死在了 Human 的构造函数中；</li>
+<li>如果new Father()过程非常缓慢，单测时我们希望用已经初始化好的 father 对象 Mock 掉这个过程也很困难。</li>
+</ol>
+<h3 id="u4F9D_u8D56_u6CE8_u5165"><a href="#u4F9D_u8D56_u6CE8_u5165" class="headerlink" title="依赖注入"></a>依赖注入</h3><p>上面将依赖在构造函数中直接初始化是一种 Hard init 方式，弊端在于两个类不够独立，不方便测试。我们还有另外一种 Init 方式，如下：</p>
+<pre><code>public class Human {
+    ...
+    Father father;
+    ...
+    public Human(Father father) {
+        this.father = father;
+    }
+}
+</code></pre><p>上面代码中，我们将 father 对象作为构造函数的一个参数传入。在调用 Human 的构造方法之前外部就已经初始化好了 Father 对象。像这种非自己主动初始化依赖，而通过外部来传入依赖的方式，我们就称为依赖注入。<br>现在我们发现上面 1 中存在的两个问题都很好解决了，简单的说依赖注入主要有两个好处：</p>
+<ol>
+<li>解耦，将依赖之间解耦。</li>
+<li>因为已经解耦，所以方便做单元测试，尤其是 Mock 测试。</li>
+</ol>
+<h2 id="u63A7_u5236_u53CD_u8F6C_u548C_u4F9D_u8D56_u6CE8_u5165_u7684_u5173_u7CFB"><a href="#u63A7_u5236_u53CD_u8F6C_u548C_u4F9D_u8D56_u6CE8_u5165_u7684_u5173_u7CFB" class="headerlink" title="控制反转和依赖注入的关系"></a>控制反转和依赖注入的关系</h2><p>我们已经分别解释了控制反转和依赖注入的概念。有些人会把控制反转和依赖注入等同，但实际上它们有着本质上的不同。</p>
+<ul>
+<li><strong>控制反转</strong>是一种思想</li>
+<li><strong>依赖注入</strong>是一种设计模式</li>
+</ul>
+<p>IoC框架使用依赖注入作为实现控制反转的方式，但是控制反转还有其他的实现方式，例如说<a href="http://martinfowler.com/articles/injection.html#UsingAServiceLocator" target="_blank" rel="external">ServiceLocator</a>，所以不能将控制反转和依赖注入等同。</p>
+<h2 id="Spring_u4E2D_u7684_u4F9D_u8D56_u6CE8_u5165"><a href="#Spring_u4E2D_u7684_u4F9D_u8D56_u6CE8_u5165" class="headerlink" title="Spring中的依赖注入"></a>Spring中的依赖注入</h2><p>上面我们提到，依赖注入是实现控制反转的一种方式。下面我们结合Spring的IoC容器，简单描述一下这个过程。</p>
+<pre><code>class MovieLister...
+    private MovieFinder finder;
+    public void setFinder(MovieFinder finder) {
+        this.finder = finder;
+    }
+
+class ColonMovieFinder...
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+</code></pre><p>我们先定义两个类，可以看到都使用了依赖注入的方式，通过外部传入依赖，而不是自己创建依赖。那么问题来了，谁把依赖传给他们，也就是说谁负责创建<code>finder</code>，并且把<code>finder</code>传给<code>MovieLister</code>。答案是Spring的IoC容器。</p>
+<p>要使用IoC容器，首先要进行配置。这里我们使用xml的配置，也可以通过代码注解方式配置。下面是<code>spring.xml</code>的内容</p>
+<pre><code>&lt;beans&gt;
+    &lt;bean id=&quot;MovieLister&quot; class=&quot;spring.MovieLister&quot;&gt;
+        &lt;property name=&quot;finder&quot;&gt;
+            &lt;ref local=&quot;MovieFinder&quot;/&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;MovieFinder&quot; class=&quot;spring.ColonMovieFinder&quot;&gt;
+        &lt;property name=&quot;filename&quot;&gt;
+            &lt;value&gt;movies1.txt&lt;/value&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><p>在Spring中，每个bean代表一个对象的实例，默认是单例模式，即在程序的生命周期内，所有的对象都只有一个实例，进行重复使用。通过配置bean，IoC容器在启动的时候会根据配置生成bean实例。具体的配置语法参考Spring文档。这里只要知道IoC容器会根据配置创建<code>MovieFinder</code>，在运行的时候把<code>MovieFinder</code>赋值给<code>MovieLister</code>的<code>finder</code>属性，完成依赖注入的过程。</p>
+<p>下面给出测试代码</p>
+<pre><code>public void testWithSpring() throws Exception {
+    ApplicationContext ctx = new FileSystemXmlApplicationContext(&quot;spring.xml&quot;);//1
+    MovieLister lister = (MovieLister) ctx.getBean(&quot;MovieLister&quot;);//2
+    Movie[] movies = lister.moviesDirectedBy(&quot;Sergio Leone&quot;);
+    assertEquals(&quot;Once Upon a Time in the West&quot;, movies[0].getTitle());
+}
+</code></pre><ol>
+<li>根据配置生成<code>ApplicationContext</code>，即IoC容器。</li>
+<li>从容器中获取<code>MovieLister</code>的实例。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>控制反转是一种在软件工程中解耦合的思想，调用类只依赖接口，而不依赖具体的实现类，减少了耦合。控制权交给了容器，在运行的时候才由容器决定将具体的实现动态的“注入”到调用类的对象中。</li>
+<li>依赖注入是一种设计模式，可以作为控制反转的一种实现方式。依赖注入就是将实例变量传入到一个对象中去(Dependency injection means giving an object its instance variables)。</li>
+<li>通过IoC框架，类A依赖类B的强耦合关系可以在运行时通过容器建立，也就是说把创建B实例的工作移交给容器，类A只管使用就可以。</li>
+</ol>
+<p><em>参考文章</em><br><a href="http://coolshell.cn/articles/9949.html" target="_blank" rel="external">IoC/DIP其实是一种管理思想</a><br><a href="http://martinfowler.com/articles/injection.html" target="_blank" rel="external">Inversion of Control Containers and the Dependency Injection pattern</a><br><a href="https://github.com/android-cn/blog/tree/master/java/dependency-injectionrticles/9949.html" target="_blank" rel="external">依赖注入</a><br><a href="http://www.importnew.com/13619.html" target="_blank" rel="external">跟我一起学Spring 3(4)–深入理解IoC(控制反转)和DI(依赖注入)</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Spring框架，它的核心就是IoC容器。要掌握Spring框架，就必须要理解控制反转的思想以]]>
+    </summary>
+    
+      <category term="DI" scheme="http://blog.xiaohansong.com/tags/DI/"/>
+    
+      <category term="IoC" scheme="http://blog.xiaohansong.com/tags/IoC/"/>
+    
+      <category term="java" scheme="http://blog.xiaohansong.com/tags/java/"/>
+    
+      <category term="java" scheme="http://blog.xiaohansong.com/categories/java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Linux内存寻址之分页机制]]></title>
+    <link href="http://blog.xiaohansong.com/2015/10/05/Linux%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E4%B9%8B%E5%88%86%E9%A1%B5%E6%9C%BA%E5%88%B6/"/>
+    <id>http://blog.xiaohansong.com/2015/10/05/Linux内存寻址之分页机制/</id>
+    <published>2015-10-05T04:51:06.000Z</published>
+    <updated>2016-01-02T17:39:28.895Z</updated>
+    <content type="html"><![CDATA[<p>在上一篇文章<a href="http://blog.xiaohansong.com/2015/10/03/Linux%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E4%B9%8B%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6/">Linux内存寻址之分段机制</a>中，我们了解逻辑地址通过分段机制转换为线性地址的过程。下面，我们就来看看更加重要和复杂的分页机制。</p>
+<p>分页机制在段机制之后进行，以完成线性—物理地址的转换过程。段机制把逻辑地址转换为线性地址，分页机制进一步把该线性地址再转换为物理地址。</p>
+<h2 id="u786C_u4EF6_u4E2D_u7684_u5206_u9875"><a href="#u786C_u4EF6_u4E2D_u7684_u5206_u9875" class="headerlink" title="硬件中的分页"></a>硬件中的分页</h2><p>分页机制由CR0中的PG位启用。如PG=1，启用分页机制，并使用本节要描述的机制，把线性地址转换为物理地址。如PG=0，禁用分页机制，直接把段机制产生的线性地址当作物理地址使用。分页机制管理的对象是固定大小的存储块，称之为页(page)。分页机制把整个线性地址空间及整个物理地址空间都看成由页组成，在线性地址空间中的任何一页，可以映射为物理地址空间中的任何一页（我们把物理空间中的一页叫做一个页面或页框(page frame)）<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image002.gif" alt=""><br>80386使用4K字节大小的页。每一页都有4K字节长，并在4K字节的边界上对齐，即每一页的起始地址都能被4K整除。因此，80386把4G字节的线性地址空间，划分为1G个页面，每页有4K字节大小。分页机制通过把线性地址空间中的页，重新定位到物理地址空间来进行管理，因为每个页面的整个4K字节作为一个单位进行映射，并且每个页面都对齐4K字节的边界，因此，线性地址的低12位经过分页机制直接地作为物理地址的低12位使用。</p>
+<h3 id="u4E3A_u4EC0_u4E48_u4F7F_u7528_u4E24_u7EA7_u9875_u8868"><a href="#u4E3A_u4EC0_u4E48_u4F7F_u7528_u4E24_u7EA7_u9875_u8868" class="headerlink" title="为什么使用两级页表"></a>为什么使用两级页表</h3><p>假设每个进程都占用了4G的线性地址空间，页表共含1M个表项，每个表项占4个字节，那么每个进程的页表要占据4M的内存空间。为了节省页表占用的空间，我们使用两级页表。每个进程都会被分配一个页目录，但是只有被实际使用页表才会被分配到内存里面。一级页表需要一次分配所有页表空间，两级页表则可以在需要的时候再分配页表空间。</p>
+<h3 id="u4E24_u7EA7_u9875_u8868_u7ED3_u6784"><a href="#u4E24_u7EA7_u9875_u8868_u7ED3_u6784" class="headerlink" title="两级页表结构"></a>两级页表结构</h3><p>两级表结构的第一级称为页目录，存储在一个4K字节的页面中。页目录表共有1K个表项，每个表项为4个字节，并指向第二级表。线性地址的最高10位(即位31~位32)用来产生第一级的索引，由索引得到的表项中，指定并选择了1K个二级表中的一个表。<br>两级表结构的第二级称为页表，也刚好存储在一个4K字节的页面中，包含1K个字节的表项，每个表项包含一个页的物理基地址。第二级页表由线性地址的中间10位(即位21~位12)进行索引，以获得包含页的物理地址的页表项，这个物理地址的高20位与线性地址的低12位形成了最后的物理地址，也就是页转化过程输出的物理地址。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image003.gif" alt="两级页表结构"></p>
+<h3 id="u9875_u76EE_u5F55_u9879"><a href="#u9875_u76EE_u5F55_u9879" class="headerlink" title="页目录项"></a>页目录项</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image004.gif" alt="页目录项结构"></p>
+<ul>
+<li>第31~12位是20位页表地址，由于页表地址的低12位总为0，所以用高20位指出32位页表地址就可以了。因此，一个页目录最多包含1024个页表地址。</li>
+<li>第0位是存在位，如果P=1，表示页表地址指向的该页在内存中，如果P=0，表示不在内存中。</li>
+<li>第1位是读/写位，第2位是用户/管理员位，这两位为页目录项提供硬件保护。当特权级为3的进程要想访问页面时，需要通过页保护检查，而特权级为0的进程就可以绕过页保护。</li>
+<li>第3位是PWT（Page Write-Through）位，表示是否采用写透方式，写透方式就是既写内存（RAM）也写高速缓存,该位为1表示采用写透方式</li>
+<li>第4位是PCD（Page Cache Disable）位，表示是否启用高速缓存,该位为1表示启用高速缓存。</li>
+<li>第5位是访问位，当对页目录项进行访问时，A位=1。</li>
+<li>第7位是Page Size标志，只适用于页目录项。如果置为1，页目录项指的是4MB的页面，请看后面的扩展分页。</li>
+<li>第9~11位由操作系统专用，Linux也没有做特殊之用。</li>
+</ul>
+<h3 id="u9875_u9762_u9879"><a href="#u9875_u9762_u9879" class="headerlink" title="页面项"></a>页面项</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image008.gif" alt="页面项结构"><br>80386的每个页目录项指向一个页表，页表最多含有1024个页面项，每项4个字节，包含页面的起始地址和有关该页面的信息。页面的起始地址也是4K的整数倍，所以页面的低12位也留作它用。<br>第31~12位是20位物理页面地址，除第6位外第0～5位及9~11位的用途和页目录项一样，第6位是页面项独有的，当对涉及的页面进行写操作时，D位被置1。<br>4GB的内存只有一个页目录，它最多有1024个页目录项，每个页目录项又含有1024个页面项，因此，内存一共可以分成1024×1024=1M个页面。由于每个页面为4K个字节，所以，存储器的大小正好最多为4GB。</p>
+<h3 id="u7EBF_u6027_u5730_u5740_u5230_u7269_u7406_u5730_u5740_u7684_u8F6C_u6362"><a href="#u7EBF_u6027_u5730_u5740_u5230_u7269_u7406_u5730_u5740_u7684_u8F6C_u6362" class="headerlink" title="线性地址到物理地址的转换"></a>线性地址到物理地址的转换</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image010.gif" alt="32位线性地址到物理地址的转换"></p>
+<ol>
+<li>CR3包含着页目录的起始地址，用32位线性地址的最高10位A31~A22作为页目录的页目录项的索引，将它乘以4，与CR3中的页目录的起始地址相加，形成相应页表的地址。</li>
+<li>从指定的地址中取出32位页目录项，它的低12位为0，这32位是页表的起始地址。用32位线性地址中的A21~A12位作为页表中的页面的索引，将它乘以4，与页表的起始地址相加，形成32位页面地址。</li>
+<li>将A11~A0作为相对于页面地址的偏移量，与32位页面地址相加，形成32位物理地址。</li>
+</ol>
+<h3 id="u6269_u5C55_u5206_u9875"><a href="#u6269_u5C55_u5206_u9875" class="headerlink" title="扩展分页"></a>扩展分页</h3><p>从奔腾处理器开始,Intel微处理器引进了扩展分页,它允许页的大小为4MB。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image012.gif" alt="扩展分页"><br>在扩展分页的情况下,分页机制把32位线性地址分成两个域：最高10位的目录域和其余22位的偏移量。</p>
+<h3 id="u9875_u9762_u9AD8_u901F_u7F13_u5B58"><a href="#u9875_u9762_u9AD8_u901F_u7F13_u5B58" class="headerlink" title="页面高速缓存"></a>页面高速缓存</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/image013.gif" alt="页面高速缓存"><br>由于在分页情况下，每次存储器访问都要存取两级页表，这就大大降低了访问速度。所以，为了提高速度，在386中设置一个最近存取页面的高速缓存硬件机制，它自动保持32项处理器最近使用的页面地址，因此，可以覆盖128K字节的存储器地址。当进行存储器访问时，先检查要访问的页面是否在高速缓存中，如果在，就不必经过两级访问了，如果不在，再进行两级访问。平均来说，页面高速缓存大约有98%的命中率，也就是说每次访问存储器时，只有2%的情况必须访问两级分页机构。这就大大加快了速度。</p>
+<h2 id="Linux_u4E2D_u7684_u5206_u9875_u673A_u5236"><a href="#Linux_u4E2D_u7684_u5206_u9875_u673A_u5236" class="headerlink" title="Linux中的分页机制"></a>Linux中的分页机制</h2><p>Linux使用了一个适合32位和64位系统的分页机制。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/four-level.png" alt="Linux分页模型"></p>
+<ul>
+<li>页全局目录</li>
+<li>页顶级目录</li>
+<li>页中间目录</li>
+<li>页表</li>
+</ul>
+<p>页全局目录包含若干页上级目录的地址，页上级目录又依次包含若干页中间目录的地址，而页中间目录又包含若干页表的地址。每一个页表项指向一个页框。线性地址因此被分成五个部分。图中没有显示位数，因为每一部分的大小与具体的计算机体系结构有关。</p>
+<p>对于没有启用物理地址扩展的32位系统，两级页表已经足够了。从本质上说Linux通过使“页上级目录”位和“页中间目录”位全为0，彻底取消了页上级目录和页中间目录字段。不过，页上级目录和页中间目录在指针序列中的位置被保留，以便同样的代码在32位系统和64位系统下都能使用。内核为页上级目录和页中间目录保留了一个位置，这是通过把它们的页目录项数设置为1，并把这两个目录项映射到页全局目录的一个合适的目录项而实现的。</p>
+<p>启用了物理地址扩展的32 位系统使用了三级页表。Linux的页全局目录对应80×86 的页目录指针表（PDPT），取消了页上级目录，页中间目录对应80×86的页目录，Linux的页表对应80×86的页表。</p>
+<p>最后，64位系统使用三级还是四级分页取决于硬件对线性地址的位的划分。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这里我们不讨论代码实现，只关注原理。从上面的讨论可以看到分页机制主要依赖硬件的实现。Linux采用的四级页表只是为了最大化兼容不同的硬件实现，单就IA32架构的CPU来说，就有多种分页实现，常规分页机制，PAE机制等。</p>
+<p>我们虽然讨论的是Linux的分页机制，实际上我们用了大部分篇幅来讨论Intel CPU的分页机制实现。因为Linux的分页机制是建立在硬件基础之上的，不同的平台需要有不同的实现。Linux在软件层面构造的虚拟地址，最终还是要通过MMU转换为物理地址，也就是说，不管Linux的分页机制是怎样实现的，CPU只按照它的分页实现来解读线性地址，所以Linux传给CPU的线性地址必然是满足硬件实现的。例如说：Linux在32位CPU上，它的四级页表结构就会兼容到硬件的两级页表结构。可见，Linux在软件层面上做了一层抽象，用四级页表的方式兼容32位和64位CPU内存寻址的不同硬件实现。</p>
+<p>最后分享两篇linux内存寻址的实验文档，结合实例更容易理解。<br><a href="http://ilinuxkernel.com/?p=1276" target="_blank" rel="external">Linux内存地址映射</a><br><a href="http://ilinuxkernel.com/?p=1303" target="_blank" rel="external">Linux内核在x86_64 CPU中地址映射</a></p>
+<p><em>参考资料</em><br>《深入理解Linux内核》<br>《深入分析Linux内核源码》</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在上一篇文章<a href="http://blog.xiaohansong.com/2015/10/03/Linux%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E4%B9%8B%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88]]>
+    </summary>
+    
+      <category term="Linux" scheme="http://blog.xiaohansong.com/tags/Linux/"/>
+    
+      <category term="Linux内核" scheme="http://blog.xiaohansong.com/categories/Linux%E5%86%85%E6%A0%B8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Linux内存寻址之分段机制]]></title>
+    <link href="http://blog.xiaohansong.com/2015/10/03/Linux%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E4%B9%8B%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6/"/>
+    <id>http://blog.xiaohansong.com/2015/10/03/Linux内存寻址之分段机制/</id>
+    <published>2015-10-03T05:56:31.000Z</published>
+    <updated>2016-01-02T17:39:28.894Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Linux内核，读到《深入理解Linux内核》的内存寻址一章。原本以为自己对分段分页机制已经理解了，结果发现其实是一知半解。于是，查找了很多资料，最终理顺了内存寻址的知识。现在把我的理解记录下来，希望对内核学习者有一定帮助，也希望大家指出错误之处。</p>
+<h2 id="u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B"><a href="#u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B" class="headerlink" title="分段到底是怎么回事"></a>分段到底是怎么回事</h2><p>相信学过操作系统课程的人都知道分段分页，但是奇怪的是书上基本没提分段分页是怎么产生的，这就导致我们知其然不知其所以然。下面我们先扒一下分段机制产生的历史。</p>
+<h3 id="u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="实模式的诞生（16位处理器及寻址）"></a>实模式的诞生（16位处理器及寻址）</h3><p>在8086处理器诞生之前，内存寻址方式就是直接访问物理地址。8086处理器为了寻址1M的内存空间，把地址总线扩展到了20位。但是，一个尴尬的问题出现了，ALU的宽度只有16位，也就是说，ALU不能计算20位的地址。为了解决这个问题，分段机制被引入，登上了历史舞台。<br>为了支持分段，8086处理器设置了四个段寄存器：CS, DS, SS, ES.每个段寄存器都是16位的，同时访问内存的指令中的地址也是16位的。但是，在送入地址总线之前，CPU先把它与某个段寄存器内的值相加。这里要注意：段寄存器的值对应于20位地址总线的中的高16位，所以相加时实际上是内存总线中的高12位与段寄存器中的16位相加，而低4位保留不变，这样就形成一个20位的实际地址，也就实现了从16位内存地址到20位实际地址的转换，或者叫“映射”。</p>
+<h3 id="u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="保护模式的诞生（32位处理器及寻址）"></a>保护模式的诞生（32位处理器及寻址）</h3><ul>
+<li>80286处理器的地址总线为24位，寻址空间达16M，同时引入了保护模式（内存段的访问受到限制）</li>
+<li>80386处理器是一个32位处理器，ALU和地址总线都是32位的，寻址空间达 4G。也就是说它可以不通过分段机制，直接访问4G的内存空间。虽然它是新时代的小王子，超越它的无数前辈，然而，它需要背负家族的使命–兼容前代的处理器。也就是说，它必须支持实模式和保护模式。所以，80386在段寄存器的基础上构筑保护模式，并且保留16位的段寄存器。</li>
+<li>从80386之后的处理器，架构基本相似，统称为IA32（32 Bit Intel Architecture）。</li>
+</ul>
+<h2 id="IA32_u7684_u5185_u5B58_u5BFB_u5740_u673A_u5236"><a href="#IA32_u7684_u5185_u5B58_u5BFB_u5740_u673A_u5236" class="headerlink" title="IA32的内存寻址机制"></a>IA32的内存寻址机制</h2><h3 id="u5BFB_u5740_u786C_u4EF6"><a href="#u5BFB_u5740_u786C_u4EF6" class="headerlink" title="寻址硬件"></a>寻址硬件</h3><p>在 8086 的实模式下，把某一段寄存器左移4位，然后与地址ADDR相加后被直接送到内存总线上，这个相加后的地址就是内存单元的物理地址，而程序中的这个地址就叫逻辑地址（或叫虚地址）。在IA32的保护模式下，这个逻辑地址不是被直接送到内存总线而是被送到内存管理单元（MMU）。MMU由一个或一组芯片组成，其功能是把逻辑地址映射为物理地址，即进行地址转换，如图所示。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/mmu.png" alt="MMU"></p>
+<h3 id="IA32_u7684_u4E09_u79CD_u5730_u5740"><a href="#IA32_u7684_u4E09_u79CD_u5730_u5740" class="headerlink" title="IA32的三种地址"></a>IA32的三种地址</h3><ul>
+<li>逻辑地址:<br>  机器语言指令仍用这种地址指定一个操作数的地址或一条指令的地址。 这种寻址方式在Intel的分段结构中表现得尤为具体，它使得MS-DOS或Windows程序员把程序分为若干段。每个逻辑地址都由一个段和偏移量组成。</li>
+<li>线性地址：<br>  线性地址是一个32位的无符号整数，可以表达高达232（4GB）的地址。通常用16进制表示线性地址，其取值范围为0x00000000～0xffffffff。</li>
+<li>物理地址：<br>  也就是内存单元的实际地址，用于芯片级内存单元寻址。 物理地址也由32位无符号整数表示。</li>
+</ul>
+<h3 id="MMU_u5730_u5740_u8F6C_u5316_u8FC7_u7A0B"><a href="#MMU_u5730_u5740_u8F6C_u5316_u8FC7_u7A0B" class="headerlink" title="MMU地址转化过程"></a>MMU地址转化过程</h3><p>MMU是一种硬件电路，它包含两个部件，一个是分段部件，一个是分页部件，在此，我们把它们分别叫做分段机制和分页机制，以利于从逻辑的角度来理解硬件的实现机制。分段机制把一个逻辑地址转换为线性地址；接着，分页机制把一个线性地址转换为物理地址。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/mmu_translate.png" alt="MMU_translate"></p>
+<h3 id="IA32_u7684_u6BB5_u5BC4_u5B58_u5668"><a href="#IA32_u7684_u6BB5_u5BC4_u5B58_u5668" class="headerlink" title="IA32的段寄存器"></a>IA32的段寄存器</h3><p>IA32中有六个16位段寄存器：CS, DS, SS, ES，FS, GS.跟8086的段寄存器不同的是，这些寄存器存放的不再是某个段的基地址，而是某个段的选择符（Selector）。</p>
+<h2 id="u5206_u6BB5_u673A_u5236_u7684_u5B9E_u73B0"><a href="#u5206_u6BB5_u673A_u5236_u7684_u5B9E_u73B0" class="headerlink" title="分段机制的实现"></a>分段机制的实现</h2><p>段是虚拟地址空间的基本单位，分段机制必须把虚拟地址空间的一个地址转换为线性地址空间的一个线性地址。</p>
+<p>为了实现这种映射，仅仅用段寄存器来确定一个基地址是不够的，至少还得描述段的长度，并且还需要段的一些其他信息，比如访问权之类。所以，这里需要的是一个数据结构，这个结构包括三个方面的内容：</p>
+<ol>
+<li>段的基地址(Base Address)：在线性地址空间中段的起始地址。</li>
+<li>段的界限(Limit)：在虚拟地址空间中，段内可以使用的最大偏移量。</li>
+<li>段的保护属性(Attribute)：表示段的特性。例如，该段是否可被读出或写入，或者该段是否作为一个程序来执行，以及段的特权级等等。</li>
+</ol>
+<p>上面的数据结构我们称为<strong>段描述符</strong>，多个段描述符组成的表称为<strong>段描述符表</strong></p>
+<h3 id="u6BB5_u63CF_u8FF0_u7B26"><a href="#u6BB5_u63CF_u8FF0_u7B26" class="headerlink" title="段描述符"></a>段描述符</h3><p>所谓描述符(Descriptor)，就是描述段的属性的一个8字节存储单元。在实模式下，段的属性不外乎是代码段、堆栈段、数据段、段的起始地址、段的长度等等，而在保护模式下则复杂一些。IA32将它们结合在一起用一个8字节的数表示，称为描述符 。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/segment_descriptor.png" alt="IA32的一个通用的段描述符的结构"><br>从图可以看出，一个段描述符指出了段的32位基地址和20位段界限(即段长)。这里我们只关注基地址和段界限，其他的属性略过。</p>
+<h3 id="u6BB5_u63CF_u8FF0_u7B26_u8868"><a href="#u6BB5_u63CF_u8FF0_u7B26_u8868" class="headerlink" title="段描述符表"></a>段描述符表</h3><p>各种各样的用户描述符和系统描述符，都放在对应的全局描述符表、局部描述符表和中断描述符表中。描述符表(即段表)定义了IA32系统的所有段的情况。所有的描述符表本身都占据一个字节为8的倍数的存储器空间，空间大小在8个字节(至少含一个描述符)到64K字节(至多含8K)个描述符之间。</p>
+<ol>
+<li>全局描述符表(GDT)<br> 全局描述符表GDT(Global Descriptor Table)，除了任务门，中断门和陷阱门描述符外，包含着系统中所有任务都共用的那些段的描述符。 它的第一个8字节位置没有使用。</li>
+<li>中断描述符表IDT(Interrupt Descriptor Table)<br> 中断描述符表IDT(Interrupt Descriptor Table)，包含256个门描述符。IDT中只能包含任务门、中断门和陷阱门描述符，虽然IDT表最长也可以为64K字节，但只能存取2K字节以内的描述符，即256个描述符，这个数字是为了和8086保持兼容。</li>
+<li>局部描述符表(LDT)<br> 局部描述符表LDT(local Descriptor Table)，包含了与一个给定任务有关的描述符，每个任务各自有一个的LDT。 有了LDT，就可以使给定任务的代码、 数据与别的任务相隔离。每一个任务的局部描述符表LDT本身也用一个描述符来表示，称为LDT描述符，它包含了有关局部描述符表的信息，被放在全局描述符表GDT中。</li>
+</ol>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>IA32的内存寻址机制完成从逻辑地址–线性地址–物理地址的转换。其中，逻辑地址的段寄存器中的值提供段描述符，然后从段描述符中得到段基址和段界限，然后加上逻辑地址的偏移量，就得到了线性地址，线性地址通过分页机制得到物理地址。<br>首先，我们要明确，分段机制是IA32提供的寻址方式，这是硬件层面的。就是说，不管你是windows还是linux，只要使用IA32的CPU访问内存，都要经过MMU的转换流程才能得到物理地址，也就是说必须经过逻辑地址–线性地址–物理地址的转换。</p>
+<h2 id="Linux_u4E2D_u5206_u6BB5_u7684_u5B9E_u73B0"><a href="#Linux_u4E2D_u5206_u6BB5_u7684_u5B9E_u73B0" class="headerlink" title="Linux中分段的实现"></a>Linux中分段的实现</h2><p>前面说了那么多关于分段机制的实现，其实，对于Linux来说，并没有什么卵用。因为，Linux基本不使用分段的机制，或者说，Linux中的分段机制只是为了兼容IA32的硬件而设计的。</p>
+<p>Intel微处理器的段机制是从8086开始提出的， 那时引入的段机制解决了从CPU内部16位地址到20位实地址的转换。为了保持这种兼容性，386仍然使用段机制，但比以前复杂得多。因此，Linux内核的设计并没有全部采用Intel所提供的段方案，仅仅有限度地使用了一下分段机制。这不仅简化了Linux内核的设计，而且为把Linux移植到其他平台创造了条件，因为很多RISC处理器并不支持段机制。但是，对段机制相关知识的了解是进入Linux内核的必经之路。</p>
+<p>从2.2版开始，Linux让所有的进程（或叫任务）都使用相同的逻辑地址空间，因此就没有必要使用局部描述符表LDT。但内核中也用到LDT，那只是在VM86模式中运行Wine，因为就是说在Linux上模拟运行Winodws软件或DOS软件的程序时才使用。</p>
+<p>在 IA32 上任意给出的地址都是一个虚拟地址，即任意一个地址都是通过“选择符:偏移量”的方式给出的，这是段机制存访问模式的基本特点。所以在IA32上设计操作系统时无法回避使用段机制。一个虚拟地址最终会通过“段基地址＋偏移量”的方式转化为一个线性地址。 但是，由于绝大多数硬件平台都不支持段机制，只支持分页机制，所以为了让 Linux 具有更好的可移植性，我们需要去掉段机制而只使用分页机制。但不幸的是，IA32规定段机制是不可禁止的，因此不可能绕过它直接给出线性地址空间的地址。万般无奈之下，Linux的设计人员干脆让段的基地址为0，而段的界限为4GB，这时任意给出一个偏移量，则等式为“0+偏移量=线性地址”，也就是说“偏移量＝线性地址”。另外由于段机制规定“偏移量&lt;4GB”，所以偏移量的范围为0H～FFFFFFFFH，这恰好是线性地址空间范围，也就是说虚拟地址直接映射到了线性地址，我们以后所提到的虚拟地址和线性地址指的也就是同一地址。看来，Linux在没有回避段机制的情况下巧妙地把段机制给绕过去了。</p>
+<p>另外，由于IA32段机制还规定，必须为代码段和数据段创建不同的段，所以Linux必须为代码段和数据段分别创建一个基地址为0，段界限为4GB的段描述符。不仅如此，由于Linux内核运行在特权级0，而用户程序运行在特权级别3，根据IA32段保护机制规定，特权级3的程序是无法访问特权级为0的段的，所以Linux必须为内核用户程序分别创建其代码段和数据段。这就意味着Linux必须创建4个段描述符——特权级0的代码段和数据段，特权级3的代码段和数据段。</p>
+<h2 id="u603B_u7ED3-1"><a href="#u603B_u7ED3-1" class="headerlink" title="总结"></a>总结</h2><p>分段机制是IA32架构CPU的特色，并不是操作系统寻址方式的必然选择。Linux为了跨平台，巧妙的绕开段机制，主要使用分页机制来寻址。</p>
+<p><em>参考资料</em><br>《深入分析Linux内核源码》</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Linux内核，读到《深入理解Linux内核》的内存寻址一章。原本以为自己对分段分页机制已经理]]>
+    </summary>
+    
+      <category term="Linux" scheme="http://blog.xiaohansong.com/tags/Linux/"/>
+    
+      <category term="Linux内核" scheme="http://blog.xiaohansong.com/categories/Linux%E5%86%85%E6%A0%B8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[ucore实验之操作系统启动流程]]></title>
+    <link href="http://blog.xiaohansong.com/2015/10/02/ucore%E5%AE%9E%E9%AA%8C%E4%B9%8B%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
+    <id>http://blog.xiaohansong.com/2015/10/02/ucore实验之操作系统启动流程/</id>
+    <published>2015-10-02T08:02:05.000Z</published>
+    <updated>2016-01-02T17:39:28.899Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文基于 ucore 操作系统实验,简要分析操作系统的启动流程.</p>
+<p>ucore 操作系统是清华大学用于操作系统教学实验的OS，参考了 MIT 的 JOS，哈佛的 OS161 以及 Linux 系统。我们可以通过这个迷你操作系统在代码层面上理解操作系统的思想。</p>
+<blockquote>
+<p><a href="https://github.com/chyyuu/ucore_os_lab" target="_blank" rel="external">ucore labs</a> was used as OS Experiments in OS Course Of Dept. of Computer Science &amp; Technology, Tsinghua University. ucore is a teaching OS which is derived from xv6&amp;jos in MIT, OS161 in Harvard and Linux.</p>
+</blockquote>
+<h2 id="u7269_u7406_u5185_u5B58_u7684_u5206_u5E03"><a href="#u7269_u7406_u5185_u5B58_u7684_u5206_u5E03" class="headerlink" title="物理内存的分布"></a>物理内存的分布</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/pc_memory.png" alt="PC默认物理内存分布"></p>
+<p>早期的 PC 是基于 16 位的 Intel 8088 的处理器的,因此只支持 1MB 的物理内存。早期的 PC 的物理内存是从 0x00000000 到 0x000FFFFF,而不是结束于 0xFFFFFFFF。</p>
+<p>如图 3-1 所示,物理内存的前 640KB 被标记为了“LowMemory”,这一块内存区域是早期 PC 唯一可以使用的 RAM。事实上,非常早期的 PC 仅仅只能使用 16KB、 32KB 或者 64KB 的 RAM。<br>从 0x000A0000 到 0x000FFFFF 的 384kB的区域是被硬件保留着用于特殊通途的,比如<br>像作为 VGA 的显示输出的缓存或者是被当作保存系统固化指令的非易失性存储器。这一部分内存区域中最重要的应该是保存在 0x000F0000 到 0x00100000 处占据 64KB 的基本输入输出系统(BIOS)。在早期的 PC 中,BIOS 是被存储在真正的只读存储器(ROM)中,但然而如今的 PC 将 BIOS 存储在可以更新的闪存中。</p>
+<p>BIOS 的作用是对系统进行初始化,比如像激活显卡、检查内存的总量。在进行完这些初始化后,BIOS 便将操作系统位置装载到内存,这些位置可以是软盘、硬盘、CD-ROM 或者是网络,在这之后,BIOS 便会将控制权交给操作系统。</p>
+<p>当出现 80286 和 80386 处理器后,Intel 处理器终于打破了仅能访问 1MB 内存空间的限制,这两种处理器分别支持寻址 16MB 和 4GB 的内存空间。尽管如此,PC 架构还是保留了之前的物理内存低 1MB 空间的布局方式,这样做是为了保证和之前存在的软件相兼容,因此最新的 PC 会保留物理内存从 0x000A0000 到 0x00100000 的区域,这样便将系统可以使用的 RAM 分成了两个部分,一部分是低 640KB 的“LowMemory”,另一部分便是 1MB 以上部分的“扩展内存”。另外,32位物理地址空间的最高部分往往被 BIOS 保留供 32 位的 PCI 外设所使用。</p>
+<p>如今的 x86 处理器能够支持多于 4GB 的物理内存，于是 RAM 的范围能够扩展到超过<br>0xFFFFFFFF。在这种情况下,BIOS 需要保留 32 位物理地址空间的最高部分,这是为了将<br>这个区域留给 32 位外设去匹配内存。在这里,由于设计的局限,ucore 操作系统仅仅会使用 PC 物理内存的前 256MB,所以我们只需考虑 PC 只支持 32 位物理地址空间。</p>
+<h2 id="BIOS"><a href="#BIOS" class="headerlink" title="BIOS"></a>BIOS</h2><p>在 PC 启动的时候,首先会在实模式下运行 BIOS。</p>
+<blockquote>
+<p>BIOS是英文”Basic Input Output System”的缩略词，直译过来后中文名称就是”基本输入输出系统”。其实，它是一组固化到计算机内主板上一个ROM芯片上的程序，它保存着计算机最重要的基本输入输出的程序、开机后自检程序和系统自启动程序，它可从CMOS中读写系统设置的具体信息。 其主要功能是为计算机提供最底层的、最直接的硬件设置和控制。</p>
+</blockquote>
+<p>在系统刚启动时,BIOS会被加载到物理内存中 0x000F0000 到 0x00100000  的位置处,CS 设置为 0xF000 ,将 IP 设置为 0xFFF0,物理地址为 0x000FFFF0,这样就保证了 BIOS 会在刚启动的时候得到控制权。BIOS 完成自检之后,就会把控制器交给 Boot Loader。</p>
+<h2 id="Boot_Loader"><a href="#Boot_Loader" class="headerlink" title="Boot Loader"></a>Boot Loader</h2><p>我们已经知道 BIOS 在完成它的一系列初始化后便把控制权交给 Boot Loader 程序,Boot Loader 程序会在编译成可执行代码后被放在模拟硬盘的第一个扇区。</p>
+<p>硬盘由于传统的原因被默认分割成了一个个大小为 512 字节的扇区,而扇区则是硬盘最小的读写单位,即每次对硬盘的读写操作只能够对一个或者多个扇区进行并且操作地址必须是 512 字节对齐的。</p>
+<p>如果说操作系统是从磁盘启动的话,则磁盘的第一个扇区就被称作“启动扇区”,因为 Boot Loader 的可执行程序就存放在这个扇区。ucore 实验中,当 BIOS 找到启动的磁盘后,便将 512 字节的启动扇区的内容装载到物理内存的 0x7c00 到 0x7dff 的位置,紧接着再执行一个跳转指令将 CS 设置为 0x0000 ,IP设置为 0x7c00 ,这样便将控制权交给 Boot Loader 程序.</p>
+<p>在 ucore 实验中,Boot Loader 由<code>bootasm.S</code>和<code>bootmain.c</code>编译而成.</p>
+<ul>
+<li><code>bootasm.S</code><br>  负责把处理器从实模式切换到保护模式(关于保护模式的相关知识请自行谷歌).然后调用<code>bootmain</code>函数.</li>
+<li><code>bootmain.c</code><br>  把内核的可执行代码从硬盘中读取到内存中.这里的可执行代码指的是 ELF 文件.在 ucore 实验中,它从硬盘的第二个扇区开始存储,因为第一个扇区存的是 boot loader。</li>
+</ul>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/computer_open_flow.png" alt="计算机启动流程"></p>
+<p>以上是计算机启动的一般流程,ucore 实验中的 boot loader 是比较简单的,不需要考虑硬盘分区等问题.但是我们从它的启动流程抽象出了一个本质的过程:操作系统的启动关键在于找到它的第一行可执行代码,至于是用什么方式,要视情况而定.</p>
+<p><em>参考资料</em><br><a href="http://grid.hust.edu.cn/zyshao/OSEngineering.htm" target="_blank" rel="external">华中科技大学32位操作系统实践</a><br><a href="https://github.com/chyyuu/ucore_os_lab" target="_blank" rel="external">ucore_lab</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文基于 ucore 操作系统实验,简要分析操作系统的启动流程.</p>
+<p>ucore 操作系统是清]]>
+    </summary>
+    
+      <category term="ucore" scheme="http://blog.xiaohansong.com/tags/ucore/"/>
+    
+      <category term="操作系统" scheme="http://blog.xiaohansong.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="ucore" scheme="http://blog.xiaohansong.com/categories/ucore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Linux源代码分析工具链]]></title>
+    <link href="http://blog.xiaohansong.com/2015/08/24/Linux%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E9%93%BE/"/>
+    <id>http://blog.xiaohansong.com/2015/08/24/Linux源码分析工具链/</id>
+    <published>2015-08-24T02:02:11.000Z</published>
+    <updated>2016-01-02T17:39:28.896Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>看源代码是一个程序员必须经历的事情,也是可以提升能力的一个捷径.个人认为: <strong>要完全掌握一个软件的方法只有阅读源码</strong><br>在Windows下有sourceinsight这个源码阅读软件(虽然我没用过,但是网上评价还不错),由于我是个Linuxer,并不喜欢用Windows,所以自然是选择在Linux下阅读源码的工具了.<br>下面我将逐一介绍在Linux下阅读源码的工具.</p>
+<h2 id="vim+ctags+cscope"><a href="#vim+ctags+cscope" class="headerlink" title="vim+ctags+cscope"></a>vim+ctags+cscope</h2><p>源码阅读三剑客.vim配合ctags和cscope,足以在源代码里面自由翱翔,在函数和变量间自由跳转.</p>
+<h3 id="u5B89_u88C5"><a href="#u5B89_u88C5" class="headerlink" title="安装"></a>安装</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> install <span class="keyword">vim</span> ctags <span class="keyword">cscope</span></span><br></pre></td></tr></table></figure>
+<h3 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h3><h4 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h4><p>vim的使用就略过了,网上资料很多,不是一篇文章能说完的,未来我可能会写一篇vim的使用心得<br>推荐一篇<a href="http://coolshell.cn/articles/5426.html" target="_blank" rel="external">简明 Vim 练级攻略</a>,看完就差不多会用了.</p>
+<h4 id="ctags"><a href="#ctags" class="headerlink" title="ctags"></a>ctags</h4><p>ctags的使用很简单,vim已经内置了对ctags的支持<br>首先在源代码根目录执行<code>ctags -R</code>,递归的为源码建立tags,在根目录会生成一个Tags的文件,存放各种函数和变量的tag,便于跳转</p>
+<ul>
+<li>使光标在函数或变量上,<code>Ctrl + ]</code>即可跳转到其定义处</li>
+<li><code>Ctrl + t</code>可以回到你跳转之前的位置</li>
+</ul>
+<p>对于简单的代码,ctags就够用了,但是对于比较复杂的代码来说,ctags显得有点力不从心,于是,下一位剑客就登场了.</p>
+<h4 id="cscope"><a href="#cscope" class="headerlink" title="cscope"></a>cscope</h4><p>vim同样内置了对cscope的支持.<br>首先在源代码根目录执行<code>cscope -Rbq</code>,就会生成cscope.out文件(索引数据库)</p>
+<ul>
+<li>-R: 在生成索引文件时，搜索子目录树中的代码</li>
+<li>-b: 只生成索引文件，不进入cscope的界面</li>
+<li>-q: 生成cscope.in.out和cscope.po.out文件，加快cscope的索引速度</li>
+</ul>
+<p>然后在vim中执行<code>:cs add cscope.out</code>,添加数据库.<br>接下来就可以使用<code>:cs find x var</code>进行查找.(x代表查询选项,var表示要查找的函数或变量名)<br>cscope支持8种查询方式</p>
+<ul>
+<li>s: 查找C语言符号，即查找函数名、宏、枚举值等出现的地方</li>
+<li>g: 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能</li>
+<li>d: 查找本函数调用的函数</li>
+<li>c: 查找调用本函数的函数</li>
+<li>t: 查找指定的字符串</li>
+<li>e: 查找egrep模式，相当于egrep功能，但查找速度快多了</li>
+<li>f: 查找并打开文件，类似vim的find功能</li>
+<li>i: 查找包含本文件的文件</li>
+</ul>
+<p>例如，我们想在vim 7.0的源代码中查找调用do_cscope()函数的函数，我们可以输入：”:cs find c do_cscope“，回车后发现没有找到匹配的功能，可能并没有函数调用do_cscope()。我们再输入”:cs find s do_cscope“，查找这个C符号出现的位置，现在vim列出了这个符号出现的所有位置。</p>
+<p>每次都有输入<code>cs find</code>来查找数据是不是有点麻烦,有没有更方便的方法呢.当然有,vim的神奇之处在其可定制性.提供一份cscope的配置,将其放在.vimrc中即可.<br><figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">"""</span><br><span class="line">" cscope setting</span><br><span class="line">"""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span></span><br><span class="line"><span class="keyword">if</span> has(<span class="string">"cscope"</span>)</span><br><span class="line">  set csprg=/usr/bin/cscope</span><br><span class="line">  set csto=<span class="number">1</span></span><br><span class="line">  set cst</span><br><span class="line">  set nocsverb</span><br><span class="line">  <span class="string">" add any database in current directory</span><br><span class="line">  if filereadable("</span>cscope.<span class="keyword">out</span><span class="string">")</span><br><span class="line">      cs add cscope.out</span><br><span class="line">  endif</span><br><span class="line">  set csverb</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">nmap &lt;C-@&gt;s :cs find s &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;g :cs find g &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;c :cs find c &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;t :cs find t &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;e :cs find e &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;f :cs find f &lt;C-R&gt;=expand("</span>&lt;cfile&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;i :cs find i ^&lt;C-R&gt;=expand("</span>&lt;cfile&gt;<span class="string">")&lt;CR&gt;$&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;d :cs find d &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的配置即把<code>Ctrl + @</code>作为<code>:cs find</code>的快捷键,也就是说要查找某个函数名,只需要把光标放在函数名上,按下<code>Ctrl + @ + s</code>即可,简直不能更方便.而且你可以自己修改配置,映射到自己觉得舒服的快捷键上.</p>
+<p>本着不重复造轮子的原则,我就简单的写了cscope的基本用法,其实基本上就够用了,进阶的用法参考这篇文章<a href="http://easwy.com/blog/archives/advanced-vim-skills-cscope/" target="_blank" rel="external">vi/vim使用进阶: 程序员的利器 – cscope</a></p>
+<h2 id="doxygen"><a href="#doxygen" class="headerlink" title="doxygen"></a>doxygen</h2><p>上面我们讲的是用vim来查看源代码,但是面对几十万代码的时候,想要看清楚各个结构体之间的关系就不是vim能够做到的了.这时候我们就需要doxygen来帮手了.</p>
+<blockquote>
+<p>Doxygen is the de facto standard tool for generating documentation from annotated C++ sources, but it also supports other popular programming languages such as C, Objective-C, C#, PHP, Java, Python, IDL (Corba, Microsoft, and UNO/OpenOffice flavors), Fortran, VHDL, Tcl, and to some extent D.</p>
+</blockquote>
+<p>doxygen是一个根据源代码生成文档的工具,这货虽然主要是给C++用的,但是它也对其他语言有支持.<br>安装直接去<a href="http://www.stack.nl/~dimitri/doxygen/index.html" target="_blank" rel="external">官网</a>,按照其指导安装即可<br>下面介绍一下doxygen的使用方法.</p>
+<p>首先,在源代码根目录执行<code>doxygen -g</code>,然后在根目录就会突然冒出一个名为<strong>Doxyfile</strong>的文件,这个文件就是doxygen生成文档的配置文件了.<br>那么,重点来了,怎么配置这个文件,默认的配置是根据代码生成各个结构体的成员数据,然后生成html和latex两个文件夹,分别是网页和latex文档.<br>说实话,默认生成的文档并没有什么卵用,除了让你更方便的看到各个结构体的组成成员.我们关心的是各个结构体之间的关系,这是针对C而言的.对与C++和java而言,关心的是类之间的关系.所以,默认的配置肯定是要修改的.至于怎么改,看<a href="http://www.stack.nl/~dimitri/doxygen/manual/index.html" target="_blank" rel="external">官方文档</a>.</p>
+<p>当然了,如果这篇文章唯一给出的建议就是看文档,那这篇文章有什么意义呢.大家都知道看文档可以解决问题,但是时间成本太高,而且是英文的.写这篇文章的目的是分享自己学习得到的经验,让大家少走弯路,如果不能解决你的问题,只能去看文档了</p>
+<p>接下来我根据我自己看文档用到的配置跟大家解释一下.<br>首先,Doxygen里面的配置可谓又臭又长,你绝对不会有读完它的欲望.所以我给出几个关键的配置项,到时候搜索它修改即可</p>
+<ul>
+<li><p>这是针对各种语言优化输出的选项,默认都是NO,因为它不清楚你用的是什么语言(话说看一下后缀不就知道了吗…)</p>
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">OPTIMIZE_OUTPUT_FOR_C</span></span><br><span class="line">OPTIMIZE_OUTPUT_JAVA</span><br><span class="line">OPTIMIZE_FOR_FORTRAN</span><br><span class="line">OPTIMIZE_OUTPUT_VHDL</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这个是生成文档的类型的选项,默认生成html和latex,共支持六种类型的文档,每种类型的生成配置也是很多,具体根据需要配置</p>
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">GENERATE_HTML</span></span><br><span class="line">GENERATE_LATEX</span><br><span class="line">GENERATE_RTF</span><br><span class="line">GENERATE_XML</span><br><span class="line">GENERATE_DOCBOOK</span><br><span class="line">GENERATE_MAN</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关于生成图像的选项.doxygen使用dot这个工具来绘图,所以要先执行<code>sudo apt-get install graphviz</code>安装dot.在设置好这个绘图选项之后,doxygen就会生成各个结构体的关系,对于类会生成函数调用关系(我没试过,因为只试过C的).</p>
+  <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">H<span class="built_in">AVE_DOT</span> (一定要置为<span class="literal">YES</span>,后面的选项都依赖这个)</span><br><span class="line">DOT_NUM_THREADS (使用dot绘图的线程数量,越多越快,我一般是设置跟cpu的核数一样)</span><br><span class="line"><span class="comment">//以下两个选项跟生成函数调用关系图有关</span></span><br><span class="line"><span class="built_in">CALL_GRAPH</span></span><br><span class="line"><span class="built_in">CALLER_GRAPH</span></span><br><span class="line">EXTRACT_ALL <span class="comment">//把所有实体都输出到文档,不管它是否能被描述</span></span><br><span class="line">EXTRACT_STATIC <span class="comment">//把静态变量也输出到文档中</span></span><br><span class="line">EXTRACT_PRIVATE <span class="comment">//把私有变量也输出到文档中</span></span><br></pre></td></tr></table></figure>
+<p>  给一个结构体关系图,就是doxygen生成的.<br>  <img src="http://7xjtfr.com1.z0.glb.clouddn.com/source_00.png" alt="machine_class"></p>
+</li>
+<li><p>关于源码搜索路径,默认是搜索本目录的源代码,大部分情况下源码是分布在各个子目录的.</p>
+  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">RECURSIVE = <span class="value"><span class="keyword">YES</span></span></span></span><br></pre></td></tr></table></figure>
+<p>  默认RECURSIVE是NO,所以记得把它设置为YES,递归搜索子目录. <em>感谢soglad的留言提醒</em></p>
+</li>
+</ul>
+<p>最后一步,在源码根目录执行<code>doxygen</code>,它会自动找到Doxygen配置,根据配置生成文档.</p>
+<h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><p>最后一个工具,大名鼎鼎的gdb.分析源码执行流程的最好方式的是运行它,然后一步步执行.用来观察它最好的工具当然是gdb了(针对C/C++).<br>gdb的使用我也不打算造轮子,直接参考<a href="http://wiki.ubuntu.org.cn/index.php?title=%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F&amp;variant=zh-hans" target="_blank" rel="external">用GDB调试程序</a>,这篇写的很好,通俗易懂.</p>
+<h2 id="u540E_u8BB0"><a href="#u540E_u8BB0" class="headerlink" title="后记"></a>后记</h2><p>以上就是我在阅读源码的时候使用的Linux工具,三剑客<strong>vim+ctags+cscope</strong>,两板斧<strong>doxygen gdb</strong>,足以驰骋源代码的江湖.</p>
+<p>以上工具,vim和gdb是最难学的,学习曲线很陡峭.但是学好之后,就能守得云开见月明.</p>
+<p><em>参考文章,感谢帮助</em><br><a href="http://easwy.com/blog/archives/advanced-vim-skills-cscope/" target="_blank" rel="external">vi/vim使用进阶: 程序员的利器 – cscope</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>看源代码是一个程序员必须经历的事情,也是可以提升能力的一个捷径.个人认为: <strong>要完全掌握一]]>
+    </summary>
+    
+      <category term="Linux" scheme="http://blog.xiaohansong.com/tags/Linux/"/>
+    
+      <category term="源代码分析" scheme="http://blog.xiaohansong.com/tags/%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="Linux工具" scheme="http://blog.xiaohansong.com/categories/Linux%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[spice源码分析之server(1)]]></title>
+    <link href="http://blog.xiaohansong.com/2015/08/19/spice%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%B9%8Bserver-1/"/>
+    <id>http://blog.xiaohansong.com/2015/08/19/spice源码分析之server-1/</id>
+    <published>2015-08-19T07:36:41.000Z</published>
+    <updated>2016-01-02T17:39:28.898Z</updated>
+    <content type="html"><![CDATA[<p><em>前言:本文是结合我自己阅读代码的心得总结而来,同时会忽略很多细节,只能作为阅读源码时的参考.如有错误,欢迎指正.</em></p>
+<h2 id="Spice_u7B80_u4ECB"><a href="#Spice_u7B80_u4ECB" class="headerlink" title="Spice简介"></a>Spice简介</h2><blockquote>
+<p>Spice是一个开源的云计算解决方案，使客户端能显示远程虚拟主机的操作界面并且使用其设备，如键盘，鼠标，声音等。Spice给用户提供了一种如同操作本地机器一样的体验，同时尽可能把密集的CPU和GPU任务在客户端上执行。Spice能在局域网和互联网间使用，而不减少用户体验。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/spice_server_01.png" alt="图0"></p>
+</blockquote>
+<p>Spice的基本组成包括:</p>
+<ul>
+<li>Spice协议</li>
+<li>Spice服务器</li>
+<li>Spice客户端</li>
+</ul>
+<p>Spice的相关组件包括:</p>
+<ul>
+<li>QXL设备</li>
+<li>QXL驱动</li>
+</ul>
+<p>其中,Spice服务器基于libspice（一个虚拟设备接口可插拔库）。VDI提供了一个通过软件组件来发布虚拟设备接口的标准方式，使得软件组件能够与虚拟设备交互。</p>
+<ul>
+<li>服务器使用Spice协议与客户端交互。</li>
+<li>服务器通过VDI接口与VDI主机程序（如QEMU）交互。</li>
+</ul>
+<p>也就是说spice服务器处于主机与客户端中间,是整个Spice的核心所在.下面我们开始从代码层面分析spice服务器<br>更多资料查看本人翻译的spice新手文档<a href="https://www.gitbook.com/book/xhansong/spice-guidebook" target="_blank" rel="external">Spice入门</a>,以及<a href="http://www.spice-space.org/" target="_blank" rel="external">官方网站</a></p>
+<h2 id="Spice_server"><a href="#Spice_server" class="headerlink" title="Spice server"></a>Spice server</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/spice_server_00.png" alt="图1"><br>图1是spice服务器的核心架构,贯穿整个源码的组织结构.<br>值得一提的是,spice server是作为一个库提供给qemu使用的,编译出来就是libspice,所以代码中没有main函数.<br>下面我们先了解一个server源码中使用到的一些核心概念,在看源码之前推荐大家先看一遍<a href="https://www.gitbook.com/book/xhansong/spice-guidebook" target="_blank" rel="external">Spice入门</a>,否则理解代码中的某些核心概念会很吃力.</p>
+<h3 id="u90E8_u5206_u5B8F_u5B9A_u4E49"><a href="#u90E8_u5206_u5B8F_u5B9A_u4E49" class="headerlink" title="部分宏定义"></a>部分宏定义</h3><ul>
+<li><strong>SPICE_GNUC_DEPRECATED</strong>,其定义是<code>#define SPICE_GNUC_DEPRECATED  __attribute__((__deprecated__))</code>表示该函数以及被弃用,在编译时会给出警告</li>
+<li><strong>SPICE_GNUC_VISIBLE</strong>,其定义是<code>#define SPICE_GNUC_VISIBLE __attribute__ ((visibility (&quot;default&quot;)))</code>用于控制符号的可见性,设置为对外可见.spice作为动态链接库给qemu使用,默认隐藏函数对外部的可见性,即外部文件不能调用库里面的函数,有这个声明的函数可以被外部文件调用,即为公共函数.</li>
+</ul>
+<h3 id="u516C_u5171_u51FD_u6570"><a href="#u516C_u5171_u51FD_u6570" class="headerlink" title="公共函数"></a>公共函数</h3><p>Server的公共函数主要在两个头文件中:</p>
+<ul>
+<li><strong>spice.h</strong>:与SpiceServer结构体相关的函数,是qemu调用spice的主要函数</li>
+<li><strong>red_dispatcher.h</strong>:与QXL设备相关的函数</li>
+</ul>
+<p>对server的分析,主要围绕这三个公共函数:</p>
+<ul>
+<li><strong>spice_server_init</strong>:负责初始化spice_server</li>
+<li><strong>spice_server_add_interface</strong>:给server注册VDI接口</li>
+<li><strong>spice_server_add_client</strong>:处理qemu接收到的客户端连接消息</li>
+</ul>
+<h3 id="VDI_u63A5_u53E3"><a href="#VDI_u63A5_u53E3" class="headerlink" title="VDI接口"></a>VDI接口</h3><p>从图1中可以看到,VDI接口是spice server离qemu最近的一层,qemu主要是通过VDI接口来与spice交互的.<br>VDI接口的定义在spice.h中,结构体内部的函数指针实现都在qemu的源码里面(ui/spice-core.c)</p>
+<ul>
+<li><p><strong>SpiceCoreInterface</strong>:核心接口,用于创建,添加,取消定时和监听事件</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SpiceTimer *<span class="list">(<span class="keyword">*timer_add</span>)</span><span class="list">(<span class="keyword">SpiceTimerFunc</span> func, void <span class="variable">*opaque);</span><br><span class="line">void (*</span>timer_start)</span><span class="list">(<span class="keyword">SpiceTimer</span> <span class="variable">*timer, uint32_t ms);</span><br><span class="line">void (*</span>timer_cancel)</span><span class="list">(<span class="keyword">SpiceTimer</span> <span class="variable">*timer);</span><br><span class="line">void (*</span>timer_remove)</span><span class="list">(<span class="keyword">SpiceTimer</span> <span class="variable">*timer);</span><br><span class="line">SpiceWatch *</span><span class="list">(<span class="keyword">*watch_add</span>)</span><span class="list">(<span class="keyword">int</span> fd, int event_mask, SpiceWatchFunc func, void <span class="variable">*opaque);</span><br><span class="line">void (*</span>watch_update_mask)</span><span class="list">(<span class="keyword">SpiceWatch</span> <span class="variable">*watch, int event_mask);</span><br><span class="line">void (*</span>watch_remove)</span><span class="list">(<span class="keyword">SpiceWatch</span> <span class="variable">*watch);</span><br><span class="line">void (*</span>channel_event)</span><span class="list">(<span class="keyword">int</span> event, SpiceChannelEventInfo <span class="variable">*info);</span></span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>QXLInterface</strong>:QXL设备接口</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*attache_worker</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, QXLWorker *</span>qxl_worker)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*set_compression_level</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, int level);</span><br><span class="line">void (*</span>set_mm_time)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint32_t mm_time);</span><br><span class="line">void (*</span>get_init_info)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, QXLDevInitInfo *</span>info)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*get_command</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, struct QXLCommandExt *</span>cmd)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*req_cmd_notification</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin);</span><br><span class="line">void (*</span>release_resource)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, struct QXLReleaseInfoExt release_info);</span><br><span class="line">int (*</span>get_cursor_command)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, struct QXLCommandExt *</span>cmd)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*req_cursor_notification</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin);</span><br><span class="line">void (*</span>notify_update)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint32_t update_id);</span><br><span class="line">int (*</span>flush_resources)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin);</span><br><span class="line">void (*</span>async_complete)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint64_t cookie);</span><br><span class="line">void (*</span>update_area_complete)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint32_t surface_id,struct QXLRect *</span>updated_rects,uint32_t num_updated_rects)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*set_client_capabilities</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin,uint8_t client_present,uint8_t caps[58]);</span><br><span class="line">/*</span> returns <span class="number">1</span> if the interface is supported, <span class="number">0</span> otherwise.</span><br><span class="line"> <span class="variable">* if monitors_config is NULL nothing is done except reporting the</span><br><span class="line"> *</span> return code. <span class="variable">*/</span><br><span class="line">int (*</span>client_monitors_config)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin,VDAgentMonitorsConfig *</span>monitors_config)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpiceCharDeviceInterface</strong>:字符型设备接口</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*state</span>)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, int connected);</span><br><span class="line">int (*</span>write)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, const uint8_t *</span>buf, int len)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*read</span>)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, uint8_t *</span>buf, int len)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*event</span>)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, uint8_t event);</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpiceKbdInterface</strong>:键盘接口</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*push_scan_freg</span>)</span><span class="list">(<span class="keyword">SpiceKbdInstance</span> <span class="variable">*sin, uint8_t frag);</span><br><span class="line">uint8_t (*</span>get_leds)</span><span class="list">(<span class="keyword">SpiceKbdInstance</span> <span class="variable">*sin);</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpiceMigrateInterface</strong>:迁移接口</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*migrate_connect_complete</span>)</span><span class="list">(<span class="keyword">SpiceMigrateInstance</span> <span class="variable">*sin);</span><br><span class="line">void (*</span>migrate_end_complete)</span><span class="list">(<span class="keyword">SpiceMigrateInstance</span> <span class="variable">*sin);</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpiceMouseInterface</strong>:鼠标接口</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> (*motion)(SpiceMouseInstance *<span class="built_in">sin</span>, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span> dz,<span class="keyword">uint32_t</span> buttons_state);</span><br><span class="line"><span class="keyword">void</span> (*buttons)(SpiceMouseInstance *<span class="built_in">sin</span>, <span class="keyword">uint32_t</span> buttons_state);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpiceTabletInterface</strong>:触摸板接口</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*set_logical_size</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, int width, int height)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*position</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, int x, int y, uint32_t buttons_state)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*wheel</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, int wheel_moution, uint32_t buttons_state)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*buttons</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, uint32_t buttons_state)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpicePlaybackInterface</strong>:声音接口</p>
+</li>
+<li><strong>SpiceRecordInterface</strong>:录音接口</li>
+</ul>
+<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><p>从图1可以看到,VDI接口之后即是Channel(QXLInterface比较特殊,这个后面再说).<br>Channel的主要作用是使用对应的TCP连接传输消息给客户端,保证其传输的可靠性,其本质是通道,不同的Channel传输不同的消息.</p>
+<p>spice中主要有六种Channel:</p>
+<ul>
+<li><strong>MainChannel</strong>:与客户端连接的建立和断开有关</li>
+<li><strong>InputsChannel</strong>:跟鼠标,键盘,触摸板的输入有关</li>
+<li><strong>DisplayChannel</strong>:跟图像传输有关</li>
+<li><strong>CursorChannel</strong>:跟鼠标指针的显示有关</li>
+<li><strong>PlaybackChannel</strong>:跟播放宿机的声音有关</li>
+<li><strong>RecordChannel</strong>:跟录制客户端的声音有关</li>
+</ul>
+<p>这六种Channel并不是平行的关系,虽然都继承与RedChannel,但是在实现以及逻辑上的作用有很大不同,大致可以分成三类.</p>
+<ul>
+<li>Main和Input通道被相应的处理函数控制(reds.c)</li>
+<li>Display和Cursor通道被每个display工作线程使用(red_worker.c)</li>
+<li>Playback和Record通道有它们各自的处理程序(snd_worker.c)</li>
+</ul>
+<p>六种Channel中只有DisplayChannel和CursorChannel是单独在工作线程工作的,其他都是在qemu线程工作.</p>
+<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/spice_server_03.png" alt="图3"><br>前面提到Channel负责传输消息,而Dispatcher则负责处理消息,并且调度Channel.<br>Dispatcher使用socketpair来与外界交互,例如监听事件,传输结果等.<br>这里存在两种Dispatcher</p>
+<ul>
+<li><strong>MainDispatcher</strong>:在qemu线程中监听socket事件,处理客户端连接的初始化,建立和断开等,跟MainChannel相关</li>
+<li><strong>RedDispatcher</strong>:在worker线程中监听socket事件,处理QXL设备有关的消息,跟DisplayChannel,CursorChannel相关,图3描述的就是RedDispatcher的工作流程.在图1我们看到QXLInterface与其他接口不一样,与Channel的联系中间多了一个RedDispatcher,它们在单独的Worker线程中工作,提供了QEMU与接收的图像命令处理和渲染过程的独立性</li>
+</ul>
+<h3 id="RedWorker"><a href="#RedWorker" class="headerlink" title="RedWorker"></a>RedWorker</h3><p>RedWorker可以说是server的核心,80%代码跟它有关,毕竟它负责图像渲染和传输,这是spice最难最复杂的部分,涉及图像的压缩,渲染,局部刷新等核心技术.<br>RedWorker在单独线程上工作,通过QXLInterface与QEMU的QXL设备直接交互,同时控制DisplayChannel,CursorChannel,并且拥有自己的poll事件驱动核心.而其他的Channel都依赖于QEMU线程.</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>Spice server作为一个库给QEMU调用,用于支持Spice协议.</li>
+<li>server通过使用VDI接口与QEMU交互</li>
+<li>server通过使用Channel与客户端交互</li>
+<li>Dispatcher用于处理消息</li>
+<li>Channel用于传输消息</li>
+<li>图像在RedWorker线程中处理</li>
+</ul>
+<p>以上是我分析的server源代码的核心概念,为了方便理解,描述并不全面.其中关于迁移,声音,录音等功能并没有看过,我主要关注server的工作原理,在了解它工作流程之后,就好比有了一张地图,剩下的就是一个个去探险了.<br>当然了,没有代码的分析就是耍流氓.这篇就当是开胃菜,之后,我会结合代码,分析server的启动流程以及工作流程.先挖个坑.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><em>前言:本文是结合我自己阅读代码的心得总结而来,同时会忽略很多细节,只能作为阅读源码时的参考.如有错误,欢迎指正.</em></p>
+<h2 id="Spice_u7B80_u4ECB"><a href="#Spice_u7B80_u4ECB" class="head]]>
+    </summary>
+    
+      <category term="spice" scheme="http://blog.xiaohansong.com/tags/spice/"/>
+    
+      <category term="虚拟化" scheme="http://blog.xiaohansong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[理解链接之链接的基本概念]]></title>
+    <link href="http://blog.xiaohansong.com/2015/07/19/%E9%93%BE%E6%8E%A5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
+    <id>http://blog.xiaohansong.com/2015/07/19/链接的基本概念/</id>
+    <published>2015-07-19T05:29:13.000Z</published>
+    <updated>2016-01-02T17:39:28.903Z</updated>
+    <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行</p>
+<p>每一个步骤展开都是一个很大的课题，链接是一个被人忽略的课题，因为它并不是很复杂，相对于编译来说它还是比较简单的，但是并不代表它不重要。<br>现在编译链接的环节基本上由IDE帮助我们完成了，于是我们很少关注编译链接。虽然说不懂编译链接对开发程序并没有很大影响，但是如果要成为大牛，计算机底层的知识还是要掌握的。<br>编译的知识很多，不是几篇文章能说完的，推荐看《编译原理》。</p>
+<p>这篇文章以及几篇相关的文章将参考《深入理解计算机系统》这本书，对链接作一些介绍。</p>
+<h1 id="u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5"><a href="#u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="链接的基本概念"></a>链接的基本概念</h1><blockquote>
+<p>链接(linking)就是将不同部分的代码和数据收集和组合成为一个单一文件的过程，这个文件可被加载或拷贝到内存并执行。</p>
+</blockquote>
+<p>简单来说，就是把程序用到的所有源文件的目标文件合成一个可执行目标文件，是一个“多合一”的过程。</p>
+<p>链接的执行时机包括：</p>
+<ul>
+<li><strong>编译时</strong>：源代码被翻译为机器码的时候。</li>
+<li><strong>加载时</strong>：程序被加载器加载到内存并执行的时候。</li>
+<li><strong>运行时</strong>：由应用程序执行。</li>
+</ul>
+<p>在早期计算机系统中，链接是手动执行的。在现代计算机系统中，链接是由链接器自动执行的。</p>
+<h1 id="u94FE_u63A5_u7684_u610F_u4E49"><a href="#u94FE_u63A5_u7684_u610F_u4E49" class="headerlink" title="链接的意义"></a>链接的意义</h1><p>链接器在软件开发中扮演了关键的角色，它使得分离编译成为可能。我们不用将一个大小的应用程序组织成一个巨大的源文件，而是可以把它分解成为更小的，更好管理的模块，可以独立的修改和编译这些模块，最终由链接器链接成为一个可执行文件。</p>
+<h1 id="u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6"><a href="#u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6" class="headerlink" title="为什么要学习链接的知识"></a>为什么要学习链接的知识</h1><p>链接通常是由链接器处理的，不需要我们插手。但是这是在没有错误产生的情况下，一旦错误产生，不理解链接的工作过程和知识，我们就无法排除错误。以下列出学习链接的几个理由：</p>
+<ul>
+<li><strong>理解链接器将帮助你构造大型程序</strong>。构造大型程序的程序员经常会遇到由于缺少模块，库和不兼容库版本引起的链接器错误。除非你理解链接器是如何解析引用，什么是库，以及链接器是如何使用库来解析引用的，否则你无处着手处理错误。</li>
+<li><strong>理解链接器将帮助你避免一些危险的编程错误</strong>。默认情况下，乱用全局变量在链接时是不会产生警告的，这样的错误难以调试。理解链接器将让你知道原因，如何避免。</li>
+<li><strong>理解链接将帮助你理解语言的作用域规则是如何实现的</strong>。</li>
+<li><strong>理解链接将帮助你理解其他重要的系统概念</strong>。</li>
+<li><strong>理解链接将使你能够开发共享库</strong>。</li>
+</ul>
+<h1 id="u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B"><a href="#u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B" class="headerlink" title="简单的链接过程"></a>简单的链接过程</h1><p>来看一个简单的静态链接过程，对链接有一个感性的认识。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_00.png" alt="static linking"></p>
+<p>源代码经过编译器翻译为汇编语言文件，再经过汇编器翻译为可重定向目标文件，最后由链接器链接为可执行目标文件。<br>(ccl:C编译器, as:汇编器, ld:链接器)</p>
+<p>为了创建可执行文件，链接器要完成两个任务：</p>
+<ul>
+<li><strong>符号解析</strong>。目标文件定义和引用符号。符号解析的目的是将每个符号引用和一个符号定义联系起来。</li>
+<li><strong>重定位</strong>。编译器和汇编器生产从地址零开始的代码和数据节。链接器通过把每个符号定义与一个存储器地址联系起来，然后修改所有对这些符号的引用，使得它们指向这个存储器地址，从而重定位这些节。</li>
+</ul>
+<h1 id="u76EE_u6807_u6587_u4EF6"><a href="#u76EE_u6807_u6587_u4EF6" class="headerlink" title="目标文件"></a>目标文件</h1><ul>
+<li><strong>可重定位目标文件</strong>。包含二进制代码和数据，其形式可以在编译时与其他可重定位目标文件合并起来，创建一个可执行目标文件。</li>
+<li><strong>可执行目标文件</strong>。包含二进制代码和数据，其形式可以直接被拷贝到内存并执行。</li>
+<li><strong>共享目标文件</strong>。一种特殊类型的可重定位目标文件，可以在加载或运行时，被动态加载到存储器并链接。</li>
+</ul>
+<h2 id="u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6"><a href="#u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6" class="headerlink" title="可重定位目标文件"></a>可重定位目标文件</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_01.png" alt="典型的ELF可重定位目标文件"></p>
+<ul>
+<li><strong>ELF header</strong>:前16个字节描述了字的大小和生产该文件系统的字节顺序，剩下的包含帮助链接器解析和解释目标文件的信息。</li>
+<li><strong>.text</strong>:已编译程序的机器代码</li>
+<li><strong>.rodata</strong>:只读数据</li>
+<li><strong>.data</strong>:已初始化的全局C变量</li>
+<li><strong>.bss</strong>:未初始化的全局C变量，不占空间</li>
+<li><strong>.symtab</strong>:符号表，存放程序中被定义和引用的函数和全局变量的信息。</li>
+<li><strong>.rel.text</strong>:一个.text节位置列表，保存跟其他文件链接之后需要修改的项</li>
+<li><strong>.rel.data</strong>:记录被模块定义或引用的全局变量的重定位信息</li>
+<li><strong>.debug</strong>:调试符号表</li>
+<li><strong>.line</strong>:源代码行号和.text节中机器码的映射,用于调试.</li>
+<li><strong>.strtab</strong>:一个字符串表包含.symtab和.debug的符号表还有其节头部名.</li>
+</ul>
+<h2 id="u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6"><a href="#u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6" class="headerlink" title="可执行目标文件"></a>可执行目标文件</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_05.png" alt="典型的ELF可执行目标文件"></p>
+<p>从上图可以看出，可执行目标文件被分为三个部分：</p>
+<ul>
+<li><strong>代码段</strong>:只读内存段</li>
+<li><strong>数据段</strong>:可读写内存段</li>
+<li><strong>符号表和调试信息</strong>:这些数据不会在执行时不会被加载到内存中.</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行</p>
+<p>每一个步骤展开都是一个很]]>
+    </summary>
+    
+      <category term="链接" scheme="http://blog.xiaohansong.com/tags/%E9%93%BE%E6%8E%A5/"/>
+    
+      <category term="理解链接" scheme="http://blog.xiaohansong.com/categories/%E7%90%86%E8%A7%A3%E9%93%BE%E6%8E%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[桌面虚拟化传输协议之android spice]]></title>
+    <link href="http://blog.xiaohansong.com/2015/07/16/%E6%A1%8C%E9%9D%A2%E8%99%9A%E6%8B%9F%E5%8C%96%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E4%B9%8Bandroid-spice/"/>
+    <id>http://blog.xiaohansong.com/2015/07/16/桌面虚拟化传输协议之android-spice/</id>
+    <published>2015-07-16T04:46:15.000Z</published>
+    <updated>2016-01-02T17:39:28.900Z</updated>
+    <content type="html"><![CDATA[<h1 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h1><p>云计算是目前计算机领域的一个热门领域，桌面虚拟化是其中的一个重要应用，即把桌面系统在服务器端虚拟化，然后通过传输协议传输数据到客户端来实现桌面虚拟化，这样的好处就在于不管用什么设备，只要通过客户端都可以访问到云端的系统，随时随地都可以在一个系统上工作。</p>
+<p>目前有两大标准的桌面传输协议，分别是RBP和RDP。</p>
+<ul>
+<li>RBP有一个简单的架构，即直接把虚拟机的图形数据直接传输给客户端，客户端直接显示图像，有点类似于看网络视频。这样子就对网络的要求较高，高延迟情况下效果很差，但是客户端压力比较小，因此对客户机的性能要求较低，毕竟它只负责显示图像。</li>
+</ul>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/android_spice_01.png" alt="RBP"></p>
+<ul>
+<li>RDP稍微复杂一点，使用的是图像局部刷新，它发送事件消息给客户端，提示需要刷新的图像区域并且提供数据，客户端根据消息数据生成图像数据显示出来。因此传输的数据量较少，适合于网络不好情况，但是缺点是客户端需要生成图像数据，对客户机有一定压力。</li>
+</ul>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/android_spice_02.png" alt="RDP"></p>
+<p>那么对于移动设备来说，很显然，RDP协议更适合移动设备，因为移动设备在3G，4G情况下不可能用耗费大流量的RFB协议，并且延迟比较高。而RDP协议由于传输的数据量较少，对网络条件要求不高。所以，针对于移动平台来说，RDP协议比较合适。</p>
+<p>但是，由于RDP协议是微软的产品，受限于其证书，并不是开源产品，所以不能用于移动设备。那么，开源的类RDP协议的<a href="http://www.spice-space.org" target="_blank" rel="external">SPICE</a>协议,就隆重登场了，结合我们的主题，在android平台上应用spice协议。下面，我们来介绍spice在android平台上的应用。</p>
+<h1 id="SPICE__u534F_u8BAE_u5728android_u5E73_u53F0_u7684_u5E94_u7528"><a href="#SPICE__u534F_u8BAE_u5728android_u5E73_u53F0_u7684_u5E94_u7528" class="headerlink" title="SPICE 协议在android平台的应用"></a>SPICE 协议在android平台的应用</h1><p>Spice事实上并没有android版本，但是它有linux版本，而android是基于linux的，所以，我们可以通过使用NDK来交叉编译Spice库到android上使用。也就是说，我们可以通过使用JNI来调用libspice.so（通过NDK交叉编译），从而在android平台上使用Spice。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/android_spice_04.png" alt="android spice"></p>
+<p>Spice服务器通过通道(Channel)来与客户端通信，其中jpeg模块是通过NDK编译好的库，使用JNI调用，把服务器发送过来图像命令转化为图像，再把图像交给android的View显示出来。</p>
+<p>在实际使用中，需要对图像的解析过程进行优化，否则显示的延迟很大。一个解决方案是使用更快的jpeg解析库。</p>
+<p>最后,推荐一个开源的spice安卓客户端<a href="https://github.com/iiordanov/remote-desktop-clients" target="_blank" rel="external">remote-desktop-clients</a></p>
+<p>以上只是对Spice工作原理的简单描述，详细介绍查看官方文档：</p>
+<ul>
+<li><a href="http://www.spice-space.org/docs/spice_for_newbies.pdf" target="_blank" rel="external">spice_for_newbies</a></li>
+<li><a href="http://xhansong.gitbooks.io/spice-guidebook/" target="_blank" rel="external">spice入门</a>(这是我根据spice官方文档翻译的中文版本)</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h1><p>云计算是目前计算机领域的一个热门领域，桌面虚拟化是其中的一个重要应用，即把桌面系统在服务器端虚拟化，然后]]>
+    </summary>
+    
+      <category term="spice" scheme="http://blog.xiaohansong.com/tags/spice/"/>
+    
+      <category term="虚拟化" scheme="http://blog.xiaohansong.com/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+      <category term="虚拟化" scheme="http://blog.xiaohansong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[算法学习之减治法(decrease and conquer)]]></title>
+    <link href="http://blog.xiaohansong.com/2015/06/22/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%87%8F%E6%B2%BB%E6%B3%95-decrease-and-conquer/"/>
+    <id>http://blog.xiaohansong.com/2015/06/22/算法学习之减治法-decrease-and-conquer/</id>
+    <published>2015-06-22T02:55:13.000Z</published>
+    <updated>2016-01-02T17:39:28.901Z</updated>
+    <content type="html"><![CDATA[<h1 id="u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5"><a href="#u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5" class="headerlink" title="什么是分治法"></a>什么是分治法</h1><p>减治技术利用了一个问题给定实例的解和同样问题较小实例的解之间的某种关系。一旦建立了这种关系，就可以从顶至下递归的来用该关系，也可以从底至上非递归的来运用该关系：</p>
+<ol>
+<li>减去一个常量</li>
+<li>减去一个常量因子</li>
+<li>减去的规模是可变的</li>
+</ol>
+<h1 id="u5206_u6CBB_u6CD5_u4F8B_u5B50"><a href="#u5206_u6CBB_u6CD5_u4F8B_u5B50" class="headerlink" title="分治法例子"></a>分治法例子</h1><h2 id="u51CF_u53BB_u4E00_u4E2A_u5E38_u91CF"><a href="#u51CF_u53BB_u4E00_u4E2A_u5E38_u91CF" class="headerlink" title="减去一个常量"></a>减去一个常量</h2><h3 id="u62D3_u6251_u6392_u5E8F"><a href="#u62D3_u6251_u6392_u5E8F" class="headerlink" title="拓扑排序"></a>拓扑排序</h3><h4 id="u5B9A_u4E49"><a href="#u5B9A_u4E49" class="headerlink" title="定义"></a>定义</h4><p>定义：将有向图中的顶点以线性方式进行排序。即对于任何连接自顶点u到顶点v的有向边uv，在最后的排序结果中，顶点u总是在顶点v的前面。</p>
+<h4 id="u4E24_u5F20_u5B9E_u73B0_u7B97_u6CD5"><a href="#u4E24_u5F20_u5B9E_u73B0_u7B97_u6CD5" class="headerlink" title="两张实现算法"></a>两张实现算法</h4><h5 id="Kahn_u7B97_u6CD5"><a href="#Kahn_u7B97_u6CD5" class="headerlink" title="Kahn算法"></a>Kahn算法</h5><pre><code>L← Empty list that will contain the sorted elements
+S ← Set of all nodes with no incoming edges
+while S is non-empty do
+    remove a node n from S
+    insert n into L
+    foreach node m with an edge e from n to m do
+        remove edge e from the graph
+        if m has no other incoming edges then
+            insert m into S
+if graph has edges then
+    return error (graph has at least onecycle)
+else 
+    return L (a topologically sortedorder)
+</code></pre><p>不难看出该算法的实现十分直观，关键在于需要维护一个入度为0的顶点的集合：<br>每次从该集合中取出(没有特殊的取出规则，随机取出也行，使用队列/栈也行，下同)一个顶点，将该顶点放入保存结果的List中。<br>紧接着循环遍历由该顶点引出的所有边，从图中移除这条边，同时获取该边的另外一个顶点，如果该顶点的入度在减去本条边之后为0，那么也将这个顶点放到入度为0的集合中。然后继续从集合中取出一个顶点…………</p>
+<p>当集合为空之后，检查图中是否还存在任何边，如果存在的话，说明图中至少存在一条环路。不存在的话则返回结果List，此List中的顺序就是对图进行拓扑排序的结果。</p>
+<p><a href="http://7xjtfr.com1.z0.glb.clouddn.com/decreace_00.png" target="_blank" rel="external">例子</a></p>
+<p>对上图进行拓扑排序的结果：<br>2-&gt;8-&gt;0-&gt;3-&gt;7-&gt;1-&gt;5-&gt;6-&gt;9-&gt;4-&gt;11-&gt;10-&gt;12</p>
+<p><strong>复杂度分析：</strong><br>初始化入度为0的集合需要遍历整张图，检查每个节点和每条边，因此复杂度为O(E+V);<br>然后对该集合进行操作，又需要遍历整张图中的，每条边，复杂度也为O(E+V);<br>因此Kahn算法的复杂度即为O(E+V)。</p>
+<h5 id="u57FA_u4E8EDFS_u7684_u62D3_u6251_u6392_u5E8F"><a href="#u57FA_u4E8EDFS_u7684_u62D3_u6251_u6392_u5E8F" class="headerlink" title="基于DFS的拓扑排序"></a>基于DFS的拓扑排序</h5><pre><code>L ← Empty list that will contain the sorted nodes
+S ← Set of all nodes with no outgoing edges
+for each node n in S do
+    visit(n) 
+function visit(node n)
+    if n has not been visited yet then
+        mark n as visited
+        for each node m with an edge from m to ndo
+            visit(m)
+        add n to L
+</code></pre><p>DFS的实现更加简单直观，使用递归实现。利用DFS实现拓扑排序，实际上只需要添加一行代码，即上面伪码中的最后一行：add n to L。<br>需要注意的是，将顶点添加到结果List中的时机是在visit方法即将退出之时。<br>这个算法的实现非常简单，但是要理解的话就相对复杂一点。<br>关键在于为什么在visit方法的最后将该顶点添加到一个集合中，就能保证这个集合就是拓扑排序的结果呢？<br>因为添加顶点到集合中的时机是在dfs方法即将退出之时，而dfs方法本身是个递归方法，只要当前顶点还存在边指向其它任何顶点，它就会递归调用dfs方法，而不会退出。因此，退出dfs方法，意味着当前顶点没有指向其它顶点的边了，即当前顶点是一条路径上的最后一个顶点。</p>
+<p><strong>复杂度分析：</strong><br>复杂度同DFS一致，即O(E+V)。具体而言，首先需要保证图是有向无环图，判断图是DAG可以使用基于DFS的算法，复杂度为O(E+V)，而后面的拓扑排序也是依赖于DFS，复杂度为O(E+V)</p>
+<p>还是对上文中的那张有向图进行拓扑排序，只不过这次使用的是基于DFS的算法，结果是：<br>8-&gt;7-&gt;2-&gt;3-&gt;0-&gt;6-&gt;9-&gt;10-&gt;11-&gt;12-&gt;1-&gt;5-&gt;4</p>
+<h5 id="u4E24_u79CD_u5B9E_u73B0_u7B97_u6CD5_u7684_u603B_u7ED3"><a href="#u4E24_u79CD_u5B9E_u73B0_u7B97_u6CD5_u7684_u603B_u7ED3" class="headerlink" title="两种实现算法的总结"></a>两种实现算法的总结</h5><p>这两种算法分别使用链表和栈来表示结果集。<br>对于基于DFS的算法，加入结果集的条件是：顶点的出度为0。这个条件和Kahn算法中入度为0的顶点集合似乎有着异曲同工之妙，这两种算法的思想犹如一枚硬币的两面，看似矛盾，实则不然。一个是从入度的角度来构造结果集，另一个则是从出度的角度来构造。</p>
+<p>实现上的一些不同之处：<br>Kahn算法不需要检测图为DAG，如果图为DAG，那么在出度为0的集合为空之后，图中还存在没有被移除的边，这就说明了图中存在环路。<br>而基于DFS的算法需要首先确定图为DAG，当然也能够做出适当调整，让环路的检测和拓扑排序同时进行，毕竟环路检测也能够在DFS的基础上进行。<br>二者的复杂度均为O(V+E)。</p>
+<h2 id="u51CF_u53BB_u4E00_u4E2A_u5E38_u91CF_u56E0_u5B50"><a href="#u51CF_u53BB_u4E00_u4E2A_u5E38_u91CF_u56E0_u5B50" class="headerlink" title="减去一个常量因子"></a>减去一个常量因子</h2><h3 id="Russian_Peasant_Multiplication"><a href="#Russian_Peasant_Multiplication" class="headerlink" title="Russian Peasant Multiplication"></a>Russian Peasant Multiplication</h3><p>计算两个整数的积</p>
+<h4 id="u539F_u7406"><a href="#u539F_u7406" class="headerlink" title="原理"></a>原理</h4><p>n * m = n/2 * m  n为偶数<br>n * m  = (n-1)/2 * 2m + m  (if n &gt; 1  and m if n = 1) n为奇数</p>
+<h4 id="u4F8B_u5B50"><a href="#u4F8B_u5B50" class="headerlink" title="例子"></a>例子</h4><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/decreace_01.png" alt="例子"></p>
+<h2 id="u51CF_u53BB_u7684_u89C4_u6A21_u662F_u53EF_u53D8_u7684"><a href="#u51CF_u53BB_u7684_u89C4_u6A21_u662F_u53EF_u53D8_u7684" class="headerlink" title="减去的规模是可变的"></a>减去的规模是可变的</h2><h3 id="Selection_Problem"><a href="#Selection_Problem" class="headerlink" title="Selection Problem"></a>Selection Problem</h3><p>找出数组中第n小的数</p>
+<h4 id="u539F_u7406-1"><a href="#u539F_u7406-1" class="headerlink" title="原理"></a>原理</h4><p>类似与快速排序,只是把key换做数组的下标,通过数的下标作为分割的依据</p>
+<h4 id="u4F8B_u5B50-1"><a href="#u4F8B_u5B50-1" class="headerlink" title="例子"></a>例子</h4><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/decreace_02.png" alt="例子"></p>
+<p><strong>参考资料:</strong><br><a href="http://www.cnblogs.com/kkgreen/archive/2011/06/17/2083915.html" target="_blank" rel="external">减治法（一）</a><br><a href="http://blog.csdn.net/dm_vincent/article/details/7714519" target="_blank" rel="external">拓扑排序的原理及其实现</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5"><a href="#u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5" class="headerlink" title="什么是分治法"></a>什么是分治法</h1]]>
+    </summary>
+    
+      <category term="减治法" scheme="http://blog.xiaohansong.com/tags/%E5%87%8F%E6%B2%BB%E6%B3%95/"/>
+    
+      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[算法学习之分治法(divide and conquer)]]></title>
+    <link href="http://blog.xiaohansong.com/2015/06/18/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E6%B2%BB%E6%B3%95-divide-and-conquer/"/>
+    <id>http://blog.xiaohansong.com/2015/06/18/算法学习之分治法-divide-and-conquer/</id>
+    <published>2015-06-18T10:50:50.000Z</published>
+    <updated>2016-01-02T17:39:28.902Z</updated>
+    <content type="html"><![CDATA[<h2 id="u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5"><a href="#u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5" class="headerlink" title="什么是分治法"></a>什么是分治法</h2><p>字面上的解释是“分而治之”，就是把一个复杂的问题分成两个或更多的相同或相似的子问题，直到最后子问题可以简单的直接求解，原问题的解即子问题的解的合并。</p>
+<h2 id="u89E3_u51B3_u95EE_u9898_u7684_u6D41_u7A0B"><a href="#u89E3_u51B3_u95EE_u9898_u7684_u6D41_u7A0B" class="headerlink" title="解决问题的流程"></a>解决问题的流程</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer00.png" alt="divide and conquer"></p>
+<h2 id="u5206_u6CBB_u6CD5_u9002_u7528_u60C5_u51B5"><a href="#u5206_u6CBB_u6CD5_u9002_u7528_u60C5_u51B5" class="headerlink" title="分治法适用情况"></a>分治法适用情况</h2><pre><code>分治法所能解决的问题一般具有以下几个特征：
+
+1. 该问题的规模缩小到一定的程度就可以容易地解决
+
+2. 该问题可以分解为若干个规模较小的相同问题，即该问题具有最优子结构性质。
+
+3. 利用该问题分解出的子问题的解可以合并为该问题的解；
+
+4. 该问题所分解出的各个子问题是相互独立的，即子问题之间不包含公共的子问题。
+</code></pre><p>第一条特征是绝大多数问题都可以满足的，因为问题的计算复杂性一般是随着问题规模的增加而增加；</p>
+<p>第二条特征是应用分治法的前提它也是大多数问题可以满足的，此特征反映了递归思想的应用；、</p>
+<p>第三条特征是关键，能否利用分治法完全取决于问题是否具有第三条特征，如果具备了第一条和第二条特征，而不具备第三条特征，则可以考虑用贪心法或动态规划法。</p>
+<p>第四条特征涉及到分治法的效率，如果各子问题是不独立的则分治法要做许多不必要的工作，重复地解公共的子问题，此时虽然可用分治法，但一般用动态规划法较好。</p>
+<h2 id="u5E94_u7528_u95EE_u9898"><a href="#u5E94_u7528_u95EE_u9898" class="headerlink" title="应用问题"></a>应用问题</h2><h3 id="u5F52_u5E76_u6392_u5E8F"><a href="#u5F52_u5E76_u6392_u5E8F" class="headerlink" title="归并排序"></a>归并排序</h3><p>可以看到排序问题正好满足以上提到的四个特征。<br>归并排序通过将待排序数组分为两个部分，递归地处理它们，最终将两个排序好的部分合并起来。<br>值得一提的是归并排序通过数组的下标分割子问题，即每次都把数组分为两半。</p>
+<p><strong>伪代码如下</strong><br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer01.png" alt="merge_sort"></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer02.png" alt="merge"></p>
+<p><strong>例子</strong><br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer03.png" alt="例子"></p>
+<h3 id="u5FEB_u901F_u6392_u5E8F"><a href="#u5FEB_u901F_u6392_u5E8F" class="headerlink" title="快速排序"></a>快速排序</h3><p>跟归并排序的思想是类似的，但是快速排序是根据值来分割子问题，即把数组根据一个值分为大于和小于它两个部分。</p>
+<p><strong>伪代码如下</strong></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer04.png" alt="quick_sort"></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer05.jpg" alt="partition"></p>
+<p><strong>例子</strong></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer06.jpg" alt="例子"></p>
+<h3 id="u4E8C_u5206_u641C_u7D22"><a href="#u4E8C_u5206_u641C_u7D22" class="headerlink" title="二分搜索"></a>二分搜索</h3><p>对一个有序的数组进行二分搜索，每次比较中间的值，key大于它说明在右边，小于说明左边。</p>
+<p><strong>伪代码如下</strong></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer07.png" alt="binary_search"></p>
+<p><strong>例子</strong></p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer08.png" alt="例子"></p>
+<h3 id="u5927_u6574_u6570_u4E58_u6CD5"><a href="#u5927_u6574_u6570_u4E58_u6CD5" class="headerlink" title="大整数乘法"></a>大整数乘法</h3><p>对于任意位数的2个数相乘 $a * b$ ，写成：<br><span>$$a = a_{1} * 10^{(n_{1}/2)} + a_{0}$$</span><!-- Has MathJax --><br>$n_{1}$为$a$的位数</p>
+<span>$$b = b_{1} * 10^{(n_{2}/2)} + b_{0}$$</span><!-- Has MathJax -->
+<p>$n_{2}$为$b$的位数</p>
+<p>分治策略就是基于以上变换，将a，b写成前一半数字和后一半数字相加的形式，例如若$a = 5423678$，那么$a_{1} = 542$  $a_{0} = 3678$（注意若不是偶数截取较小一半）</p>
+<p>这样a和b相乘就可以写为：<br><span>$$a * b = { a_{1} * 10^{(n_{1}/2)} + a_{0} } * { b_{1} * 10^{(n_{2}/2)} + b_{0} }$$</span><!-- Has MathJax --><br>展开后整理得：<br><span>$$a * b = a_{1}*b_{1} * 10^{[(n_{1}+n_{2})/2]} + a_{1}*b_{0} * 10^{(n_{1}/2)} + a_{0}*b_{1} * 10^{(n_{2}/2)} + a_{0}*b_{0}$$</span><!-- Has MathJax --><br>这样就很容易递归的来求$a * b$，如果嫌分解后的数还太大，就可以继续分解。（你可以自己规定在何时结束递归）</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>分治法实际上就是类似于数学归纳法，找到解决本问题的求解方程公式，然后根据方程公式设计递归程序。</p>
+<ol>
+<li>一定是先找到最小问题规模时的求解方法</li>
+<li>然后考虑随着问题规模增大时的求解方法</li>
+<li>找到求解的递归函数式后（各种规模或因子），设计递归程序即可。</li>
+</ol>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/steven_oyj/archive/2010/05/22/1741370.html" target="_blank" rel="external">五大常用算法之一：分治算法</a></p>
+<p><a href="http://www.cnblogs.com/kkgreen/archive/2011/06/12/2078668.html" target="_blank" rel="external">大整数乘法和Strassen矩阵乘法</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5"><a href="#u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5" class="headerlink" title="什么是分治法"></a>什么是分治法</h2]]>
+    </summary>
+    
+      <category term="分治法" scheme="http://blog.xiaohansong.com/tags/%E5%88%86%E6%B2%BB%E6%B3%95/"/>
+    
+      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[算法学习之暴力求解(brute force)]]></title>
+    <link href="http://blog.xiaohansong.com/2015/06/18/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%9A%B4%E5%8A%9B%E6%B1%82%E8%A7%A3-brute-force/"/>
+    <id>http://blog.xiaohansong.com/2015/06/18/算法学习之暴力求解-brute-force/</id>
+    <published>2015-06-18T08:53:51.000Z</published>
+    <updated>2016-01-02T17:39:28.903Z</updated>
+    <content type="html"><![CDATA[<h2 id="u66B4_u529B_u6C42_u89E3_28brute_force_29"><a href="#u66B4_u529B_u6C42_u89E3_28brute_force_29" class="headerlink" title="暴力求解(brute force)"></a>暴力求解(brute force)</h2><blockquote>
+<p>Brute force is a straightforward approach to solving a problem, usually directly based on the problem statement and definitions of the concepts involved.</p>
+</blockquote>
+<p>暴力求解即根据问题的描述和定义直接求解,不使用一些特殊的算法.</p>
+<h3 id="u6392_u5E8F_u95EE_u9898_u7684_u5E94_u7528"><a href="#u6392_u5E8F_u95EE_u9898_u7684_u5E94_u7528" class="headerlink" title="排序问题的应用"></a>排序问题的应用</h3><ul>
+<li><p>选择排序<br>选择排序将数组分为排序与未排序两个部分,每次将从未排序部分取出最小的值,插入排序部分的最后,最终未排序部分消失,排序完成.</p>
+</li>
+<li><p>冒泡排序<br>冒泡排序也是将数组分为排序与未排序两个部分,每次从未排序部分的第一个数开始,与后一个比较,如果大于它两两交换,否则从第二个开始继续与后一个比较.最终未排序部分的最后一个数即最大的数.循环n次即完成排序.</p>
+</li>
+</ul>
+<h3 id="u641C_u7D22_u95EE_u9898_u7684_u5E94_u7528"><a href="#u641C_u7D22_u95EE_u9898_u7684_u5E94_u7528" class="headerlink" title="搜索问题的应用"></a>搜索问题的应用</h3><ul>
+<li><p>线性搜索<br>简单粗暴,一个个比较.</p>
+</li>
+<li><p>字符串匹配<br>同样道理,逐个比较.</p>
+</li>
+</ul>
+<h3 id="u51E0_u4F55_u95EE_u9898"><a href="#u51E0_u4F55_u95EE_u9898" class="headerlink" title="几何问题"></a>几何问题</h3><ul>
+<li><p>最近点问题<br>把所有两点距离求出来,然后选择最小值.</p>
+</li>
+<li><p>凸包问题<br>用循序渐进的方式求取给定点集的凸包，首先把最初输入的3个不共线(Non-collinear)的点按 逆时针方向构成一个三角形，这就是这3点的凸包。接着便会考察第4点，看看这个点是否位于前述三 角形之内或三角形的边上。若是，则这第4点并非凸包上的点，前述三角形保持不变。若否，则把这前述的三角 形扩大为一个四边形，并把不适用的边擦去。这个四边形便是这首4点的凸包。接着程序又会考察第5点，如此 类推，直至所有点均已被考察为止.由于每次都要检查所有之前的点，时间复杂度为O(n^2).</p>
+</li>
+</ul>
+<h3 id="u7A77_u4E3E_u641C_u7D22"><a href="#u7A77_u4E3E_u641C_u7D22" class="headerlink" title="穷举搜索"></a>穷举搜索</h3><p>以下3个问题都可以用穷举的方法暴力求解,把所有可能都试一遍.然而实际上由于可能情况太多,一般不会使用穷举的方法.数据量小的情况可以考虑使用.每个问题都有不少更优的算法.</p>
+<ul>
+<li><p>旅行推销员问题(Travelling Salesman Problem)    有n个城市，一个推销员要从其中某一个城市出发，唯一走遍所有的城市，再回到他出发的城市，求最短的路线。也即求一个最短的哈密顿回路。</p>
+</li>
+<li><p>背包问题(knapsack problem)<br>给定一组物品，每种物品都有自己的重量和价格，在限定的总重量内，我们如何选择，才能使得物品的总价格最高。</p>
+</li>
+<li><p>任务分配问题(assignment problem)<br>线性任务分配问题：P是二元组(a, b)的集合，其中a和b分别是集合A和B中的元素。C是某一函数，并满足特定约束条件，例如：A的每一个元素必须在P中出现一次，或者B的每一个元素必须在P中出现一次，或者以上二者都必须满足。线性任务分配问题的目标就是最大化或者最小化C(a, b)之和。</p>
+</li>
+</ul>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><pre><code>暴力求解法可以说毫无技巧,但是简单容易实现.一般情况是不会用到的,但是在特定情况下有奇效.可以说当人们解决某个问题的时候用暴力求解应该是第一直觉,然而这太简单并不能体现自己的能力,就会开始寻找更快的方法.我的理解是更优的算法应该是基于暴力求解法之上的.例如说背包问题,同样样遍历所有情况,动态规划巧妙的利用前面的尝试过的数据,减少了工作量.但本质上还是要试遍所有可能,只是试的少了.
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u66B4_u529B_u6C42_u89E3_28brute_force_29"><a href="#u66B4_u529B_u6C42_u89E3_28brute_force_29" class="headerlink" title="暴力求解(brute f]]>
+    </summary>
+    
+      <category term="暴力求解" scheme="http://blog.xiaohansong.com/tags/%E6%9A%B4%E5%8A%9B%E6%B1%82%E8%A7%A3/"/>
+    
+      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[算法学习之算法基本概念]]></title>
+    <link href="http://blog.xiaohansong.com/2015/06/18/%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
+    <id>http://blog.xiaohansong.com/2015/06/18/算法基本概念/</id>
+    <published>2015-06-18T08:18:24.000Z</published>
+    <updated>2016-01-02T17:39:28.901Z</updated>
+    <content type="html"><![CDATA[<h2 id="u7B97_u6CD5_u7684_u5B9A_u4E49"><a href="#u7B97_u6CD5_u7684_u5B9A_u4E49" class="headerlink" title="算法的定义"></a>算法的定义</h2><blockquote>
+<p>An algorithm is a sequence of unambiguous instructions for solving a problem</p>
+</blockquote>
+<p>即算法是解决问题的无二义性的指令序列.简单说就是用来解决问题步骤.</p>
+<h2 id="u7B97_u6CD5_u8BBE_u8BA1_u53CA_u5B9E_u73B0_u6D41_u7A0B"><a href="#u7B97_u6CD5_u8BBE_u8BA1_u53CA_u5B9E_u73B0_u6D41_u7A0B" class="headerlink" title="算法设计及实现流程"></a>算法设计及实现流程</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/20150615181318512.png" alt="算法设计及实现流程"></p>
+<h2 id="u91CD_u8981_u7684_u95EE_u9898_u7C7B_u578B"><a href="#u91CD_u8981_u7684_u95EE_u9898_u7C7B_u578B" class="headerlink" title="重要的问题类型"></a>重要的问题类型</h2><ul>
+<li>Sorting</li>
+<li>Searching</li>
+<li>String processing</li>
+<li>Graph problems</li>
+<li>Combinatorial problems</li>
+<li>Geometric problems</li>
+<li>Numerical Problems</li>
+</ul>
+<h2 id="u57FA_u7840_u6570_u636E_u7ED3_u6784"><a href="#u57FA_u7840_u6570_u636E_u7ED3_u6784" class="headerlink" title="基础数据结构"></a>基础数据结构</h2><ul>
+<li>linear data structure<ul>
+<li>array</li>
+<li>list</li>
+<li>stack</li>
+<li>queue</li>
+</ul>
+</li>
+<li>graphs</li>
+<li>tree</li>
+<li>set and dictionaries</li>
+</ul>
+<h2 id="u5E38_u7528_u7684_u7B97_u6CD5_u601D_u60F3"><a href="#u5E38_u7528_u7684_u7B97_u6CD5_u601D_u60F3" class="headerlink" title="常用的算法思想"></a>常用的算法思想</h2><ul>
+<li>Brute force (暴力求解)</li>
+<li>Divide and conquer (分治法)</li>
+<li>Decrease and conquer (减治法)</li>
+<li>Transform and conquer (转治法)</li>
+<li>Space and time tradeoffs (时空权衡)</li>
+<li>Greedy approach (贪婪算法)</li>
+<li>Dynamic programming (动态规划)</li>
+<li>Iterative improvement (迭代改进)</li>
+<li>Backtracking (回溯法)</li>
+<li>Branch and bound (分支界限法)</li>
+</ul>
+<p>基本上,算法就是围绕上面提到的问题和数据结构进行研究,遇到某个问题时,先分析问题,确定问题类型和使用的数据结构,有利于快速找到头绪.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u7B97_u6CD5_u7684_u5B9A_u4E49"><a href="#u7B97_u6CD5_u7684_u5B9A_u4E49" class="headerlink" title="算法的定义"></a>算法的定义</h2><blockquote>
+]]>
+    </summary>
+    
+      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[用hexo搭建github博客]]></title>
+    <link href="http://blog.xiaohansong.com/2015/06/17/%E7%94%A8hexo%E6%90%AD%E5%BB%BAgithub%E5%8D%9A%E5%AE%A2/"/>
+    <id>http://blog.xiaohansong.com/2015/06/17/用hexo搭建github博客/</id>
+    <published>2015-06-17T02:14:18.000Z</published>
+    <updated>2016-01-02T17:39:28.900Z</updated>
+    <content type="html"><![CDATA[<h2 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h2><p><strong>搭建环境:Linux,nodejs,npm,git</strong></p>
+<p>现在网上已经有很多关于搭建hexo github博客的文章,我自己也是参考别人的文章过来的,但是现在hexo已经到了3.0版本,很多教程都过时了,而且感觉他们教程的思路着重于怎么做,并没有说明背后的原因,所以我希望写一篇着重于<strong>为什么</strong>,而不是怎么做的文章.我相信只有理解背后的原理才能更好更快的上手.</p>
+<p>其次,最好的教程就是官方文档,所以在这篇文章我引用的都是官方文档的内容,而且只是提供思路,不提供详细步骤.因为版本更新之后,操作是不一样的,官方文档会随时更新,但是这篇文章不一定会随时更新,然而思路是不变的,所以我极力推荐大家首先阅读官方文档.</p>
+<h3 id="u4EC0_u4E48_u662FGithub_Page"><a href="#u4EC0_u4E48_u662FGithub_Page" class="headerlink" title="什么是Github Page"></a>什么是Github Page</h3><p>首先,所谓的github博客是通过github page来实现的.</p>
+<p>简单的说，Github是一个具有版本管理功能的代码仓库，每个项目都有一个主页，列出项目的源文件。</p>
+<p>但是对于一个新手来说，看到一大堆源码，只会让人头晕脑涨，不知何处入手。<br>他希望看到的是，一个简明易懂的网页，说明每一步应该怎么做。</p>
+<p>因此，github就设计了Pages功能，允许用户自定义项目首页，用来替代默认的源码列表。</p>
+<p>所以，github Pages可以被认为是用户编写的、托管在github上的静态网页。</p>
+<h3 id="u4EC0_u4E48_u662FHexo"><a href="#u4EC0_u4E48_u662FHexo" class="headerlink" title="什么是Hexo"></a>什么是Hexo</h3><blockquote>
+<p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+</blockquote>
+<p>我们主要是用hexo在本地写博客,然后上传到github page,就像你commit项目代码到github一样.</p>
+<h2 id="u64CD_u4F5C"><a href="#u64CD_u4F5C" class="headerlink" title="操作"></a>操作</h2><h3 id="u5EFA_u7ACB_u4E00_u4E2AGithub_page"><a href="#u5EFA_u7ACB_u4E00_u4E2AGithub_page" class="headerlink" title="建立一个Github page"></a>建立一个Github page</h3><p>首先注册个github账户,然后在本地配置ssh到github,这一步自行google.</p>
+<blockquote>
+<h2 id="Create_a_repository"><a href="#Create_a_repository" class="headerlink" title="Create a repository"></a>Create a repository</h2><p>Head over to GitHub and create a new repository named username.github.io, where username is your username (or organization name) on GitHub.</p>
+<p>If the first part of the repository doesn’t exactly match your username, it won’t work, so make sure to get it right.</p>
+</blockquote>
+<p>官方教程主要强调命名项目的格式,即一定要命名为 username.github.io<br>同时,建完项目之后不要进行任何操作.我们可以直接用hexo初始化项目.</p>
+<h3 id="u5B89_u88C5_u914D_u7F6Ehexo"><a href="#u5B89_u88C5_u914D_u7F6Ehexo" class="headerlink" title="安装配置hexo"></a>安装配置hexo</h3><p>这一步强烈推荐看<a href="http://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo 官方文档</a>,现在很多网上的安装过程是过时的,现在hexo是3.0了.<br>请耐心的看完官方文档以下内容</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/hexo_00.png" alt="官方文档目录"></p>
+<p>由于hexo3.0很多功能都插件化了,包括git上传,server功能.<br>所以我们要把博客上传到github就需要先装git插件,详细见<a href="http://hexo.io/zh-cn/docs/deployment.html" target="_blank" rel="external">部署</a>(切记要根据文档配置config.yml)<br>以下是常用插件</p>
+<pre><code>npm install hexo-generator-index --save
+npm install hexo-generator-archive --save
+npm install hexo-generator-category --save
+npm install hexo-generator-tag --save
+npm install hexo-server --save
+npm install hexo-deployer-git --save
+npm install hexo-renderer-marked@0.2 --save
+npm install hexo-renderer-stylus@0.2 --save
+npm install hexo-generator-feed@1 --save
+npm install hexo-generator-sitemap@1 --save
+</code></pre><p>在命令行执行即可</p>
+<h3 id="u7528hexo_u5199_u4F5Cgithub_u535A_u5BA2_u7684_u6D41_u7A0B"><a href="#u7528hexo_u5199_u4F5Cgithub_u535A_u5BA2_u7684_u6D41_u7A0B" class="headerlink" title="用hexo写作github博客的流程"></a>用hexo写作github博客的流程</h3><p><strong>注意:hexo是用markdown来写作的,以下命令都是博客所在目录执行</strong></p>
+<ol>
+<li>hexo new “title”<br> 新建一篇文章,然后编辑相应的md文件<br> 具体使用查看<a href="http://hexo.io/zh-cn/docs/writing.html" target="_blank" rel="external">写作</a></li>
+<li>hexo clean<br> 清除缓存</li>
+<li>hexo generate<br> 根据写作的内容和配置生成网页<br> 生成文章在public文件夹中,上传到github的就是里面的内容<br> 具体使用查看<a href="http://hexo.io/zh-cn/docs/generating.html" target="_blank" rel="external">生成器</a></li>
+<li>hexo deploy<br> 上传到github<br> 具体使用查看<a href="http://hexo.io/zh-cn/docs/deployment.html" target="_blank" rel="external">部署</a></li>
+<li>访问username.github.io查看内容</li>
+</ol>
+<h3 id="hexo_u4E0Egithub_u7684_u5173_u7CFB"><a href="#hexo_u4E0Egithub_u7684_u5173_u7CFB" class="headerlink" title="hexo与github的关系"></a>hexo与github的关系</h3><p>hexo是一个博客框架,给我们提供了基于markdown的语法,帮助我们自动生成博客.</p>
+<p>由于github提供了github page的功能,那么我们可以把生成的博客网页放在github上,供大家访问.</p>
+<p>也就是说github就像是一个网站空间,由于hexo自带对github的支持,可以直接commit内容到github上,也就是说我们可以把hexo当做集成了写作和ftp发布功能的软件.</p>
+<h3 id="hexo_u7684_u4E3B_u9898"><a href="#hexo_u7684_u4E3B_u9898" class="headerlink" title="hexo的主题"></a>hexo的主题</h3><p>hexo有丰富的主题支持,本博客用的就是<a href="http://wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="external">jacman</a></p>
+<p>更多主题查看<a href="http://hexo.io/themes/" target="_blank" rel="external">主题</a></p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>整个部署流程如下</p>
+<ul>
+<li>注册github</li>
+<li>创建 username.github.io</li>
+<li>安装配置hexo</li>
+<li>开始写作</li>
+<li>额外配置主题</li>
+</ul>
+<p>总的来说,刚开始配置就是一直在折腾,需要有足够的耐心,可能大家都喜欢看别人一步步的详细的步骤,自己只要复制粘贴就行了.但是有时候即使你完全照着做也会出问题的,因为版本和环境不一样.</p>
+<p>一开始我也是这样,后来才发现,最好的方法是查看别人做的思路,然后去找官方的文档.这样遇到的问题会大大减少,有时候你纠结半天的问题可能只是版本不一样.就像前面deploy部署,所有文章都是没有提到要先装</p>
+<pre><code>npm install hexo-deployer-git --save
+</code></pre><p>因为hexo3.0把它插件化了,然后我在官方文档找到了答案.<br><strong>最后提示一下：如果运行命令出现什么问题，加上sudo试试看看，里面有些需要root权限(例如说<code>sudo hexo server</code>)</strong></p>
+<p>仅以此文记录折腾hexo的过程,并且希望给后来者有参考价值.</p>
+<p>最后推荐一篇极其详细的使用hexo的文章<a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">hexo你的博客</a><br><em>里面的搭建流程是hexo2.0的,最好参考官方文档3.0的方法</em></p>
+<h2 id="u8865_u5145"><a href="#u8865_u5145" class="headerlink" title="补充"></a>补充</h2><h3 id="u5173_u4E8E_u8349_u7A3F_u7684_u4F7F_u7528_u65B9_u6CD5"><a href="#u5173_u4E8E_u8349_u7A3F_u7684_u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="关于草稿的使用方法"></a>关于草稿的使用方法</h3><p>官方文档关于草稿的使用没有说的很清楚,我根据自己的使用情况作一些介绍.</p>
+<ul>
+<li>创建草稿<br>  <code>hexo new draft &quot;title&quot;</code><br>  在source/_drafts中会创建一份md文件.作为草稿.</li>
+<li>预览草稿<br>  这一步文档中只是要加<code>--draft</code>,没有详细说在哪里加这个选项.根据我的实验,需要在两个命令中添加<code>--draft</code><br>  <code>hexo generate --draft</code>在生成时同时生成草稿<br>  <code>hexo server --draft</code>在本地预览时显示草稿</li>
+<li>发布草稿<br>  <code>hexo publish draft &quot;title&quot;</code>把草稿从_draft中移动到_post</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h2><p><strong>搭建环境:Linux,nodejs,npm,git</strong></p>
+<p>现在]]>
+    </summary>
+    
+      <category term="github" scheme="http://blog.xiaohansong.com/tags/github/"/>
+    
+      <category term="hexo" scheme="http://blog.xiaohansong.com/tags/hexo/"/>
+    
+      <category term="Linux工具" scheme="http://blog.xiaohansong.com/categories/Linux%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+</feed>
