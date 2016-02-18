@@ -5,10 +5,10 @@
     
   <url>
     <loc>http://blog.xiaohansong.com/2016/02/18/dereference-null/</loc>
-    <lastmod>2016-02-18T14:52:20.849Z</lastmod>
+    <lastmod>2016-02-18T14:56:13.014Z</lastmod>
     <data>
         <display>
-        <title>dereference null</title>
+        <title>访问 NULL 指针错误背后的原理</title>
         <pubTime>2016-02-18T14:50:43.000Z</pubTime>
         
          

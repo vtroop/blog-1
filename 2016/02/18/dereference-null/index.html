@@ -7,7 +7,7 @@
 <meta name="baidu-site-verification" content="28u1lswj4v" />
   <meta charset="UTF-8">
   
-    <title>dereference null | ShareHub</title>
+    <title>访问 NULL 指针错误背后的原理 | ShareHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Yonah-潇">
@@ -17,14 +17,14 @@
     <meta name="description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
 NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dereference null">
+<meta property="og:title" content="访问 NULL 指针错误背后的原理">
 <meta property="og:url" content="http://blog.xiaohansong.com/2016/02/18/dereference-null/index.html">
 <meta property="og:site_name" content="ShareHub">
 <meta property="og:description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
 NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
-<meta property="og:updated_time" content="2016-02-18T14:52:20.849Z">
+<meta property="og:updated_time" content="2016-02-18T14:56:13.014Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dereference null">
+<meta name="twitter:title" content="访问 NULL 指针错误背后的原理">
 <meta name="twitter:description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
 NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 <meta name="twitter:creator" content="@Yonah_x">
@@ -83,7 +83,7 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/18/dereference-null/" title="dereference null" itemprop="url">dereference null</a>
+      <a href="/2016/02/18/dereference-null/" title="访问 NULL 指针错误背后的原理" itemprop="url">访问 NULL 指针错误背后的原理</a>
   </h1>
   <p class="article-author">By
        
@@ -115,13 +115,13 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 <ol>
 <li>Linux 中，每个进程空间的 0x0 虚拟地址开始的线性区(memory region)都会被映射到一个用户态没有访问权限的页上。通过这样的映射，内核可以保证没有别的页会映射到这个区域。</li>
 <li>编译器把空指针当做 <code>0</code> 对待，开心地让你去访问空指针。</li>
-<li>缺页异常处理程序被调用，因为在 0x0 的页框没有在物理内存里面。</li>
+<li>缺页异常处理程序被调用，因为在 0x0 的页没有在物理内存里面。</li>
 <li>缺页异常处理程序发现你没有访问的权限。</li>
 <li>内核发送 <code>SIGSEGV</code> 信号给进程，该信号默认是让进程自杀。</li>
 </ol>
 <p>可以看到：不需要特定的编译器实现或者内核的支持，只需要让一个页映射到 0x0 的虚拟地址上，就完美的实现了检测空指针的错误。</p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>为了研究这个问题，我查了很多资料。空指针的问题涉及 Linux 内存管理的知识，主要参考了 Robert Love 大神对该 <a href="https://www.quora.com/What-actually-happens-when-dereferencing-a-NULL-pointer" target="_blank" rel="external">问题</a> 的回答和《深入理解Linux内核》。最大的感悟是带着问题去看内核的书，你会理解内核为什么要这么做，同时可以加深理解和记忆。</p>
-<p>空指针的实现取决于编译器的实现，访问空指针的后果取决于操作系统的实现。大部分系统类似于 Linux，会产生 <code>Segmentation fault</code> 的错误，至于内部实现就要看各个系统的代码了。</p>
+<p>总之，空指针的实现取决于编译器的实现，访问空指针的后果取决于操作系统的实现。大部分系统类似于 Linux，会产生 <code>Segmentation fault</code> 的错误，至于内部实现就要看各个系统的代码了。</p>
 <p><em>参考资料</em><br><a href="https://www.quora.com/What-actually-happens-when-dereferencing-a-NULL-pointer" target="_blank" rel="external">What actually happens when dereferencing a NULL pointer?</a><br>《深入理解Linux内核》</p>
   
 	</div>
@@ -140,7 +140,7 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/" data-title="dereference null | ShareHub" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/" data-title="访问 NULL 指针错误背后的原理 | ShareHub" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -166,7 +166,7 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/02/18/dereference-null/" data-title="dereference null" data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/"></div>
+	<div class="ds-thread" data-thread-key="2016/02/18/dereference-null/" data-title="访问 NULL 指针错误背后的原理" data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/"></div>
 </section>
 
 
