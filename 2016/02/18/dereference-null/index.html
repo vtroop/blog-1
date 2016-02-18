@@ -7,29 +7,26 @@
 <meta name="baidu-site-verification" content="28u1lswj4v" />
   <meta charset="UTF-8">
   
-    <title>理解链接之链接的基本概念 | ShareHub</title>
+    <title>dereference null | ShareHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Yonah-潇">
     
 
     
-    <meta name="description" content="前言我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行
-每一个步骤展开都是一个很大的课题，链接是一个被人忽略的课题，因为它并不是很复杂，相对于编译来说它还是比较简单的，但是并不代表它不重要。现在编译链接的环节基本上由IDE帮助我们完成了，于是我们很少关注编译链接。虽然说不懂编译链接对开发程序并没有很大影响，但是如果要成为大牛，计算机底层的知识还是要掌握的。编译的知识很多，不是几篇文章">
+    <meta name="description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
+NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 <meta property="og:type" content="article">
-<meta property="og:title" content="理解链接之链接的基本概念">
-<meta property="og:url" content="http://blog.xiaohansong.com/2015/07/19/链接的基本概念/index.html">
+<meta property="og:title" content="dereference null">
+<meta property="og:url" content="http://blog.xiaohansong.com/2016/02/18/dereference-null/index.html">
 <meta property="og:site_name" content="ShareHub">
-<meta property="og:description" content="前言我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行
-每一个步骤展开都是一个很大的课题，链接是一个被人忽略的课题，因为它并不是很复杂，相对于编译来说它还是比较简单的，但是并不代表它不重要。现在编译链接的环节基本上由IDE帮助我们完成了，于是我们很少关注编译链接。虽然说不懂编译链接对开发程序并没有很大影响，但是如果要成为大牛，计算机底层的知识还是要掌握的。编译的知识很多，不是几篇文章">
-<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/link_00.png">
-<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/link_01.png">
-<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/link_05.png">
-<meta property="og:updated_time" content="2016-01-02T17:39:28.903Z">
+<meta property="og:description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
+NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
+<meta property="og:updated_time" content="2016-02-18T14:52:20.849Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="理解链接之链接的基本概念">
-<meta name="twitter:description" content="前言我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行
-每一个步骤展开都是一个很大的课题，链接是一个被人忽略的课题，因为它并不是很复杂，相对于编译来说它还是比较简单的，但是并不代表它不重要。现在编译链接的环节基本上由IDE帮助我们完成了，于是我们很少关注编译链接。虽然说不懂编译链接对开发程序并没有很大影响，但是如果要成为大牛，计算机底层的知识还是要掌握的。编译的知识很多，不是几篇文章">
+<meta name="twitter:title" content="dereference null">
+<meta name="twitter:description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
+NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 <meta name="twitter:creator" content="@Yonah_x">
 
     
@@ -86,14 +83,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/19/链接的基本概念/" title="理解链接之链接的基本概念" itemprop="url">理解链接之链接的基本概念</a>
+      <a href="/2016/02/18/dereference-null/" title="dereference null" itemprop="url">dereference null</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Yonah-潇" target="_blank" itemprop="author">Yonah-潇</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-19T05:29:13.000Z" itemprop="datePublished"> 发表于 2015-07-19</time>
+    <time datetime="2016-02-18T14:50:43.000Z" itemprop="datePublished"> 发表于 2016-02-18</time>
     
   </p>
 </header>
@@ -102,67 +99,30 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5"><span class="toc-number">2.</span> <span class="toc-text">链接的基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u94FE_u63A5_u7684_u610F_u4E49"><span class="toc-number">3.</span> <span class="toc-text">链接的意义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6"><span class="toc-number">4.</span> <span class="toc-text">为什么要学习链接的知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B"><span class="toc-number">5.</span> <span class="toc-text">简单的链接过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u76EE_u6807_u6587_u4EF6"><span class="toc-number">6.</span> <span class="toc-text">目标文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6"><span class="toc-number">6.1.</span> <span class="toc-text">可重定位目标文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6"><span class="toc-number">6.2.</span> <span class="toc-text">可执行目标文件</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><span class="toc-number">2.</span> <span class="toc-text">NULL 在编译器中的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B"><span class="toc-number">3.</span> <span class="toc-text">访问 NULL 指针的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行</p>
-<p>每一个步骤展开都是一个很大的课题，链接是一个被人忽略的课题，因为它并不是很复杂，相对于编译来说它还是比较简单的，但是并不代表它不重要。<br>现在编译链接的环节基本上由IDE帮助我们完成了，于是我们很少关注编译链接。虽然说不懂编译链接对开发程序并没有很大影响，但是如果要成为大牛，计算机底层的知识还是要掌握的。<br>编译的知识很多，不是几篇文章能说完的，推荐看《编译原理》。</p>
-<p>这篇文章以及几篇相关的文章将参考《深入理解计算机系统》这本书，对链接作一些介绍。</p>
-<h1 id="u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5"><a href="#u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="链接的基本概念"></a>链接的基本概念</h1><blockquote>
-<p>链接(linking)就是将不同部分的代码和数据收集和组合成为一个单一文件的过程，这个文件可被加载或拷贝到内存并执行。</p>
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>说到 NULL 指针大家都是谈之色变，第一印象就是 <code>NullPointerException</code>, <code>Segmentation fault</code> 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。</p>
+<h2 id="NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><a href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0" class="headerlink" title="NULL 在编译器中的实现"></a>NULL 在编译器中的实现</h2><p>首先，我们来看看 NULL 指针到底是什么？</p>
+<blockquote>
+<p>Null 是一个特殊指针值（或是一种对象引用）表示这个指针并不指向任何的对象。</p>
 </blockquote>
-<p>简单来说，就是把程序用到的所有源文件的目标文件合成一个可执行目标文件，是一个“多合一”的过程。</p>
-<p>链接的执行时机包括：</p>
-<ul>
-<li><strong>编译时</strong>：源代码被翻译为机器码的时候。</li>
-<li><strong>加载时</strong>：程序被加载器加载到内存并执行的时候。</li>
-<li><strong>运行时</strong>：由应用程序执行。</li>
-</ul>
-<p>在早期计算机系统中，链接是手动执行的。在现代计算机系统中，链接是由链接器自动执行的。</p>
-<h1 id="u94FE_u63A5_u7684_u610F_u4E49"><a href="#u94FE_u63A5_u7684_u610F_u4E49" class="headerlink" title="链接的意义"></a>链接的意义</h1><p>链接器在软件开发中扮演了关键的角色，它使得分离编译成为可能。我们不用将一个大小的应用程序组织成一个巨大的源文件，而是可以把它分解成为更小的，更好管理的模块，可以独立的修改和编译这些模块，最终由链接器链接成为一个可执行文件。</p>
-<h1 id="u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6"><a href="#u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6" class="headerlink" title="为什么要学习链接的知识"></a>为什么要学习链接的知识</h1><p>链接通常是由链接器处理的，不需要我们插手。但是这是在没有错误产生的情况下，一旦错误产生，不理解链接的工作过程和知识，我们就无法排除错误。以下列出学习链接的几个理由：</p>
-<ul>
-<li><strong>理解链接器将帮助你构造大型程序</strong>。构造大型程序的程序员经常会遇到由于缺少模块，库和不兼容库版本引起的链接器错误。除非你理解链接器是如何解析引用，什么是库，以及链接器是如何使用库来解析引用的，否则你无处着手处理错误。</li>
-<li><strong>理解链接器将帮助你避免一些危险的编程错误</strong>。默认情况下，乱用全局变量在链接时是不会产生警告的，这样的错误难以调试。理解链接器将让你知道原因，如何避免。</li>
-<li><strong>理解链接将帮助你理解语言的作用域规则是如何实现的</strong>。</li>
-<li><strong>理解链接将帮助你理解其他重要的系统概念</strong>。</li>
-<li><strong>理解链接将使你能够开发共享库</strong>。</li>
-</ul>
-<h1 id="u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B"><a href="#u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B" class="headerlink" title="简单的链接过程"></a>简单的链接过程</h1><p>来看一个简单的静态链接过程，对链接有一个感性的认识。</p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_00.png" alt="static linking"></p>
-<p>源代码经过编译器翻译为汇编语言文件，再经过汇编器翻译为可重定向目标文件，最后由链接器链接为可执行目标文件。<br>(ccl:C编译器, as:汇编器, ld:链接器)</p>
-<p>为了创建可执行文件，链接器要完成两个任务：</p>
-<ul>
-<li><strong>符号解析</strong>。目标文件定义和引用符号。符号解析的目的是将每个符号引用和一个符号定义联系起来。</li>
-<li><strong>重定位</strong>。编译器和汇编器生产从地址零开始的代码和数据节。链接器通过把每个符号定义与一个存储器地址联系起来，然后修改所有对这些符号的引用，使得它们指向这个存储器地址，从而重定位这些节。</li>
-</ul>
-<h1 id="u76EE_u6807_u6587_u4EF6"><a href="#u76EE_u6807_u6587_u4EF6" class="headerlink" title="目标文件"></a>目标文件</h1><ul>
-<li><strong>可重定位目标文件</strong>。包含二进制代码和数据，其形式可以在编译时与其他可重定位目标文件合并起来，创建一个可执行目标文件。</li>
-<li><strong>可执行目标文件</strong>。包含二进制代码和数据，其形式可以直接被拷贝到内存并执行。</li>
-<li><strong>共享目标文件</strong>。一种特殊类型的可重定位目标文件，可以在加载或运行时，被动态加载到存储器并链接。</li>
-</ul>
-<h2 id="u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6"><a href="#u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6" class="headerlink" title="可重定位目标文件"></a>可重定位目标文件</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_01.png" alt="典型的ELF可重定位目标文件"></p>
-<ul>
-<li><strong>ELF header</strong>:前16个字节描述了字的大小和生产该文件系统的字节顺序，剩下的包含帮助链接器解析和解释目标文件的信息。</li>
-<li><strong>.text</strong>:已编译程序的机器代码</li>
-<li><strong>.rodata</strong>:只读数据</li>
-<li><strong>.data</strong>:已初始化的全局C变量</li>
-<li><strong>.bss</strong>:未初始化的全局C变量，不占空间</li>
-<li><strong>.symtab</strong>:符号表，存放程序中被定义和引用的函数和全局变量的信息。</li>
-<li><strong>.rel.text</strong>:一个.text节位置列表，保存跟其他文件链接之后需要修改的项</li>
-<li><strong>.rel.data</strong>:记录被模块定义或引用的全局变量的重定位信息</li>
-<li><strong>.debug</strong>:调试符号表</li>
-<li><strong>.line</strong>:源代码行号和.text节中机器码的映射,用于调试.</li>
-<li><strong>.strtab</strong>:一个字符串表包含.symtab和.debug的符号表还有其节头部名.</li>
-</ul>
-<h2 id="u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6"><a href="#u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6" class="headerlink" title="可执行目标文件"></a>可执行目标文件</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_05.png" alt="典型的ELF可执行目标文件"></p>
-<p>从上图可以看出，可执行目标文件被分为三个部分：</p>
-<ul>
-<li><strong>代码段</strong>:只读内存段</li>
-<li><strong>数据段</strong>:可读写内存段</li>
-<li><strong>符号表和调试信息</strong>:这些数据不会在执行时不会被加载到内存中.</li>
-</ul>
+<p>举一些例子，C/C++ 中的 <code>NULL</code>，Python 中的 <code>None</code> 等等。大部分 <code>NULL</code> 实现是用 <code>0</code> 代表 <code>NULL</code>，例如说 C/C++ 。实际上，NULL 的值并不重要，重要的是它代表的含义。例如说，JVM 规范并没有规定 NULL 的值，不同虚拟机实现可以自己定义 NULL 的值。</p>
+<p>总之， NULL 的值取决编译器实现。</p>
+<h2 id="u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B"><a href="#u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B" class="headerlink" title="访问 NULL 指针的过程"></a>访问 NULL 指针的过程</h2><p>C 语言中，NULL 的值是 0，即 <code>NULL == 0</code> 是成立的。我们前面说访问 NULL 指针的行为会产生不可预料的后果。但是在 Linux 系统中后果是确定的：访问空指针会产生 <code>Segmentation fault</code> 的错误。因此这里的“不可预料”指的是在不同系统产生的后果不一样。</p>
+<p>让我们假设现在使用的是 C 语言，运行在 Linux 系统上，以此来分析访问 NULL 指针的过程。</p>
+<ol>
+<li>Linux 中，每个进程空间的 0x0 虚拟地址开始的线性区(memory region)都会被映射到一个用户态没有访问权限的页上。通过这样的映射，内核可以保证没有别的页会映射到这个区域。</li>
+<li>编译器把空指针当做 <code>0</code> 对待，开心地让你去访问空指针。</li>
+<li>缺页异常处理程序被调用，因为在 0x0 的页框没有在物理内存里面。</li>
+<li>缺页异常处理程序发现你没有访问的权限。</li>
+<li>内核发送 <code>SIGSEGV</code> 信号给进程，该信号默认是让进程自杀。</li>
+</ol>
+<p>可以看到：不需要特定的编译器实现或者内核的支持，只需要让一个页映射到 0x0 的虚拟地址上，就完美的实现了检测空指针的错误。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>为了研究这个问题，我查了很多资料。空指针的问题涉及 Linux 内存管理的知识，主要参考了 Robert Love 大神对该 <a href="https://www.quora.com/What-actually-happens-when-dereferencing-a-NULL-pointer" target="_blank" rel="external">问题</a> 的回答和《深入理解Linux内核》。最大的感悟是带着问题去看内核的书，你会理解内核为什么要这么做，同时可以加深理解和记忆。</p>
+<p>空指针的实现取决于编译器的实现，访问空指针的后果取决于操作系统的实现。大部分系统类似于 Linux，会产生 <code>Segmentation fault</code> 的错误，至于内部实现就要看各个系统的代码了。</p>
+<p><em>参考资料</em><br><a href="https://www.quora.com/What-actually-happens-when-dereferencing-a-NULL-pointer" target="_blank" rel="external">What actually happens when dereferencing a NULL pointer?</a><br>《深入理解Linux内核》</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -170,14 +130,9 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/理解链接/">理解链接</a>
+  <a class="article-category-link" href="/categories/Linux内核/">Linux内核</a>
 </div>
 
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/链接/">链接</a>
-  </div>
 
 </div>
 
@@ -185,7 +140,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.xiaohansong.com/2015/07/19/链接的基本概念/" data-title="理解链接之链接的基本概念 | ShareHub" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/" data-title="dereference null | ShareHub" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -198,19 +153,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/19/spice源码分析之server-1/" title="spice源码分析之server(1)">
-  <strong>上一篇：</strong><br/>
-  <span>
-  spice源码分析之server(1)</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/16/桌面虚拟化传输协议之android-spice/"  title="桌面虚拟化传输协议之android spice">
+<a href="/2016/01/16/kownledge-Management/"  title="程序员的知识管理">
  <strong>下一篇：</strong><br/> 
- <span>桌面虚拟化传输协议之android spice
+ <span>程序员的知识管理
 </span>
 </a>
 </div>
@@ -219,7 +166,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/19/链接的基本概念/" data-title="理解链接之链接的基本概念" data-url="http://blog.xiaohansong.com/2015/07/19/链接的基本概念/"></div>
+	<div class="ds-thread" data-thread-key="2016/02/18/dereference-null/" data-title="dereference null" data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/"></div>
 </section>
 
 
@@ -229,7 +176,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5"><span class="toc-number">2.</span> <span class="toc-text">链接的基本概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u94FE_u63A5_u7684_u610F_u4E49"><span class="toc-number">3.</span> <span class="toc-text">链接的意义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6"><span class="toc-number">4.</span> <span class="toc-text">为什么要学习链接的知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B"><span class="toc-number">5.</span> <span class="toc-text">简单的链接过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u76EE_u6807_u6587_u4EF6"><span class="toc-number">6.</span> <span class="toc-text">目标文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6"><span class="toc-number">6.1.</span> <span class="toc-text">可重定位目标文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6"><span class="toc-number">6.2.</span> <span class="toc-text">可执行目标文件</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><span class="toc-number">2.</span> <span class="toc-text">NULL 在编译器中的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B"><span class="toc-number">3.</span> <span class="toc-text">访问 NULL 指针的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
  
   </div>
 

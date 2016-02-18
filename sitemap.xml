@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.xiaohansong.com/2016/02/18/dereference-null/</loc>
+    <lastmod>2016-02-18T14:52:20.849Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.xiaohansong.com/about/index.html</loc>
     <lastmod>2016-01-17T08:17:18.757Z</lastmod>
   </url>
@@ -37,12 +42,12 @@
   </url>
   
   <url>
-    <loc>http://blog.xiaohansong.com/2015/06/17/%E7%94%A8hexo%E6%90%AD%E5%BB%BAgithub%E5%8D%9A%E5%AE%A2/</loc>
+    <loc>http://blog.xiaohansong.com/2015/07/16/%E6%A1%8C%E9%9D%A2%E8%99%9A%E6%8B%9F%E5%8C%96%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E4%B9%8Bandroid-spice/</loc>
     <lastmod>2016-01-02T17:39:28.900Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.xiaohansong.com/2015/07/16/%E6%A1%8C%E9%9D%A2%E8%99%9A%E6%8B%9F%E5%8C%96%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E4%B9%8Bandroid-spice/</loc>
+    <loc>http://blog.xiaohansong.com/2015/06/17/%E7%94%A8hexo%E6%90%AD%E5%BB%BAgithub%E5%8D%9A%E5%AE%A2/</loc>
     <lastmod>2016-01-02T17:39:28.900Z</lastmod>
   </url>
   
