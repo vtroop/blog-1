@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-02-18T14:56:13.014Z</updated>
+  <updated>2016-03-13T09:16:17.289Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,128 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Java String 对 null 对象的巧妙处理]]></title>
+    <link href="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/"/>
+    <id>http://blog.xiaohansong.com/2016/03/13/null-in-java-string/</id>
+    <published>2016-03-13T09:10:24.000Z</published>
+    <updated>2016-03-13T09:16:17.289Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在读《Thinking in Java》，看到这样一段话：</p>
+<blockquote>
+<p>Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initialized to null, and if you try to call methods for any of them, you’ll get an exception-a runtime error. Conveniently, you can still print a null reference without throwing an exception.<br>大意是：原生类型会被自动初始化为 0，但是对象引用会被初始化为 null，如果你尝试调用该对象的方法，就会抛出空指针异常。通常，你可以打印一个 null 对象而不会抛出异常。</p>
+</blockquote>
+<p>第一句相信大家都会容易理解，这是类型初始化的基础知识，但是第二句就让我很疑惑：为什么打印一个 null 对象不会抛出异常？带着这个疑问，我开始了解惑之旅。下面我将详细阐述我解决这个问题的思路，并且深入 JDK 源码找到问题的答案。</p>
+<h2 id="u89E3_u51B3_u95EE_u9898_u7684_u8FC7_u7A0B"><a href="#u89E3_u51B3_u95EE_u9898_u7684_u8FC7_u7A0B" class="headerlink" title="解决问题的过程"></a>解决问题的过程</h2><p>可以发现，其实这个问题有几种情况，所以我们分类讨论各种情况，看最后能不能得到答案。</p>
+<p>首先，我们把这个问题分解为三个小问题，逐一解决。</p>
+<h3 id="u7B2C_u4E00_u4E2A_u95EE_u9898"><a href="#u7B2C_u4E00_u4E2A_u95EE_u9898" class="headerlink" title="第一个问题"></a>第一个问题</h3><p>直接打印 null 的 String 对象，会得到什么结果？</p>
+<pre><code>String s = null;
+System.out.print(s);
+</code></pre><p>运行的结果是</p>
+<pre><code>null
+</code></pre><p>果然如书上说的没有抛出异常，而是打印了<code>null</code>。显然问题的线索在于<code>print</code>函数的源码中。我们找到<code>print</code>的源码：</p>
+<pre><code>public void print(String s) {
+    if (s == null) {
+        s = &quot;null&quot;;
+    }
+    write(s);
+}
+</code></pre><p>看到源码才发现原来就只是加了一句判断而已，简单粗暴，可能你对 JDK 的简单实现有点失望了。放心，第一个问题只是开胃菜而已，大餐还在后面。</p>
+<h3 id="u7B2C_u4E8C_u4E2A_u95EE_u9898"><a href="#u7B2C_u4E8C_u4E2A_u95EE_u9898" class="headerlink" title="第二个问题"></a>第二个问题</h3><p>打印一个 null 的非 String 对象，例如说 Integer：</p>
+<pre><code>Integer i = null;
+System.out.print(i);
+</code></pre><p>运行的结果不出意料：</p>
+<pre><code>null
+</code></pre><p>我们再去看看<code>print</code>的源码：</p>
+<pre><code>public void print(Object obj) {
+    write(String.valueOf(obj));
+}
+</code></pre><p>有点不一样的了，看来秘密藏在<code>valueOf</code>里面。</p>
+<pre><code>public static String valueOf(Object obj) {
+    return (obj == null) ? &quot;null&quot; : obj.toString();
+}
+</code></pre><p>看到这里，我们终于发现了打印 null 对象不会抛出异常的秘密。<code>print</code>方法对 String 对象和非 String 对象分开进行处理。</p>
+<ol>
+<li><strong>String 对象</strong>：直接判断是否为 null，如果为 null 给 null 对象赋值为<code>&quot;null&quot;</code>。</li>
+<li><strong>非 String 对象</strong>：通过调用<code>String.valueOf</code>方法，如果是 null 对象，就返回<code>&quot;null&quot;</code>，否则调用对象的<code>toString</code>方法。</li>
+</ol>
+<p>通过上面的处理，可以保证打印 null 对象不会出错。</p>
+<p>到这里，本文就应该结束了。<br>什么？说好的大餐呢？上面还不够塞牙缝呢。<br>开玩笑啦。下面我们来探讨第三个问题。</p>
+<h3 id="u7B2C_u4E09_u4E2A_u95EE_u9898_uFF08_u9690_u85CF_u7684_u5927_u9910_uFF09"><a href="#u7B2C_u4E09_u4E2A_u95EE_u9898_uFF08_u9690_u85CF_u7684_u5927_u9910_uFF09" class="headerlink" title="第三个问题（隐藏的大餐）"></a>第三个问题（隐藏的大餐）</h3><p>null 对象与字符串拼接会得到什么结果？</p>
+<pre><code>String s = null;
+s = s + &quot;!&quot;;
+System.out.print(s);
+</code></pre><p>结果可能你也猜到了：</p>
+<pre><code>null!
+</code></pre><p>为什么呢？跟踪代码运行可以发现，这回跟<code>print</code>没有什么关系。但是上面的代码就调用了<code>print</code>函数，不是它会是谁呢？<code>+</code>的嫌疑最大，但是<code>+</code>又不是函数，我们怎么看到它的源代码？这种情况，唯一的解释就是编译器动了手脚，天网恢恢，疏而不漏，找不到源代码，我们可以去看看编译器生成的字节码。</p>
+<pre><code>L0
+ LINENUMBER 27 L0
+ ACONST_NULL
+ ASTORE 1
+L1
+ LINENUMBER 28 L1
+ NEW java/lang/StringBuilder
+ DUP
+ INVOKESPECIAL java/lang/StringBuilder.&lt;init&gt; ()V
+ ALOAD 1
+ INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+ LDC &quot;!&quot;
+ INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+ INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+ ASTORE 1
+L2
+ LINENUMBER 29 L2
+ GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+ ALOAD 1
+ INVOKEVIRTUAL java/io/PrintStream.print (Ljava/lang/String;)V
+</code></pre><p>看了上面的字节码是不是一头雾水？这里我们就要扯开话题，来侃侃<code>+</code>字符串拼接的原理了。</p>
+<p>编译器对字符串相加会进行优化，首先实例化一个<code>StringBuilder</code>，然后把相加的字符串按顺序<code>append</code>，最后调用<code>toString</code>返回一个<code>String</code>对象。不信你们看看上面的字节码是不是出现了<code>StringBuilder</code>。详细的解释参考这篇文章 <a href="http://droidyue.com/blog/2014/08/30/java-details-string-concatenation/" target="_blank" rel="external">Java细节：字符串的拼接</a>。</p>
+<pre><code>String s = &quot;a&quot; + &quot;b&quot;;
+//等价于
+StringBuilder sb = new StringBuilder();
+sb.append(&quot;a&quot;);
+sb.append(&quot;b&quot;);
+String s = sb.toString();
+</code></pre><p>再回到我们的问题，现在我们知道秘密在<code>StringBuilder.append</code>函数的源码中。</p>
+<pre><code>//针对 String 对象
+public AbstractStringBuilder append(String str) {
+    if (str == null)
+        return appendNull();
+    int len = str.length();
+    ensureCapacityInternal(count + len);
+    str.getChars(0, len, value, count);
+    count += len;
+    return this;
+}
+//针对非 String 对象
+public AbstractStringBuilder append(Object obj) {
+    return append(String.valueOf(obj));
+}
+
+private AbstractStringBuilder appendNull() {
+    int c = count;
+    ensureCapacityInternal(c + 4);
+    final char[] value = this.value;
+    value[c++] = &apos;n&apos;;
+    value[c++] = &apos;u&apos;;
+    value[c++] = &apos;l&apos;;
+    value[c++] = &apos;l&apos;;
+    count = c;
+    return this;
+}
+</code></pre><p>现在我们恍然大悟，<code>append</code>函数如果判断对象为 null，就会调用<code>appendNull</code>，填充<code>&quot;null&quot;</code>。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>上面我们讨论了三个问题，由此引出 Java 中 String 对 null 对象的巧妙处理。上面的例子没有覆盖所有的处理情况，算是抛砖引玉。</p>
+<p>如何让程序中的 null 对象在我们的控制之中，这是我们从优秀源代码中需要学到的东西。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在读《Thinking in Java》，看到这样一段话：</p>
+<blockquote>
+<p>]]>
+    </summary>
+    
+      <category term="java" scheme="http://blog.xiaohansong.com/categories/java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[访问 NULL 指针错误背后的原理]]></title>
