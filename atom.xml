@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-03-13T09:16:17.289Z</updated>
+  <updated>2016-03-15T08:02:58.222Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[Java String 对 null 对象的巧妙处理]]></title>
+    <title><![CDATA[Java String 对 null 对象的容错处理]]></title>
     <link href="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/"/>
     <id>http://blog.xiaohansong.com/2016/03/13/null-in-java-string/</id>
     <published>2016-03-13T09:10:24.000Z</published>
-    <updated>2016-03-13T09:16:17.289Z</updated>
+    <updated>2016-03-15T08:02:58.222Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在读《Thinking in Java》，看到这样一段话：</p>
 <blockquote>
 <p>Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initialized to null, and if you try to call methods for any of them, you’ll get an exception-a runtime error. Conveniently, you can still print a null reference without throwing an exception.<br>大意是：原生类型会被自动初始化为 0，但是对象引用会被初始化为 null，如果你尝试调用该对象的方法，就会抛出空指针异常。通常，你可以打印一个 null 对象而不会抛出异常。</p>
@@ -123,8 +123,8 @@ private AbstractStringBuilder appendNull() {
     return this;
 }
 </code></pre><p>现在我们恍然大悟，<code>append</code>函数如果判断对象为 null，就会调用<code>appendNull</code>，填充<code>&quot;null&quot;</code>。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>上面我们讨论了三个问题，由此引出 Java 中 String 对 null 对象的巧妙处理。上面的例子没有覆盖所有的处理情况，算是抛砖引玉。</p>
-<p>如何让程序中的 null 对象在我们的控制之中，这是我们从优秀源代码中需要学到的东西。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>上面我们讨论了三个问题，由此引出 Java 中 String 对 null 对象的容错处理。上面的例子没有覆盖所有的处理情况，算是抛砖引玉。</p>
+<p>如何让程序中的 null 对象在我们的控制之中，是我们编程的时候需要时刻注意的事情。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在读《Thinking in Java》，看到这样一段话：</p>

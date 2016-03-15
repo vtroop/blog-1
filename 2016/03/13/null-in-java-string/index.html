@@ -7,7 +7,7 @@
 <meta name="baidu-site-verification" content="28u1lswj4v" />
   <meta charset="UTF-8">
   
-    <title>Java String 对 null 对象的巧妙处理 | ShareHub</title>
+    <title>Java String 对 null 对象的容错处理 | ShareHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Yonah-潇">
@@ -18,15 +18,15 @@
 
 Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initializ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java String 对 null 对象的巧妙处理">
+<meta property="og:title" content="Java String 对 null 对象的容错处理">
 <meta property="og:url" content="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/index.html">
 <meta property="og:site_name" content="ShareHub">
 <meta property="og:description" content="前言最近在读《Thinking in Java》，看到这样一段话：
 
 Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initializ">
-<meta property="og:updated_time" content="2016-03-13T09:16:17.289Z">
+<meta property="og:updated_time" content="2016-03-15T08:02:58.222Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java String 对 null 对象的巧妙处理">
+<meta name="twitter:title" content="Java String 对 null 对象的容错处理">
 <meta name="twitter:description" content="前言最近在读《Thinking in Java》，看到这样一段话：
 
 Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initializ">
@@ -86,7 +86,7 @@ Primitives that are fields in a class are automatically initialized to zero, as 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/13/null-in-java-string/" title="Java String 对 null 对象的巧妙处理" itemprop="url">Java String 对 null 对象的巧妙处理</a>
+      <a href="/2016/03/13/null-in-java-string/" title="Java String 对 null 对象的容错处理" itemprop="url">Java String 对 null 对象的容错处理</a>
   </h1>
   <p class="article-author">By
        
@@ -209,8 +209,8 @@ private AbstractStringBuilder appendNull() {
     return this;
 }
 </code></pre><p>现在我们恍然大悟，<code>append</code>函数如果判断对象为 null，就会调用<code>appendNull</code>，填充<code>&quot;null&quot;</code>。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>上面我们讨论了三个问题，由此引出 Java 中 String 对 null 对象的巧妙处理。上面的例子没有覆盖所有的处理情况，算是抛砖引玉。</p>
-<p>如何让程序中的 null 对象在我们的控制之中，这是我们从优秀源代码中需要学到的东西。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>上面我们讨论了三个问题，由此引出 Java 中 String 对 null 对象的容错处理。上面的例子没有覆盖所有的处理情况，算是抛砖引玉。</p>
+<p>如何让程序中的 null 对象在我们的控制之中，是我们编程的时候需要时刻注意的事情。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -228,7 +228,7 @@ private AbstractStringBuilder appendNull() {
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/" data-title="Java String 对 null 对象的巧妙处理 | ShareHub" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/" data-title="Java String 对 null 对象的容错处理 | ShareHub" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -254,7 +254,7 @@ private AbstractStringBuilder appendNull() {
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/03/13/null-in-java-string/" data-title="Java String 对 null 对象的巧妙处理" data-url="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/"></div>
+	<div class="ds-thread" data-thread-key="2016/03/13/null-in-java-string/" data-title="Java String 对 null 对象的容错处理" data-url="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/"></div>
 </section>
 
 
