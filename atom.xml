@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-03-15T08:02:58.222Z</updated>
+  <updated>2016-04-09T08:12:09.131Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,124 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Hiho 1289 403 Forbidden（微软编程题）]]></title>
+    <link href="http://blog.xiaohansong.com/2016/04/09/forbidden/"/>
+    <id>http://blog.xiaohansong.com/2016/04/09/forbidden/</id>
+    <published>2016-04-09T08:10:40.000Z</published>
+    <updated>2016-04-09T08:12:09.131Z</updated>
+    <content type="html"><![CDATA[<h2 id="u9898_u610F"><a href="#u9898_u610F" class="headerlink" title="题意"></a>题意</h2><pre><code>allow 1.2.3.4/30
+deny 1.1.1.1
+allow 127.0.0.1
+allow 123.234.12.23/3
+deny 0.0.0.0/0
+</code></pre><p>输入 ip 按顺序匹配规则，优先匹配前面的规则，如果没有规则可以匹配则视为合法。注意：掩码为 0 的时候表示匹配所有 ip。</p>
+<h2 id="u601D_u8DEF"><a href="#u601D_u8DEF" class="headerlink" title="思路"></a>思路</h2><p>一开始做的时候用遍历匹配的方法，直接超时了。后来才想到用字典树的方法来做，这道题本质上是一道字典树变形。</p>
+<h3 id="u6570_u636E_u7ED3_u6784"><a href="#u6570_u636E_u7ED3_u6784" class="headerlink" title="数据结构"></a>数据结构</h3><pre><code>class Node {
+        byte flag;//0代表普通节点，1代表允许规则终点，2代表禁止规则终点
+        int seq;//规则顺序
+        Node[] next = new Node[2];
+
+        Node(byte flag){
+            this.flag = flag;
+    }
+}
+</code></pre><h3 id="u5EFA_u6811"><a href="#u5EFA_u6811" class="headerlink" title="建树"></a>建树</h3><ol>
+<li>seq 自增，记录规则的顺序</li>
+<li>解析掩码：如果输入的 ip 没有 mask，则默认 <code>mask = 32</code></li>
+<li>把ip地址转化为二进制形式</li>
+<li>插入节点：如果该节点不存在，则新建；否则沿着节点往下走</li>
+<li>设置节点的 flag 和 seq：后面的规则不能覆盖前面的规则，所以要查看当前节点是否为某规则的终点。</li>
+</ol>
+<p>代码如下：</p>
+<pre><code>public void insert(String ip, byte flag) {
+    seq++;
+    int mask = 32;
+    int index = ip.indexOf(&apos;/&apos;);
+    //检测是否有掩码
+    if (index != -1) {
+        mask = Integer.parseInt(ip.substring(index + 1));
+    } else {
+        index = ip.length();
+    }
+     //把ip地址转化为二进制形式
+    String binary = toBinary(ip.substring(0, index));
+
+    char[] binarys = binary.toCharArray();
+
+    Node node = root;
+
+    for (int i = 0; i &lt; mask; i++) {
+        int pos = binarys[i] - &apos;0&apos;;
+        if (node.next[pos] == null){
+            node.next[pos] = new Node((byte) 0);
+        }
+        node = node.next[pos];
+    }
+    //后面的规则不能覆盖前面的
+    if (node.flag == 0){
+        node.flag = flag;
+    }
+    if (node.seq == 0) {
+        node.seq = seq;
+    }
+}
+</code></pre><h3 id="u5339_u914D"><a href="#u5339_u914D" class="headerlink" title="匹配"></a>匹配</h3><ol>
+<li>把ip地址转化为二进制形式</li>
+<li>遍历字典树</li>
+<li>如果当前节点为规则的终点，则需要比较该规则的顺序，seq 小的优先匹配</li>
+<li>遍历完字典树之后，isAllow 的值就是该 ip 最先匹配到的规则所规定的权限</li>
+</ol>
+<p>代码如下：</p>
+<pre><code>public boolean isAllow(String ip){
+    String binary = toBinary(ip);
+    char[] binarys = binary.toCharArray();
+
+    Node node = root;
+    int seq = Integer.MAX_VALUE;
+    boolean isAllow = true;
+    int i = 0;
+    int pos = 0;
+    while (node != null){
+        //字典树最多会有33个节点，而ip的二进制最多只有32位
+        //另一种避免判断的方法是在ip的二进制后面补一个0
+        if (i &lt; binarys.length){
+            pos = binarys[i] - &apos;0&apos;;
+        }
+        if (node.flag == 1){
+            if (node.seq &lt; seq){
+                isAllow = true;
+                seq = node.seq;
+            }
+        } else if (node.flag == 2){
+            if (node.seq &lt; seq){
+                isAllow = false;
+                seq = node.seq;
+            }
+        } else {
+            //flag=0说明是普通节点，直接跳过即可。
+        }
+        node = node.next[pos];
+        i++;
+    }
+    return isAllow;
+}
+</code></pre><p><em><a href="https://github.com/x-hansong/JavaCodes/blob/master/src/main/java/com/contest/Forbidden.java" target="_blank" rel="external">完整代码</a></em></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u9898_u610F"><a href="#u9898_u610F" class="headerlink" title="题意"></a>题意</h2><pre><code>allow 1.2.3.4/30
+deny 1.1.1.1
+allow 127.0.0.]]>
+    </summary>
+    
+      <category term="Trie" scheme="http://blog.xiaohansong.com/tags/Trie/"/>
+    
+      <category term="字典树" scheme="http://blog.xiaohansong.com/tags/%E5%AD%97%E5%85%B8%E6%A0%91/"/>
+    
+      <category term="解题报告" scheme="http://blog.xiaohansong.com/categories/%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Java String 对 null 对象的容错处理]]></title>
@@ -503,7 +621,7 @@ void testApp() {
     <link href="http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/"/>
     <id>http://blog.xiaohansong.com/2015/11/24/clean-code-polymorphism/</id>
     <published>2015-11-24T07:54:43.000Z</published>
-    <updated>2016-01-02T17:39:28.898Z</updated>
+    <updated>2016-04-09T08:16:17.133Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?list=PL693EFD059797C21E" target="_blank" rel="external">谷歌简洁代码演讲系列</a> 中的 <a href="https://www.youtube.com/watch?v=4F72VULWFvc&amp;list=PL693EFD059797C21E&amp;index=1" target="_blank" rel="external">多态和条件语句</a> 的总结。大部分的条件语句是可以用多态代替的，本文将围绕以下问题开展：</p>
 <ul>
 <li>为什么要用多态替代条件语句</li>
@@ -571,7 +689,7 @@ void testExecuteDoB() {
 <p>我们可以分为两步来操作：</p>
 <ul>
 <li>让 <code>Update</code> 成为抽象类，方法也抽象。</li>
-<li>在子类中的重载方法实现条件语句的分支操作。</li>
+<li>在子类中的覆盖方法实现条件语句的分支操作。</li>
 </ul>
 <p>代码如下</p>
 <pre><code>abstract class Update {
@@ -843,10 +961,10 @@ class ColonMovieFinder...
     <link href="http://blog.xiaohansong.com/2015/10/03/Linux%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E4%B9%8B%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6/"/>
     <id>http://blog.xiaohansong.com/2015/10/03/Linux内存寻址之分段机制/</id>
     <published>2015-10-03T05:56:31.000Z</published>
-    <updated>2016-01-02T17:39:28.894Z</updated>
+    <updated>2016-04-09T08:21:48.468Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Linux内核，读到《深入理解Linux内核》的内存寻址一章。原本以为自己对分段分页机制已经理解了，结果发现其实是一知半解。于是，查找了很多资料，最终理顺了内存寻址的知识。现在把我的理解记录下来，希望对内核学习者有一定帮助，也希望大家指出错误之处。</p>
 <h2 id="u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B"><a href="#u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B" class="headerlink" title="分段到底是怎么回事"></a>分段到底是怎么回事</h2><p>相信学过操作系统课程的人都知道分段分页，但是奇怪的是书上基本没提分段分页是怎么产生的，这就导致我们知其然不知其所以然。下面我们先扒一下分段机制产生的历史。</p>
-<h3 id="u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="实模式的诞生（16位处理器及寻址）"></a>实模式的诞生（16位处理器及寻址）</h3><p>在8086处理器诞生之前，内存寻址方式就是直接访问物理地址。8086处理器为了寻址1M的内存空间，把地址总线扩展到了20位。但是，一个尴尬的问题出现了，ALU的宽度只有16位，也就是说，ALU不能计算20位的地址。为了解决这个问题，分段机制被引入，登上了历史舞台。<br>为了支持分段，8086处理器设置了四个段寄存器：CS, DS, SS, ES.每个段寄存器都是16位的，同时访问内存的指令中的地址也是16位的。但是，在送入地址总线之前，CPU先把它与某个段寄存器内的值相加。这里要注意：段寄存器的值对应于20位地址总线的中的高16位，所以相加时实际上是内存总线中的高12位与段寄存器中的16位相加，而低4位保留不变，这样就形成一个20位的实际地址，也就实现了从16位内存地址到20位实际地址的转换，或者叫“映射”。</p>
+<h3 id="u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="实模式的诞生（16位处理器及寻址）"></a>实模式的诞生（16位处理器及寻址）</h3><p>在8086处理器诞生之前，内存寻址方式就是直接访问物理地址。8086处理器为了寻址1M的内存空间，把地址总线扩展到了20位。但是，一个尴尬的问题出现了，ALU的宽度只有16位，也就是说，ALU不能计算20位的地址。为了解决这个问题，分段机制被引入，登上了历史舞台。<br>为了支持分段，8086处理器设置了四个段寄存器：CS, DS, SS, ES.每个段寄存器都是16位的，同时访问内存的指令中的地址也是16位的。但是，在送入地址总线之前，CPU先把它与某个段寄存器内的值相加。这里要注意：段寄存器的值对应于20位地址总线的中的高16位，所以相加时实际上是内存总线中的高16位与段寄存器中的16位相加，而低4位保留不变，这样就形成一个20位的实际地址，也就实现了从16位内存地址到20位实际地址的转换，或者叫“映射”。</p>
 <h3 id="u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="保护模式的诞生（32位处理器及寻址）"></a>保护模式的诞生（32位处理器及寻址）</h3><ul>
 <li>80286处理器的地址总线为24位，寻址空间达16M，同时引入了保护模式（内存段的访问受到限制）</li>
 <li>80386处理器是一个32位处理器，ALU和地址总线都是32位的，寻址空间达 4G。也就是说它可以不通过分段机制，直接访问4G的内存空间。虽然它是新时代的小王子，超越它的无数前辈，然而，它需要背负家族的使命–兼容前代的处理器。也就是说，它必须支持实模式和保护模式。所以，80386在段寄存器的基础上构筑保护模式，并且保留16位的段寄存器。</li>
