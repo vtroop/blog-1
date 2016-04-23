@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-04-14T13:59:10.171Z</updated>
+  <updated>2016-04-23T02:55:47.408Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -15,11 +15,107 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[【译】JVM 进行线程同步背后的原理]]></title>
+    <link href="http://blog.xiaohansong.com/2016/04/23/JVM-Synchronized/"/>
+    <id>http://blog.xiaohansong.com/2016/04/23/JVM-Synchronized/</id>
+    <published>2016-04-23T02:50:37.000Z</published>
+    <updated>2016-04-23T02:55:47.408Z</updated>
+    <content type="html"><![CDATA[<p><em>本文翻译自<a href="http://www.javaworld.com/article/2076971/java-concurrency/how-the-java-virtual-machine-performs-thread-synchronization.html" target="_blank" rel="external">How the Java virtual machine performs thread synchronization</a>，内容略有删改</em></p>
+<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>所有的 Java 程序都会被翻译为包含字节码的 class 文件，字节码是 JVM 的机器语言。这篇文章将阐述 JVM 是如何处理线程同步以及相关的字节码。</p>
+<h2 id="u7EBF_u7A0B_u548C_u5171_u4EAB_u6570_u636E"><a href="#u7EBF_u7A0B_u548C_u5171_u4EAB_u6570_u636E" class="headerlink" title="线程和共享数据"></a>线程和共享数据</h2><p>Java 的一个优点就是在语言层面支持多线程，这种支持集中在协调多线程对数据的访问上。</p>
+<p>JVM 将运行时数据划分为几个区域：一个或多个栈，一个堆，一个方法区。</p>
+<p>在 JVM 中，每个线程拥有一个栈，其他线程无法访问，里面的数据包括：局部变量，函数参数，线程调用的方法的返回值。栈里面的数据只包含原生数据类型和对象引用。在 JVM 中，不可能将实际对象的拷贝放入栈。所有对象都在堆里面。</p>
+<p>JVM 只有一个堆，所有线程都共享它。堆中只包含对象，把单独的原生类型或者对象引用放入堆也是不可能的，除非它们是对象的一部分。数组也在堆中，包括原生类型的数组，因为在 Java 中，数组也是对象。</p>
+<p>除了栈和堆，另一个存放数据的区域就是方法区了，它包含程序中使用到的所有类（静态）变量。方法区类似于栈，也只包含原生类型和对象引用，但是又跟栈不同，方法区中类变量是线程共享的。</p>
+<h2 id="u5BF9_u8C61_u9501_u548C_u7C7B_u9501"><a href="#u5BF9_u8C61_u9501_u548C_u7C7B_u9501" class="headerlink" title="对象锁和类锁"></a>对象锁和类锁</h2><p>正如前面所说，JVM 中的两个区域包含线程共享的数据，分别是：</p>
+<ol>
+<li><strong>堆</strong>：包含所有对象</li>
+<li><strong>方法区</strong>：包含所有类变量</li>
+</ol>
+<p>如果多个线程需要同时使用同一个对象或者类变量，它们对数据的访问必须被恰当地控制。否则，程序会产生不可预测的行为。</p>
+<p>为了协调多个线程对共享数据的访问，JVM 给每个对象和类关联了一个锁。锁就像是任意时间点只有一个线程能够拥有的特权。如果一个线程想要锁住一个特定的对象或者类，它需要向 JVM 请求锁。线程向 JVM 请求锁之后，可能很快就拿到，或者过一会就拿到，也可能永远拿不到。当线程不需要锁之后，它把锁还给 JVM。如果其他线程需要这个锁，JVM 会交给该线程。</p>
+<p>类锁的实现其实跟对象锁是一样的。当 JVM 加载类文件的时候，它会创建一个对应类<code>java.lang.Class</code>对象。当你锁住一个类的时候，你实际上是锁住了这个类的<code>Class</code>对象。</p>
+<p>线程访问对象实例或者类变量的时候不需要获取锁。但是如果一个线程获取了一个锁，其他线程不能访问被锁住的数据，直到拥有锁的线程释放它。</p>
+<h2 id="u7BA1_u7A0B"><a href="#u7BA1_u7A0B" class="headerlink" title="管程"></a>管程</h2><p>JVM 使用锁和管程协作。管程监视一段代码，保证一个时间点内只有一个线程能执行这段代码。</p>
+<p>每个管程与一个对象引用关联。当线程到达管程监视代码段的第一条指令时，线程必须获取关联对象的锁。线程不能执行这段代码直到它得到了锁。一旦它得到了锁，线程可以进入被保护的代码段。</p>
+<p>当线程离开被保护的代码块，不管是如何离开的，它都会释放关联对象的锁。</p>
+<h2 id="u591A_u6B21_u9501_u5B9A"><a href="#u591A_u6B21_u9501_u5B9A" class="headerlink" title="多次锁定"></a>多次锁定</h2><p>一个线程被允许锁定一个对象多次。对于每个对象，JVM 维护了一个锁的计数器。没有被锁的对象计数为 0。当一个线程第一次获取锁，计数器自增变为 1。每次这个线程（已经得到锁的线程）请求同一个对象的锁，计数器都会自增。每次线程释放锁，计数器都会自减。当计数器变为 0 时，锁才被释放，可以给别的线程使用。</p>
+<h2 id="u540C_u6B65_u5757"><a href="#u540C_u6B65_u5757" class="headerlink" title="同步块"></a>同步块</h2><p>在 Java 语言的术语中，协调多个线程访问共享数据被称为<strong>同步（synchronization）</strong>。Java 提供了两种内建的方式来同步对数据的访问：</p>
+<ol>
+<li>同步语句</li>
+<li>同步方法</li>
+</ol>
+<h3 id="u540C_u6B65_u8BED_u53E5"><a href="#u540C_u6B65_u8BED_u53E5" class="headerlink" title="同步语句"></a>同步语句</h3><p>为了创建同步语句，你需要使用<code>synchronized</code>关键字，括号里面是同步的对象引用，如下所示：</p>
+<pre><code>class KitchenSync {
+    private int[] intArray = new int[10];
+    void reverseOrder() {
+        synchronized (this) {
+            int halfWay = intArray.length / 2;
+            for (int i = 0; i &lt; halfWay; ++i) {
+                int upperIndex = intArray.length - 1 - i;
+                int save = intArray[upperIndex];
+                intArray[upperIndex] = intArray[i];
+                intArray[i] = save;
+            }
+        }
+    }
+}
+</code></pre><p>在上面的例子中，被同步块包含的语句不会被执行，直到线程得到<code>this</code>引用的对象锁。如果不是锁住<code>this</code>引用，而是锁住其他对象，在线程执行同步块语句之前，它需要获得该对象的锁。</p>
+<p>有两个字节码<code>monitorenter</code>和<code>monitorexit</code>，被用来<strong>同步方法中的同步块</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>字节码</th>
+<th>操作数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>monitorenter</td>
+<td>无</td>
+<td>取出对象引用，请求与对象引用关联的锁</td>
+</tr>
+<tr>
+<td>monitorexit</td>
+<td>无</td>
+<td>取出对象引用，释放与对象引用关联的锁</td>
+</tr>
+</tbody>
+</table>
+<p>当<code>monitorenter</code>被 JVM 执行时，它请求栈顶对象引用关联的锁。如果该线程已经拥有该对象的锁，计数器自增。每次<code>monitorexit</code>被执行，计数器自减。当计数器变为 0 时，该锁被释放。</p>
+<p><strong>注意：</strong>当同步块中抛出异常时，<code>catch</code>语句保证对象锁被释放。不管同步块是如何退出的，JVM 保证线程会释放锁。</p>
+<h3 id="u540C_u6B65_u65B9_u6CD5"><a href="#u540C_u6B65_u65B9_u6CD5" class="headerlink" title="同步方法"></a>同步方法</h3><p>为了同步整个方法，你只需要在方法声明前面加上<code>synchronized</code>关键字。</p>
+<pre><code>class HeatSync {
+    private int[] intArray = new int[10];
+    synchronized void reverseOrder() {
+        int halfWay = intArray.length / 2;
+        for (int i = 0; i &lt; halfWay; ++i) {
+            int upperIndex = intArray.length - 1 - i;
+            int save = intArray[upperIndex];
+            intArray[upperIndex] = intArray[i];
+            intArray[i] = save;
+        }
+    }
+}
+</code></pre><p>JVM 不会使用特殊的字节码来调用同步方法。当 JVM 解析方法的符号引用时，它会判断方法是不是同步的。如果是，JVM 要求线程在调用之前请求锁。对于实例方法，JVM 要求得到该实例对象的锁。对于类方法，JVM 要求得到类锁。在同步方法完成之后，不管它是正常返回还是抛出异常，锁都会被释放。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><em>本文翻译自<a href="http://www.javaworld.com/article/2076971/java-concurrency/how-the-java-virtual-machine-performs-thread-synchronization.]]>
+    </summary>
+    
+      <category term="synchronized" scheme="http://blog.xiaohansong.com/tags/synchronized/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[三言两语：SQL 连接（join）]]></title>
     <link href="http://blog.xiaohansong.com/2016/04/14/sql-join/"/>
     <id>http://blog.xiaohansong.com/2016/04/14/sql-join/</id>
     <published>2016-04-14T13:52:59.000Z</published>
-    <updated>2016-04-14T13:59:10.171Z</updated>
+    <updated>2016-04-23T02:57:58.464Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文将从连接的理论和语法讲起，结合具体的例子，详细分析 SQL 连接。</p>
 <p>之前对数据库的连接操作似懂非懂，大概知道是什么东西，但是面试笔试的时候被虐成渣，讲不清连接到底是什么。吃一堑，长一智。这就是所谓的似懂非懂， 只是单纯的看书是没用的，只有亲自动手做实验才能彻底理解什么是连接。</p>
 <h2 id="u8FDE_u63A5_u7C7B_u578B_u4E0E_u6761_u4EF6"><a href="#u8FDE_u63A5_u7C7B_u578B_u4E0E_u6761_u4EF6" class="headerlink" title="连接类型与条件"></a>连接类型与条件</h2><p>SQL 中每一种连接操作都包括一个连接类型和连接条件。</p>
@@ -201,6 +297,12 @@ left join course on student_course.cid = course.id;
 <p>之前对数据库的连接]]>
     </summary>
     
+      <category term="MySQL" scheme="http://blog.xiaohansong.com/tags/MySQL/"/>
+    
+      <category term="join" scheme="http://blog.xiaohansong.com/tags/join/"/>
+    
+      <category term="数据库" scheme="http://blog.xiaohansong.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
   </entry>
   
   <entry>
@@ -326,7 +428,7 @@ allow 127.0.0.]]>
     <link href="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/"/>
     <id>http://blog.xiaohansong.com/2016/03/13/null-in-java-string/</id>
     <published>2016-03-13T09:10:24.000Z</published>
-    <updated>2016-03-15T08:02:58.222Z</updated>
+    <updated>2016-04-23T02:53:48.465Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在读《Thinking in Java》，看到这样一段话：</p>
 <blockquote>
 <p>Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initialized to null, and if you try to call methods for any of them, you’ll get an exception-a runtime error. Conveniently, you can still print a null reference without throwing an exception.<br>大意是：原生类型会被自动初始化为 0，但是对象引用会被初始化为 null，如果你尝试调用该对象的方法，就会抛出空指针异常。通常，你可以打印一个 null 对象而不会抛出异常。</p>
@@ -439,7 +541,7 @@ private AbstractStringBuilder appendNull() {
 <p>]]>
     </summary>
     
-      <category term="java" scheme="http://blog.xiaohansong.com/categories/java/"/>
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
     
   </entry>
   
@@ -483,7 +585,7 @@ private AbstractStringBuilder appendNull() {
     <link href="http://blog.xiaohansong.com/2016/01/16/kownledge-Management/"/>
     <id>http://blog.xiaohansong.com/2016/01/16/kownledge-Management/</id>
     <published>2016-01-16T05:01:51.000Z</published>
-    <updated>2016-01-16T05:14:23.413Z</updated>
+    <updated>2016-04-23T03:10:22.011Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文从一个程序员的视角来讨论知识管理，包括以下几个方面：</p>
 <ul>
 <li>什么是知识管理</li>
@@ -500,7 +602,7 @@ private AbstractStringBuilder appendNull() {
 <li><strong>更好地掌握知识。</strong><br>  使用合适的工具，正确的方法，可以更好地掌握知识，让知识凝固在脑海，而不是流走。</li>
 <li><strong>节约时间成本。</strong><br>  程序员经常遇到同样的问题，例如说部署开发环境的时候，如果有把解决方案记录下来，就能省去重新解决问题的时间。</li>
 </ul>
-<h2 id="u5982_u4F55_u7BA1_u7406_u77E5_u8BC6"><a href="#u5982_u4F55_u7BA1_u7406_u77E5_u8BC6" class="headerlink" title="如何管理知识"></a>如何管理知识</h2><p>程序员的知识获取途径大部分来自于搜索引擎（值得一提的是，使用谷歌可以节约时间，少用百度），这与其他行业不同。主要原因是技术知识主要来源是互联网，例如说技术博客， Stackoverflow 等。因此，程序员的知识管理主要围绕互联网展开。</p>
+<h2 id="u5982_u4F55_u7BA1_u7406_u77E5_u8BC6"><a href="#u5982_u4F55_u7BA1_u7406_u77E5_u8BC6" class="headerlink" title="如何管理知识"></a>如何管理知识</h2><p>程序员的知识获取途径大部分来自于搜索引擎（谷歌可以提高搜索效率）和技术书籍，这与其他行业不同。主要原因是技术知识一个主要来源是互联网，例如说技术博客，技术文档等。因此，程序员的知识管理主要围绕互联网展开（并不意味着书籍就不重要）。</p>
 <p>我把程序员的知识管理分为三个过程：</p>
 <ul>
 <li><strong>知识积累</strong></li>
@@ -534,6 +636,7 @@ private AbstractStringBuilder appendNull() {
 <li><strong>碎片整理</strong>：在个人 wiki 上记录初步消化的知识碎片。</li>
 <li><strong>思考加工</strong>：对存在笔记和 wiki 中知识进行思考加工后写在博客。</li>
 </ol>
+<p>以上讲的是如何在互联网中学习积累，但是千万不要忽视了看书这一重要方法，书中的知识是成体系的，知识密度高，网上的文章良莠不齐，不成体系，比较碎片化。合理分配时间看书和上网学习是很重要的。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文从一个程序员的视角来讨论知识管理，包括以下几个方面：</p>
@@ -976,7 +1079,7 @@ class Factory {
     <link href="http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/"/>
     <id>http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/</id>
     <published>2015-10-21T13:39:57.000Z</published>
-    <updated>2016-01-02T17:39:28.894Z</updated>
+    <updated>2016-04-23T02:54:04.713Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Spring框架，它的核心就是IoC容器。要掌握Spring框架，就必须要理解控制反转的思想以及依赖注入的实现方式。下面，我们将围绕下面几个问题来探讨控制反转与依赖注入的关系以及在Spring中如何应用。</p>
 <ul>
 <li>什么是控制反转？</li>
@@ -1084,7 +1187,7 @@ class ColonMovieFinder...
     
       <category term="java" scheme="http://blog.xiaohansong.com/tags/java/"/>
     
-      <category term="java" scheme="http://blog.xiaohansong.com/categories/java/"/>
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
     
   </entry>
   
@@ -1730,63 +1833,6 @@ function visit(node n)
     </summary>
     
       <category term="暴力求解" scheme="http://blog.xiaohansong.com/tags/%E6%9A%B4%E5%8A%9B%E6%B1%82%E8%A7%A3/"/>
-    
-      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
-    
-      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[算法学习之算法基本概念]]></title>
-    <link href="http://blog.xiaohansong.com/2015/06/18/%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
-    <id>http://blog.xiaohansong.com/2015/06/18/算法基本概念/</id>
-    <published>2015-06-18T08:18:24.000Z</published>
-    <updated>2016-01-02T17:39:28.901Z</updated>
-    <content type="html"><![CDATA[<h2 id="u7B97_u6CD5_u7684_u5B9A_u4E49"><a href="#u7B97_u6CD5_u7684_u5B9A_u4E49" class="headerlink" title="算法的定义"></a>算法的定义</h2><blockquote>
-<p>An algorithm is a sequence of unambiguous instructions for solving a problem</p>
-</blockquote>
-<p>即算法是解决问题的无二义性的指令序列.简单说就是用来解决问题步骤.</p>
-<h2 id="u7B97_u6CD5_u8BBE_u8BA1_u53CA_u5B9E_u73B0_u6D41_u7A0B"><a href="#u7B97_u6CD5_u8BBE_u8BA1_u53CA_u5B9E_u73B0_u6D41_u7A0B" class="headerlink" title="算法设计及实现流程"></a>算法设计及实现流程</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/20150615181318512.png" alt="算法设计及实现流程"></p>
-<h2 id="u91CD_u8981_u7684_u95EE_u9898_u7C7B_u578B"><a href="#u91CD_u8981_u7684_u95EE_u9898_u7C7B_u578B" class="headerlink" title="重要的问题类型"></a>重要的问题类型</h2><ul>
-<li>Sorting</li>
-<li>Searching</li>
-<li>String processing</li>
-<li>Graph problems</li>
-<li>Combinatorial problems</li>
-<li>Geometric problems</li>
-<li>Numerical Problems</li>
-</ul>
-<h2 id="u57FA_u7840_u6570_u636E_u7ED3_u6784"><a href="#u57FA_u7840_u6570_u636E_u7ED3_u6784" class="headerlink" title="基础数据结构"></a>基础数据结构</h2><ul>
-<li>linear data structure<ul>
-<li>array</li>
-<li>list</li>
-<li>stack</li>
-<li>queue</li>
-</ul>
-</li>
-<li>graphs</li>
-<li>tree</li>
-<li>set and dictionaries</li>
-</ul>
-<h2 id="u5E38_u7528_u7684_u7B97_u6CD5_u601D_u60F3"><a href="#u5E38_u7528_u7684_u7B97_u6CD5_u601D_u60F3" class="headerlink" title="常用的算法思想"></a>常用的算法思想</h2><ul>
-<li>Brute force (暴力求解)</li>
-<li>Divide and conquer (分治法)</li>
-<li>Decrease and conquer (减治法)</li>
-<li>Transform and conquer (转治法)</li>
-<li>Space and time tradeoffs (时空权衡)</li>
-<li>Greedy approach (贪婪算法)</li>
-<li>Dynamic programming (动态规划)</li>
-<li>Iterative improvement (迭代改进)</li>
-<li>Backtracking (回溯法)</li>
-<li>Branch and bound (分支界限法)</li>
-</ul>
-<p>基本上,算法就是围绕上面提到的问题和数据结构进行研究,遇到某个问题时,先分析问题,确定问题类型和使用的数据结构,有利于快速找到头绪.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u7B97_u6CD5_u7684_u5B9A_u4E49"><a href="#u7B97_u6CD5_u7684_u5B9A_u4E49" class="headerlink" title="算法的定义"></a>算法的定义</h2><blockquote>
-]]>
-    </summary>
     
       <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
     
