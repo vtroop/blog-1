@@ -25,7 +25,7 @@
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/mmu.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/mmu_translate.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/segment_descriptor.png">
-<meta property="og:updated_time" content="2016-04-09T08:21:48.468Z">
+<meta property="og:updated_time" content="2016-04-25T02:49:54.051Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux内存寻址之分段机制">
 <meta name="twitter:description" content="前言最近在学习Linux内核，读到《深入理解Linux内核》的内存寻址一章。原本以为自己对分段分页机制已经理解了，结果发现其实是一知半解。于是，查找了很多资料，最终理顺了内存寻址的知识。现在把我的理解记录下来，希望对内核学习者有一定帮助，也希望大家指出错误之处。
@@ -108,8 +108,19 @@
 		
 		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Linux内核，读到《深入理解Linux内核》的内存寻址一章。原本以为自己对分段分页机制已经理解了，结果发现其实是一知半解。于是，查找了很多资料，最终理顺了内存寻址的知识。现在把我的理解记录下来，希望对内核学习者有一定帮助，也希望大家指出错误之处。</p>
 <h2 id="u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B"><a href="#u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B" class="headerlink" title="分段到底是怎么回事"></a>分段到底是怎么回事</h2><p>相信学过操作系统课程的人都知道分段分页，但是奇怪的是书上基本没提分段分页是怎么产生的，这就导致我们知其然不知其所以然。下面我们先扒一下分段机制产生的历史。</p>
-<h3 id="u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="实模式的诞生（16位处理器及寻址）"></a>实模式的诞生（16位处理器及寻址）</h3><p>在8086处理器诞生之前，内存寻址方式就是直接访问物理地址。8086处理器为了寻址1M的内存空间，把地址总线扩展到了20位。但是，一个尴尬的问题出现了，ALU的宽度只有16位，也就是说，ALU不能计算20位的地址。为了解决这个问题，分段机制被引入，登上了历史舞台。<br>为了支持分段，8086处理器设置了四个段寄存器：CS, DS, SS, ES.每个段寄存器都是16位的，同时访问内存的指令中的地址也是16位的。但是，在送入地址总线之前，CPU先把它与某个段寄存器内的值相加。这里要注意：段寄存器的值对应于20位地址总线的中的高16位，所以相加时实际上是内存总线中的高16位与段寄存器中的16位相加，而低4位保留不变，这样就形成一个20位的实际地址，也就实现了从16位内存地址到20位实际地址的转换，或者叫“映射”。</p>
-<h3 id="u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="保护模式的诞生（32位处理器及寻址）"></a>保护模式的诞生（32位处理器及寻址）</h3><ul>
+<h3 id="u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="实模式的诞生（16位处理器及寻址）"></a>实模式的诞生（16位处理器及寻址）</h3><p>在8086处理器诞生之前，内存寻址方式就是直接访问物理地址。8086处理器为了寻址1M的内存空间，把地址总线扩展到了20位。但是，一个尴尬的问题出现了，ALU的宽度只有16位，也就是说，ALU不能计算20位的地址。为了解决这个问题，分段机制被引入，登上了历史舞台。</p>
+<p>为了支持分段，8086处理器设置了四个段寄存器：CS, DS, SS, ES.每个段寄存器都是16位的，同时访问内存的指令中的地址也是16位的。但是，在送入地址总线之前，CPU先把它与某个段寄存器内的值相加。这里要注意：段寄存器的值对应于20位地址总线的中的高16位，所以相加时实际上是16位内存地址（即段内偏移值）的高12位与段寄存器中的16位相加，而低4位保留不变，这样就形成一个20位的实际地址，也就实现了从16位内存地址到20位实际地址的转换，或者叫“映射”。</p>
+<p><em>上面关于分段机制计算内存地址的描述比较难理解，画了一个图帮助理解</em></p>
+<pre><code>+-----------------+
+|       20        |  20位地址总线
++-----------------+
++------------+
+|      16    |       16位段地址
++------------+
+    +-------------+
+    |    12  | 4  |  16位内存地址（段内偏移量）
+    +--------+----+
+</code></pre><h3 id="u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="保护模式的诞生（32位处理器及寻址）"></a>保护模式的诞生（32位处理器及寻址）</h3><ul>
 <li>80286处理器的地址总线为24位，寻址空间达16M，同时引入了保护模式（内存段的访问受到限制）</li>
 <li>80386处理器是一个32位处理器，ALU和地址总线都是32位的，寻址空间达 4G。也就是说它可以不通过分段机制，直接访问4G的内存空间。虽然它是新时代的小王子，超越它的无数前辈，然而，它需要背负家族的使命–兼容前代的处理器。也就是说，它必须支持实模式和保护模式。所以，80386在段寄存器的基础上构筑保护模式，并且保留16位的段寄存器。</li>
 <li>从80386之后的处理器，架构基本相似，统称为IA32（32 Bit Intel Architecture）。</li>
@@ -237,8 +248,6 @@
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
 		  
 		
@@ -336,6 +345,14 @@
 			
 		
 			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/知识管理/" title="知识管理">知识管理<sup>1</sup></a></li>
 			
 		
@@ -349,14 +366,6 @@
 		
 			
 				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
 			
 		
 		</ul>
