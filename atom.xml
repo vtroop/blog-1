@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-04-23T02:55:47.408Z</updated>
+  <updated>2016-04-26T03:28:58.670Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,170 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[三言两语：JVM 字节码执行实例分析]]></title>
+    <link href="http://blog.xiaohansong.com/2016/04/26/java-bytecode/"/>
+    <id>http://blog.xiaohansong.com/2016/04/26/java-bytecode/</id>
+    <published>2016-04-26T03:11:29.000Z</published>
+    <updated>2016-04-26T03:28:58.670Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《Java 虚拟机规范》和《深入理解JVM虚拟机》，对于字节码的执行有了进一步的了解。字节码就像是汇编语言，是 JVM 的指令集。下面我们先对 JVM 执行引擎做一下简单介绍，然后根据实例分析 JVM 字节码的执行过程。</p>
+<h2 id="u8FD0_u884C_u65F6_u6808_u5E27_u7ED3_u6784"><a href="#u8FD0_u884C_u65F6_u6808_u5E27_u7ED3_u6784" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h2><p>栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构，它是虚拟机运行时数据区中的虚拟机栈的栈元素。栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程。</p>
+<p>在编译程序员代码的时候，栈帧中局部变量表和操作数栈的大小已经确定了，并且写入到方法表中的 <code>Code</code> 属性中。</p>
+<p>在活动线程中，只有位于栈顶的栈帧才是有效的， 称为当前栈帧，与这个栈帧关联的方法称为当前方法。执行引擎运行的所有字节码指令只对当前栈帧进行操作。</p>
+<h3 id="u5C40_u90E8_u53D8_u91CF_u8868"><a href="#u5C40_u90E8_u53D8_u91CF_u8868" class="headerlink" title="局部变量表"></a>局部变量表</h3><p>局部变量表是一组变量值存储空间，用于存放方法参数和方法内部定义的局部变量。局部变量表的容量以变量槽（slot）为最小单位，每个 slot 保证能放下 32 位内的数据类型。虚拟机通过索引定位的方式使用局部变量表，索引值从 0 开始。值得注意的是，对于实例方法，局部变量表中第 0 位索引的 slot 默认是 <code>this</code>引用；静态方法则不是。而且为了节约内存，slot 是可以重用的。</p>
+<h3 id="u64CD_u4F5C_u6570_u6808"><a href="#u64CD_u4F5C_u6570_u6808" class="headerlink" title="操作数栈"></a>操作数栈</h3><p>操作数栈的元素可以是任意的 Java 数据类型。当一个方法开始时，这个方法的操作数栈是空的，在方法的执行过程中，会有各种字节码指令往操作数栈中写入和提取内容，也就是出栈入栈操作。</p>
+<h2 id="u5B9E_u4F8B_u5206_u6790"><a href="#u5B9E_u4F8B_u5206_u6790" class="headerlink" title="实例分析"></a>实例分析</h2><p>下面分析的字节码指令主要是对局部变量表和操作栈的读写。</p>
+<h3 id="for__u5FAA_u73AF_u5B57_u8282_u7801_u5206_u6790"><a href="#for__u5FAA_u73AF_u5B57_u8282_u7801_u5206_u6790" class="headerlink" title="for 循环字节码分析"></a>for 循环字节码分析</h3><pre><code>void spin() {
+    int i;
+    for (i = 0; i &lt; 100; i++) {
+        ; // Loop body is empty
+    }
+}
+</code></pre><p>上面是一个空循环的代码，编译后的字节码如下：</p>
+<pre><code>Method void spin()
+    0 iconst_0 // Push int constant 0
+    1 istore_1 // Store into local variable 1 (i=0)
+    2 goto 8 // First time through don’t increment
+    5 iinc 1 1 // Increment local variable 1 by 1 (i++)
+    8 iload_1 // Push local variable 1 (i)
+    9 bipush 100 // Push int constant 100
+    11 if_icmplt 5 // Compare and loop if less than (i &lt; 100)
+    14 return // Return void when done
+</code></pre><p>相信大家看到上面的代码都是一脸懵逼，即使有注释还是不知道字节码到底做了什么操作。下面我就图解每一条指令，帮助理解。上面的代码都是对局部变量表和操作数栈的操作，所以我们的关注点就在这两个区域上。（栈是自顶向下的）</p>
+<pre><code>0 iconst_0 //把常量0放入栈
++--------+--------+
+| local  | stack  |
++-----------------+
+|        |   0    |
++-----------------+
+|        |        |
++--------+--------+
+
+1 istore_1 //把栈顶的元素出栈，存到局部变量表索引为1的位置
++--------+--------+
+| local  | stack  |
++-----------------+
+|   0    |        |
++-----------------+
+|        |        |
++--------+--------+
+
+2 goto 8 //跳转到第8条指令
+
+8 iload_1 //把局部变量表中索引为1的变量入栈
++--------+--------+
+| local  | stack  |
++-----------------+
+|   0    |   0    |
++-----------------+
+|        |        |
++--------+--------+
+
+9 bipush 100 //把100入栈
++--------+--------+
+| local  | stack  |
++-----------------+
+|   0    |   0    |
++-----------------+
+|        |  100   |
++--------+--------+
+
+11 if_icmplt 5 //出栈两个元素v1，v2，比较它们的值，当且仅当v1 &lt; v2，跳转到指令5
++--------+--------+
+| local  | stack  |
++-----------------+
+|   0    |        |
++-----------------+
+|        |        |
++--------+--------+
+
+5 iinc 1 1 //自增局部变量表中索引为1的值
++--------+--------+
+| local  | stack  |
++-----------------+
+|   1    |        |
++-----------------+
+|        |        |
++--------+--------+
+
+//进行下次循环直到指令11不满足，到达指令14
+14 return //清空栈，执行引擎把控制权交换给调用者。
++--------+--------+
+| local  | stack  |
++-----------------+
+|   100  |        |
++-----------------+
+|        |        |
++--------+--------+
+</code></pre><p>以上就是<code>for</code>循环字节码执行的过程。可以发现，所有指令都是围绕者局部变量表和操作数栈在操作。</p>
+<blockquote>
+<p><strong>解惑</strong><br>指令<code>iconst_0</code>,<code>iload_1</code>的命名解读<br>第一个<code>i</code>代表这是对int数据类型进行的操作<br><code>const</code>,<code>load</code>是操作码<br><code>0</code>,<code>1</code>是隐含的操作数<br>上面的两个指令等价于<code>iconst 0</code>,<code>iload 1</code><br><em>详细的字节码解释查阅《JVM 虚拟机规范》</em></p>
+</blockquote>
+<h3 id="try-catch-finally__u5B57_u8282_u7801_u5206_u6790"><a href="#try-catch-finally__u5B57_u8282_u7801_u5206_u6790" class="headerlink" title="try-catch-finally 字节码分析"></a>try-catch-finally 字节码分析</h3><pre><code>static int inc(){
+    int x;
+    try {
+        x = 1;
+        return x;
+    } catch (Exception e){
+        x = 2;
+        return x;
+    } finally {
+        x = 3;
+    }
+}
+</code></pre><p>下面是它的字节码，这次我就不画图了，里面的命令跟上面的类似。</p>
+<pre><code>static int inc();
+descriptor: ()I
+flags: ACC_STATIC
+Code:
+  stack=1, locals=4, args_size=0
+     0: iconst_1  //try 块中的 x = 1;
+     1: istore_0  //保存栈顶元素到局部变量表中索引为 0 的 slot 中
+     2: iload_0   //加载局部变量表中索引为 0 的值到栈中
+     3: istore_1  //保存栈顶元素到局部变量表中索引为 1 的 slot 中
+     4: iconst_3  //finally 块中的 x = 3;
+     5: istore_0  //保存栈顶元素到局部变量表中索引为 0 的 slot 中，x 的值存在这里。
+     6: iload_1  //加载局部变量表中索引为 1 的值到栈中
+     7: ireturn  //返回栈顶元素，即 x = 1;正常情况下函数运行到这里就结束了，如果出现异常根据异常表跳转到指定的位置
+     8: astore_1 //给 catch 块中定义的 Exception e 赋值，存储在 slot1 中。
+     9: iconst_2 //catch 块中的 x = 2;
+    10: istore_0
+    11: iload_0
+    12: istore_2
+    13: iconst_3 //finally 块中的 x = 3;
+    14: istore_0
+    15: iload_2
+    16: ireturn //此时返回的是 slot2 中的值，即 x = 2
+    17: astore_3 //如果出现不属于 java.lang.Exception 及其子类的异常，才会根据异常表中的规则跳转到这里。
+    18: iconst_3 //finally 块中的 x = 3;
+    19: istore_0
+    20: aload_3 //将异常加载到栈顶，
+    21: athrow //抛出栈顶的异常
+  Exception table:
+     from    to  target type
+         0     4     8   Class java/lang/Exception
+         0     4    17   any
+         8    13    17   any
+</code></pre><ol>
+<li>字节码中 0 ~ 4 行将整数 1 赋值为变量 x，x 存储在 slot0 中，并且将 x 的值拷贝一份放到 slot1。如果没有出现异常，继续走到 5 ~ 7 行，将 x 赋值为 3，然后读取 slot1 中的值到栈顶，最后<code>ireturn</code>返回栈顶的值，方法结束。</li>
+<li>如果出现异常，PC 寄存器指针转到第 8 行，第 8 ~ 16 行所做的事情就是将 2 赋值给 x，然后保存 x 的拷贝，最后将 x 赋值为 3。方法返回前将 x 的拷贝 2 读取到栈顶。</li>
+<li>如果在 0 ~ 4，8 ~ 13 行中出现其他异常，则跳转到第 17 行执行，先同样执行<code>finally</code>块中的<code>x = 3</code>，最后抛出异常，方法结束。</li>
+</ol>
+<p>可以看到，Java 字节码是通过异常表的方式来决定代码执行的路径。而<code>finally</code>的实现是通过在每个路径的最后加入<code>finally</code>块中的字节码实现的。</p>
+<p><em>参考资料</em><br>《Java 虚拟机规范》<br>《深入理解JVM虚拟机》</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《Java 虚拟机规范》和《深入理解JVM虚拟机》，对于字节码的执行有了进一步的了解。字节码就像]]>
+    </summary>
+    
+      <category term="JVM" scheme="http://blog.xiaohansong.com/tags/JVM/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[【译】JVM 进行线程同步背后的原理]]></title>
@@ -550,7 +714,7 @@ private AbstractStringBuilder appendNull() {
     <link href="http://blog.xiaohansong.com/2016/02/18/dereference-null/"/>
     <id>http://blog.xiaohansong.com/2016/02/18/dereference-null/</id>
     <published>2016-02-18T14:50:43.000Z</published>
-    <updated>2016-02-18T14:56:13.014Z</updated>
+    <updated>2016-04-26T03:13:57.793Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>说到 NULL 指针大家都是谈之色变，第一印象就是 <code>NullPointerException</code>, <code>Segmentation fault</code> 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。</p>
 <h2 id="NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><a href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0" class="headerlink" title="NULL 在编译器中的实现"></a>NULL 在编译器中的实现</h2><p>首先，我们来看看 NULL 指针到底是什么？</p>
 <blockquote>
@@ -1253,7 +1417,7 @@ class ColonMovieFinder...
     <link href="http://blog.xiaohansong.com/2015/10/03/Linux%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E4%B9%8B%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6/"/>
     <id>http://blog.xiaohansong.com/2015/10/03/Linux内存寻址之分段机制/</id>
     <published>2015-10-03T05:56:31.000Z</published>
-    <updated>2016-04-25T02:49:54.051Z</updated>
+    <updated>2016-04-26T03:16:55.042Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Linux内核，读到《深入理解Linux内核》的内存寻址一章。原本以为自己对分段分页机制已经理解了，结果发现其实是一知半解。于是，查找了很多资料，最终理顺了内存寻址的知识。现在把我的理解记录下来，希望对内核学习者有一定帮助，也希望大家指出错误之处。</p>
 <h2 id="u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B"><a href="#u5206_u6BB5_u5230_u5E95_u662F_u600E_u4E48_u56DE_u4E8B" class="headerlink" title="分段到底是怎么回事"></a>分段到底是怎么回事</h2><p>相信学过操作系统课程的人都知道分段分页，但是奇怪的是书上基本没提分段分页是怎么产生的，这就导致我们知其然不知其所以然。下面我们先扒一下分段机制产生的历史。</p>
 <h3 id="u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u5B9E_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0816_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="实模式的诞生（16位处理器及寻址）"></a>实模式的诞生（16位处理器及寻址）</h3><p>在8086处理器诞生之前，内存寻址方式就是直接访问物理地址。8086处理器为了寻址1M的内存空间，把地址总线扩展到了20位。但是，一个尴尬的问题出现了，ALU的宽度只有16位，也就是说，ALU不能计算20位的地址。为了解决这个问题，分段机制被引入，登上了历史舞台。</p>
@@ -1268,6 +1432,8 @@ class ColonMovieFinder...
     +-------------+
     |    12  | 4  |  16位内存地址（段内偏移量）
     +--------+----+
+
+实际物理地址 = （段寄存器地址 &lt;&lt; 4） + （CPU 提交的访存地址）
 </code></pre><h3 id="u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09"><a href="#u4FDD_u62A4_u6A21_u5F0F_u7684_u8BDE_u751F_uFF0832_u4F4D_u5904_u7406_u5668_u53CA_u5BFB_u5740_uFF09" class="headerlink" title="保护模式的诞生（32位处理器及寻址）"></a>保护模式的诞生（32位处理器及寻址）</h3><ul>
 <li>80286处理器的地址总线为24位，寻址空间达16M，同时引入了保护模式（内存段的访问受到限制）</li>
 <li>80386处理器是一个32位处理器，ALU和地址总线都是32位的，寻址空间达 4G。也就是说它可以不通过分段机制，直接访问4G的内存空间。虽然它是新时代的小王子，超越它的无数前辈，然而，它需要背负家族的使命–兼容前代的处理器。也就是说，它必须支持实模式和保护模式。所以，80386在段寄存器的基础上构筑保护模式，并且保留16位的段寄存器。</li>
@@ -1793,57 +1959,6 @@ function visit(node n)
     </summary>
     
       <category term="分治法" scheme="http://blog.xiaohansong.com/tags/%E5%88%86%E6%B2%BB%E6%B3%95/"/>
-    
-      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
-    
-      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[算法学习之暴力求解(brute force)]]></title>
-    <link href="http://blog.xiaohansong.com/2015/06/18/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%9A%B4%E5%8A%9B%E6%B1%82%E8%A7%A3-brute-force/"/>
-    <id>http://blog.xiaohansong.com/2015/06/18/算法学习之暴力求解-brute-force/</id>
-    <published>2015-06-18T08:53:51.000Z</published>
-    <updated>2016-01-02T17:39:28.903Z</updated>
-    <content type="html"><![CDATA[<h2 id="u66B4_u529B_u6C42_u89E3_28brute_force_29"><a href="#u66B4_u529B_u6C42_u89E3_28brute_force_29" class="headerlink" title="暴力求解(brute force)"></a>暴力求解(brute force)</h2><blockquote>
-<p>Brute force is a straightforward approach to solving a problem, usually directly based on the problem statement and definitions of the concepts involved.</p>
-</blockquote>
-<p>暴力求解即根据问题的描述和定义直接求解,不使用一些特殊的算法.</p>
-<h3 id="u6392_u5E8F_u95EE_u9898_u7684_u5E94_u7528"><a href="#u6392_u5E8F_u95EE_u9898_u7684_u5E94_u7528" class="headerlink" title="排序问题的应用"></a>排序问题的应用</h3><ul>
-<li><p>选择排序<br>选择排序将数组分为排序与未排序两个部分,每次将从未排序部分取出最小的值,插入排序部分的最后,最终未排序部分消失,排序完成.</p>
-</li>
-<li><p>冒泡排序<br>冒泡排序也是将数组分为排序与未排序两个部分,每次从未排序部分的第一个数开始,与后一个比较,如果大于它两两交换,否则从第二个开始继续与后一个比较.最终未排序部分的最后一个数即最大的数.循环n次即完成排序.</p>
-</li>
-</ul>
-<h3 id="u641C_u7D22_u95EE_u9898_u7684_u5E94_u7528"><a href="#u641C_u7D22_u95EE_u9898_u7684_u5E94_u7528" class="headerlink" title="搜索问题的应用"></a>搜索问题的应用</h3><ul>
-<li><p>线性搜索<br>简单粗暴,一个个比较.</p>
-</li>
-<li><p>字符串匹配<br>同样道理,逐个比较.</p>
-</li>
-</ul>
-<h3 id="u51E0_u4F55_u95EE_u9898"><a href="#u51E0_u4F55_u95EE_u9898" class="headerlink" title="几何问题"></a>几何问题</h3><ul>
-<li><p>最近点问题<br>把所有两点距离求出来,然后选择最小值.</p>
-</li>
-<li><p>凸包问题<br>用循序渐进的方式求取给定点集的凸包，首先把最初输入的3个不共线(Non-collinear)的点按 逆时针方向构成一个三角形，这就是这3点的凸包。接着便会考察第4点，看看这个点是否位于前述三 角形之内或三角形的边上。若是，则这第4点并非凸包上的点，前述三角形保持不变。若否，则把这前述的三角 形扩大为一个四边形，并把不适用的边擦去。这个四边形便是这首4点的凸包。接着程序又会考察第5点，如此 类推，直至所有点均已被考察为止.由于每次都要检查所有之前的点，时间复杂度为O(n^2).</p>
-</li>
-</ul>
-<h3 id="u7A77_u4E3E_u641C_u7D22"><a href="#u7A77_u4E3E_u641C_u7D22" class="headerlink" title="穷举搜索"></a>穷举搜索</h3><p>以下3个问题都可以用穷举的方法暴力求解,把所有可能都试一遍.然而实际上由于可能情况太多,一般不会使用穷举的方法.数据量小的情况可以考虑使用.每个问题都有不少更优的算法.</p>
-<ul>
-<li><p>旅行推销员问题(Travelling Salesman Problem)    有n个城市，一个推销员要从其中某一个城市出发，唯一走遍所有的城市，再回到他出发的城市，求最短的路线。也即求一个最短的哈密顿回路。</p>
-</li>
-<li><p>背包问题(knapsack problem)<br>给定一组物品，每种物品都有自己的重量和价格，在限定的总重量内，我们如何选择，才能使得物品的总价格最高。</p>
-</li>
-<li><p>任务分配问题(assignment problem)<br>线性任务分配问题：P是二元组(a, b)的集合，其中a和b分别是集合A和B中的元素。C是某一函数，并满足特定约束条件，例如：A的每一个元素必须在P中出现一次，或者B的每一个元素必须在P中出现一次，或者以上二者都必须满足。线性任务分配问题的目标就是最大化或者最小化C(a, b)之和。</p>
-</li>
-</ul>
-<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><pre><code>暴力求解法可以说毫无技巧,但是简单容易实现.一般情况是不会用到的,但是在特定情况下有奇效.可以说当人们解决某个问题的时候用暴力求解应该是第一直觉,然而这太简单并不能体现自己的能力,就会开始寻找更快的方法.我的理解是更优的算法应该是基于暴力求解法之上的.例如说背包问题,同样样遍历所有情况,动态规划巧妙的利用前面的尝试过的数据,减少了工作量.但本质上还是要试遍所有可能,只是试的少了.
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u66B4_u529B_u6C42_u89E3_28brute_force_29"><a href="#u66B4_u529B_u6C42_u89E3_28brute_force_29" class="headerlink" title="暴力求解(brute f]]>
-    </summary>
-    
-      <category term="暴力求解" scheme="http://blog.xiaohansong.com/tags/%E6%9A%B4%E5%8A%9B%E6%B1%82%E8%A7%A3/"/>
     
       <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
     
