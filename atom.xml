@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-04-26T03:28:58.670Z</updated>
+  <updated>2016-04-26T03:38:45.652Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -19,8 +19,12 @@
     <link href="http://blog.xiaohansong.com/2016/04/26/java-bytecode/"/>
     <id>http://blog.xiaohansong.com/2016/04/26/java-bytecode/</id>
     <published>2016-04-26T03:11:29.000Z</published>
-    <updated>2016-04-26T03:28:58.670Z</updated>
-    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《Java 虚拟机规范》和《深入理解JVM虚拟机》，对于字节码的执行有了进一步的了解。字节码就像是汇编语言，是 JVM 的指令集。下面我们先对 JVM 执行引擎做一下简单介绍，然后根据实例分析 JVM 字节码的执行过程。</p>
+    <updated>2016-04-26T03:38:45.652Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《Java 虚拟机规范》和《深入理解JVM虚拟机》，对于字节码的执行有了进一步的了解。字节码就像是汇编语言，是 JVM 的指令集。下面我们先对 JVM 执行引擎做一下简单介绍，然后根据实例分析 JVM 字节码的执行过程。包括：</p>
+<ol>
+<li>for 循环字节码分析</li>
+<li>try-catch-finally 字节码分析</li>
+</ol>
 <h2 id="u8FD0_u884C_u65F6_u6808_u5E27_u7ED3_u6784"><a href="#u8FD0_u884C_u65F6_u6808_u5E27_u7ED3_u6784" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h2><p>栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构，它是虚拟机运行时数据区中的虚拟机栈的栈元素。栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程。</p>
 <p>在编译程序员代码的时候，栈帧中局部变量表和操作数栈的大小已经确定了，并且写入到方法表中的 <code>Code</code> 属性中。</p>
 <p>在活动线程中，只有位于栈顶的栈帧才是有效的， 称为当前栈帧，与这个栈帧关联的方法称为当前方法。执行引擎运行的所有字节码指令只对当前栈帧进行操作。</p>
@@ -592,7 +596,7 @@ allow 127.0.0.]]>
     <link href="http://blog.xiaohansong.com/2016/03/13/null-in-java-string/"/>
     <id>http://blog.xiaohansong.com/2016/03/13/null-in-java-string/</id>
     <published>2016-03-13T09:10:24.000Z</published>
-    <updated>2016-04-23T02:53:48.465Z</updated>
+    <updated>2016-04-26T03:40:32.990Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在读《Thinking in Java》，看到这样一段话：</p>
 <blockquote>
 <p>Primitives that are fields in a class are automatically initialized to zero, as noted in the Everything Is an Object chapter. But the object references are initialized to null, and if you try to call methods for any of them, you’ll get an exception-a runtime error. Conveniently, you can still print a null reference without throwing an exception.<br>大意是：原生类型会被自动初始化为 0，但是对象引用会被初始化为 null，如果你尝试调用该对象的方法，就会抛出空指针异常。通常，你可以打印一个 null 对象而不会抛出异常。</p>
@@ -705,6 +709,10 @@ private AbstractStringBuilder appendNull() {
 <p>]]>
     </summary>
     
+      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
+    
+      <category term="String" scheme="http://blog.xiaohansong.com/tags/String/"/>
+    
       <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
     
   </entry>
@@ -714,7 +722,7 @@ private AbstractStringBuilder appendNull() {
     <link href="http://blog.xiaohansong.com/2016/02/18/dereference-null/"/>
     <id>http://blog.xiaohansong.com/2016/02/18/dereference-null/</id>
     <published>2016-02-18T14:50:43.000Z</published>
-    <updated>2016-04-26T03:13:57.793Z</updated>
+    <updated>2016-04-26T03:40:20.262Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>说到 NULL 指针大家都是谈之色变，第一印象就是 <code>NullPointerException</code>, <code>Segmentation fault</code> 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。</p>
 <h2 id="NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><a href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0" class="headerlink" title="NULL 在编译器中的实现"></a>NULL 在编译器中的实现</h2><p>首先，我们来看看 NULL 指针到底是什么？</p>
 <blockquote>
@@ -739,6 +747,8 @@ private AbstractStringBuilder appendNull() {
     <summary type="html">
     <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>说到 NULL 指针大家都是谈之色变，第一印象就是 <code>NullPointerException]]>
     </summary>
+    
+      <category term="Linux" scheme="http://blog.xiaohansong.com/tags/Linux/"/>
     
       <category term="Linux内核" scheme="http://blog.xiaohansong.com/categories/Linux%E5%86%85%E6%A0%B8/"/>
     
