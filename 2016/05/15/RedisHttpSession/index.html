@@ -7,26 +7,26 @@
 <meta name="baidu-site-verification" content="28u1lswj4v" />
   <meta charset="UTF-8">
   
-    <title>访问 NULL 指针错误背后的原理 | ShareHub</title>
+    <title>RedisHttpSession 的设计与实现 | ShareHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Yonah-潇">
     
 
     
-    <meta name="description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
-NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
+    <meta name="description" content="前言RedisHttpSession 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。
+RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpSession实现。RedisH">
 <meta property="og:type" content="article">
-<meta property="og:title" content="访问 NULL 指针错误背后的原理">
-<meta property="og:url" content="http://blog.xiaohansong.com/2016/02/18/dereference-null/index.html">
+<meta property="og:title" content="RedisHttpSession 的设计与实现">
+<meta property="og:url" content="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/index.html">
 <meta property="og:site_name" content="ShareHub">
-<meta property="og:description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
-NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
-<meta property="og:updated_time" content="2016-04-26T03:40:20.262Z">
+<meta property="og:description" content="前言RedisHttpSession 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。
+RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpSession实现。RedisH">
+<meta property="og:updated_time" content="2016-05-15T02:53:41.153Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="访问 NULL 指针错误背后的原理">
-<meta name="twitter:description" content="前言说到 NULL 指针大家都是谈之色变，第一印象就是 NullPointerException, Segmentation fault 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。
-NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
+<meta name="twitter:title" content="RedisHttpSession 的设计与实现">
+<meta name="twitter:description" content="前言RedisHttpSession 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。
+RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpSession实现。RedisH">
 <meta name="twitter:creator" content="@Yonah_x">
 
     
@@ -83,14 +83,14 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/18/dereference-null/" title="访问 NULL 指针错误背后的原理" itemprop="url">访问 NULL 指针错误背后的原理</a>
+      <a href="/2016/05/15/RedisHttpSession/" title="RedisHttpSession 的设计与实现" itemprop="url">RedisHttpSession 的设计与实现</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Yonah-潇" target="_blank" itemprop="author">Yonah-潇</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-18T14:50:43.000Z" itemprop="datePublished"> 发表于 2016-02-18</time>
+    <time datetime="2016-05-15T02:49:39.000Z" itemprop="datePublished"> 发表于 2016-05-15</time>
     
   </p>
 </header>
@@ -99,30 +99,62 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><span class="toc-number">2.</span> <span class="toc-text">NULL 在编译器中的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B"><span class="toc-number">3.</span> <span class="toc-text">访问 NULL 指针的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSession"><span class="toc-number">2.</span> <span class="toc-text">RedisHttpSession</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionProxy"><span class="toc-number">3.</span> <span class="toc-text">RedisHttpSessionProxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionFilter"><span class="toc-number">4.</span> <span class="toc-text">RedisHttpSessionFilter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>说到 NULL 指针大家都是谈之色变，第一印象就是 <code>NullPointerException</code>, <code>Segmentation fault</code> 之类的错误。NULL 指针大部分情况下会导致程序被终止。但是其实严格来说，访问空指针会产生不可预料的结果。只不过大部分情况是程序被终止。为什么呢？接下来让我们来探讨访问 NULL 指针错误背后的原理。</p>
-<h2 id="NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><a href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0" class="headerlink" title="NULL 在编译器中的实现"></a>NULL 在编译器中的实现</h2><p>首先，我们来看看 NULL 指针到底是什么？</p>
-<blockquote>
-<p>Null 是一个特殊指针值（或是一种对象引用）表示这个指针并不指向任何的对象。</p>
-</blockquote>
-<p>举一些例子，C/C++ 中的 <code>NULL</code>，Python 中的 <code>None</code> 等等。大部分 <code>NULL</code> 实现是用 <code>0</code> 代表 <code>NULL</code>，例如说 C/C++ 。实际上，NULL 的值并不重要，重要的是它代表的含义。例如说，JVM 规范并没有规定 NULL 的值，不同虚拟机实现可以自己定义 NULL 的值。</p>
-<p>总之， NULL 的值取决编译器实现。</p>
-<h2 id="u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B"><a href="#u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B" class="headerlink" title="访问 NULL 指针的过程"></a>访问 NULL 指针的过程</h2><p>C 语言中，NULL 的值是 0，即 <code>NULL == 0</code> 是成立的。我们前面说访问 NULL 指针的行为会产生不可预料的后果。但是在 Linux 系统中后果是确定的：访问空指针会产生 <code>Segmentation fault</code> 的错误。因此这里的“不可预料”指的是在不同系统产生的后果不一样。</p>
-<p>让我们假设现在使用的是 C 语言，运行在 Linux 系统上，以此来分析访问 NULL 指针的过程。</p>
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。</p>
+<h2 id="RedisHttpSession"><a href="#RedisHttpSession" class="headerlink" title="RedisHttpSession"></a>RedisHttpSession</h2><p>这个类实现了<code>HttpSession</code>接口，用于替换默认的<code>HttpSession</code>实现。<code>RedisHttpSession</code>将<code>HttpSession</code>的接口方法重写了一遍，将<code>HttpSession</code>的属性存储到了 Redis 中。</p>
+<p>每个<code>RedisHttpSession</code>都有一个 UUID 与之对应，该字段加上<code>session:</code>前缀作为存储在 Redis 中的键值。例如：</p>
+<pre><code>localhost:63679&gt; keys *
+1) &quot;session:fd9ec3cf-fb9b-4672-ade6-67a810e7db9f&quot;
+2) &quot;session:cbaa057c-85a4-475d-b399-38c320e85dcc&quot;
+3) &quot;session:13e030f5-de3d-458f-8d25-fd5643c40ff0&quot;
+4) &quot;session:262596b3-3d13-4df1-8328-714153c1ae83&quot;
+5) &quot;session:0b7d04c6-eaac-4eed-a9aa-8366f25f04f0&quot;
+</code></pre><p>同时，<code>RedisHttpSession</code>中的属性是直接序列化成字节数组存储在 Redis 中的，存储在对应键中的哈希表里面。例如：</p>
+<pre><code>localhost:63679&gt; hgetall session:fd9ec3cf-fb9b-4672-ade6-67a810e7db9f
+1) &quot;lastAccessedTime&quot;
+2) &quot;\xac\xed\x00\x05sr\x00\x0ejava.lang.Long;\x8b\xe4\x90\xcc\x8f#\xdf\x02\x00\x01J\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x01T\x91\x03\&quot;\xec&quot;
+3) &quot;maxInactiveInterval&quot;
+4) &quot;\xac\xed\x00\x05sr\x00\x11java.lang.Integer\x12\xe2\xa0\xa4\xf7\x81\x878\x02\x00\x01I\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\a\b&quot;
+5) &quot;creationTime&quot;
+6) &quot;\xac\xed\x00\x05sr\x00\x0ejava.lang.Long;\x8b\xe4\x90\xcc\x8f#\xdf\x02\x00\x01J\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x01T\x91\x03\&quot;\xb4&quot;
+</code></pre><p>另外，Session 的自动过期是通过 Redis 设置键的过期时间实现的。</p>
+<h2 id="RedisHttpSessionProxy"><a href="#RedisHttpSessionProxy" class="headerlink" title="RedisHttpSessionProxy"></a>RedisHttpSessionProxy</h2><p><code>RedisHttpSessionProxy</code>是<code>RedisHttpSession</code>的代理类，使用了 JDK 的动态代理。为什么要引入代理？这是基于下面的考虑做出的设计。</p>
 <ol>
-<li>Linux 中，每个进程空间的 0x0 虚拟地址开始的线性区(memory region)都会被映射到一个用户态没有访问权限的页上。通过这样的映射，内核可以保证没有别的页会映射到这个区域。</li>
-<li>编译器把空指针当做 <code>0</code> 对待，开心地让你去访问空指针。</li>
-<li>缺页异常处理程序被调用，因为在 0x0 的页没有在物理内存里面。</li>
-<li>缺页异常处理程序发现你没有访问的权限。</li>
-<li>内核发送 <code>SIGSEGV</code> 信号给进程，该信号默认是让进程自杀。</li>
+<li>由于 Session 存储在 Redis 中，在执行每个<code>RedisHttpSession</code>的接口方法之前都需要检查 Redis 连接是否可用。</li>
+<li>访问一个已经被注销的 Session 需要抛出异常。</li>
+<li>每次访问 Session 需要刷新过期时间和最后访问时间。</li>
 </ol>
-<p>可以看到：不需要特定的编译器实现或者内核的支持，只需要让一个页映射到 0x0 的虚拟地址上，就完美的实现了检测空指针的错误。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>为了研究这个问题，我查了很多资料。空指针的问题涉及 Linux 内存管理的知识，主要参考了 Robert Love 大神对该 <a href="https://www.quora.com/What-actually-happens-when-dereferencing-a-NULL-pointer" target="_blank" rel="external">问题</a> 的回答和《深入理解Linux内核》。最大的感悟是带着问题去看内核的书，你会理解内核为什么要这么做，同时可以加深理解和记忆。</p>
-<p>总之，空指针的实现取决于编译器的实现，访问空指针的后果取决于操作系统的实现。大部分系统类似于 Linux，会产生 <code>Segmentation fault</code> 的错误，至于内部实现就要看各个系统的代码了。</p>
-<p><em>参考资料</em><br><a href="https://www.quora.com/What-actually-happens-when-dereferencing-a-NULL-pointer" target="_blank" rel="external">What actually happens when dereferencing a NULL pointer?</a><br>《深入理解Linux内核》</p>
+<p>基于上面的考虑，对于每个<code>RedisHttpSession</code>的接口方法，我们都需要进行重复的操作，因此使用动态代理对每个接口方法进行增强是最合适的。代码如下：</p>
+<pre><code>public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    RedisHttpSession session = (RedisHttpSession) originalObj;
+    //check redis connection
+    RedisConnection connection = session.getRedisConnection();
+    if (!connection.isConnected()){
+        connection.close();
+        session.setRedisConnection(repository.getRedisConnection());
+    }
+    //For every methods of interface, check it valid or not
+    if (session.isInvalidated()){
+        throw new IllegalStateException(&quot;The HttpSession has already be invalidated.&quot;);
+    } else {
+        Object result =  method.invoke(originalObj, args);
+        //if not invalidate method, refresh expireTime and lastAccessedTime;
+        if (!method.getName().equals(&quot;invalidate&quot;)) {
+            session.refresh();
+            session.setLastAccessedTime(System.currentTimeMillis());
+        }
+        return result;
+    }
+}
+</code></pre><h2 id="RedisHttpSessionFilter"><a href="#RedisHttpSessionFilter" class="headerlink" title="RedisHttpSessionFilter"></a>RedisHttpSessionFilter</h2><p><code>RedisHttpSessionFilter</code>作为过滤器，将请求和响应替换成<code>RedisSessionRequestWrapper</code>和<code>RedisSessionResponseWrapper</code>，利用了装饰器模式动态的给请求和响应进行增强：</p>
+<ol>
+<li><code>RedisSessionRequestWrapper</code>：重写了<code>getSession</code>，替换默认的<code>HttpSession</code>实现为<code>RedisHttpSession</code>。</li>
+<li><code>RedisSessionResponseWrapper</code>：在响应的头部中加入<code>x-auth-token</code>字段，作为 Session 的 ID。客户端之后的请求都需要附带该字段，以便服务端识别对应的 Session。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 利用 Filter 将请求的 Session 替换成 <code>RedisHttpSession</code>，在过滤阶段偷梁换柱，在之后对 Session 的操作都无需关心其内部实现，整个过程都是透明的。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -130,13 +162,13 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Linux内核/">Linux内核</a>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Linux/">Linux</a>
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/Session/">Session</a>
   </div>
 
 </div>
@@ -145,7 +177,7 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/" data-title="访问 NULL 指针错误背后的原理 | ShareHub" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/" data-title="RedisHttpSession 的设计与实现 | ShareHub" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -158,19 +190,11 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2016/03/13/null-in-java-string/" title="Java String 对 null 对象的容错处理">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Java String 对 null 对象的容错处理</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2016/01/16/kownledge-Management/"  title="程序员的知识管理">
+<a href="/2016/04/26/java-bytecode/"  title="三言两语：JVM 字节码执行实例分析">
  <strong>下一篇：</strong><br/> 
- <span>程序员的知识管理
+ <span>三言两语：JVM 字节码执行实例分析
 </span>
 </a>
 </div>
@@ -179,7 +203,7 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/02/18/dereference-null/" data-title="访问 NULL 指针错误背后的原理" data-url="http://blog.xiaohansong.com/2016/02/18/dereference-null/"></div>
+	<div class="ds-thread" data-thread-key="2016/05/15/RedisHttpSession/" data-title="RedisHttpSession 的设计与实现" data-url="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/"></div>
 </section>
 
 
@@ -189,7 +213,7 @@ NULL 在编译器中的实现首先，我们来看看 NULL 指针到">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NULL__u5728_u7F16_u8BD1_u5668_u4E2D_u7684_u5B9E_u73B0"><span class="toc-number">2.</span> <span class="toc-text">NULL 在编译器中的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BBF_u95EE_NULL__u6307_u9488_u7684_u8FC7_u7A0B"><span class="toc-number">3.</span> <span class="toc-text">访问 NULL 指针的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSession"><span class="toc-number">2.</span> <span class="toc-text">RedisHttpSession</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionProxy"><span class="toc-number">3.</span> <span class="toc-text">RedisHttpSessionProxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionFilter"><span class="toc-number">4.</span> <span class="toc-text">RedisHttpSessionFilter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
  
   </div>
 

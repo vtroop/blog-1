@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-04-26T03:38:45.652Z</updated>
+  <updated>2016-05-15T02:53:41.153Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -15,11 +15,82 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[RedisHttpSession 的设计与实现]]></title>
+    <link href="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/"/>
+    <id>http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/</id>
+    <published>2016-05-15T02:49:39.000Z</published>
+    <updated>2016-05-15T02:53:41.153Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。</p>
+<h2 id="RedisHttpSession"><a href="#RedisHttpSession" class="headerlink" title="RedisHttpSession"></a>RedisHttpSession</h2><p>这个类实现了<code>HttpSession</code>接口，用于替换默认的<code>HttpSession</code>实现。<code>RedisHttpSession</code>将<code>HttpSession</code>的接口方法重写了一遍，将<code>HttpSession</code>的属性存储到了 Redis 中。</p>
+<p>每个<code>RedisHttpSession</code>都有一个 UUID 与之对应，该字段加上<code>session:</code>前缀作为存储在 Redis 中的键值。例如：</p>
+<pre><code>localhost:63679&gt; keys *
+1) &quot;session:fd9ec3cf-fb9b-4672-ade6-67a810e7db9f&quot;
+2) &quot;session:cbaa057c-85a4-475d-b399-38c320e85dcc&quot;
+3) &quot;session:13e030f5-de3d-458f-8d25-fd5643c40ff0&quot;
+4) &quot;session:262596b3-3d13-4df1-8328-714153c1ae83&quot;
+5) &quot;session:0b7d04c6-eaac-4eed-a9aa-8366f25f04f0&quot;
+</code></pre><p>同时，<code>RedisHttpSession</code>中的属性是直接序列化成字节数组存储在 Redis 中的，存储在对应键中的哈希表里面。例如：</p>
+<pre><code>localhost:63679&gt; hgetall session:fd9ec3cf-fb9b-4672-ade6-67a810e7db9f
+1) &quot;lastAccessedTime&quot;
+2) &quot;\xac\xed\x00\x05sr\x00\x0ejava.lang.Long;\x8b\xe4\x90\xcc\x8f#\xdf\x02\x00\x01J\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x01T\x91\x03\&quot;\xec&quot;
+3) &quot;maxInactiveInterval&quot;
+4) &quot;\xac\xed\x00\x05sr\x00\x11java.lang.Integer\x12\xe2\xa0\xa4\xf7\x81\x878\x02\x00\x01I\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\a\b&quot;
+5) &quot;creationTime&quot;
+6) &quot;\xac\xed\x00\x05sr\x00\x0ejava.lang.Long;\x8b\xe4\x90\xcc\x8f#\xdf\x02\x00\x01J\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x01T\x91\x03\&quot;\xb4&quot;
+</code></pre><p>另外，Session 的自动过期是通过 Redis 设置键的过期时间实现的。</p>
+<h2 id="RedisHttpSessionProxy"><a href="#RedisHttpSessionProxy" class="headerlink" title="RedisHttpSessionProxy"></a>RedisHttpSessionProxy</h2><p><code>RedisHttpSessionProxy</code>是<code>RedisHttpSession</code>的代理类，使用了 JDK 的动态代理。为什么要引入代理？这是基于下面的考虑做出的设计。</p>
+<ol>
+<li>由于 Session 存储在 Redis 中，在执行每个<code>RedisHttpSession</code>的接口方法之前都需要检查 Redis 连接是否可用。</li>
+<li>访问一个已经被注销的 Session 需要抛出异常。</li>
+<li>每次访问 Session 需要刷新过期时间和最后访问时间。</li>
+</ol>
+<p>基于上面的考虑，对于每个<code>RedisHttpSession</code>的接口方法，我们都需要进行重复的操作，因此使用动态代理对每个接口方法进行增强是最合适的。代码如下：</p>
+<pre><code>public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    RedisHttpSession session = (RedisHttpSession) originalObj;
+    //check redis connection
+    RedisConnection connection = session.getRedisConnection();
+    if (!connection.isConnected()){
+        connection.close();
+        session.setRedisConnection(repository.getRedisConnection());
+    }
+    //For every methods of interface, check it valid or not
+    if (session.isInvalidated()){
+        throw new IllegalStateException(&quot;The HttpSession has already be invalidated.&quot;);
+    } else {
+        Object result =  method.invoke(originalObj, args);
+        //if not invalidate method, refresh expireTime and lastAccessedTime;
+        if (!method.getName().equals(&quot;invalidate&quot;)) {
+            session.refresh();
+            session.setLastAccessedTime(System.currentTimeMillis());
+        }
+        return result;
+    }
+}
+</code></pre><h2 id="RedisHttpSessionFilter"><a href="#RedisHttpSessionFilter" class="headerlink" title="RedisHttpSessionFilter"></a>RedisHttpSessionFilter</h2><p><code>RedisHttpSessionFilter</code>作为过滤器，将请求和响应替换成<code>RedisSessionRequestWrapper</code>和<code>RedisSessionResponseWrapper</code>，利用了装饰器模式动态的给请求和响应进行增强：</p>
+<ol>
+<li><code>RedisSessionRequestWrapper</code>：重写了<code>getSession</code>，替换默认的<code>HttpSession</code>实现为<code>RedisHttpSession</code>。</li>
+<li><code>RedisSessionResponseWrapper</code>：在响应的头部中加入<code>x-auth-token</code>字段，作为 Session 的 ID。客户端之后的请求都需要附带该字段，以便服务端识别对应的 Session。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 利用 Filter 将请求的 Session 替换成 <code>RedisHttpSession</code>，在过滤阶段偷梁换柱，在之后对 Session 的操作都无需关心其内部实现，整个过程都是透明的。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/RedisHttpSessi]]>
+    </summary>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
+    
+      <category term="Session" scheme="http://blog.xiaohansong.com/tags/Session/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[三言两语：JVM 字节码执行实例分析]]></title>
     <link href="http://blog.xiaohansong.com/2016/04/26/java-bytecode/"/>
     <id>http://blog.xiaohansong.com/2016/04/26/java-bytecode/</id>
     <published>2016-04-26T03:11:29.000Z</published>
-    <updated>2016-04-26T03:38:45.652Z</updated>
+    <updated>2016-04-27T02:35:01.141Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《Java 虚拟机规范》和《深入理解JVM虚拟机》，对于字节码的执行有了进一步的了解。字节码就像是汇编语言，是 JVM 的指令集。下面我们先对 JVM 执行引擎做一下简单介绍，然后根据实例分析 JVM 字节码的执行过程。包括：</p>
 <ol>
 <li>for 循环字节码分析</li>
@@ -167,7 +238,7 @@ Code:
 <li>如果出现异常，PC 寄存器指针转到第 8 行，第 8 ~ 16 行所做的事情就是将 2 赋值给 x，然后保存 x 的拷贝，最后将 x 赋值为 3。方法返回前将 x 的拷贝 2 读取到栈顶。</li>
 <li>如果在 0 ~ 4，8 ~ 13 行中出现其他异常，则跳转到第 17 行执行，先同样执行<code>finally</code>块中的<code>x = 3</code>，最后抛出异常，方法结束。</li>
 </ol>
-<p>可以看到，Java 字节码是通过异常表的方式来决定代码执行的路径。而<code>finally</code>的实现是通过在每个路径的最后加入<code>finally</code>块中的字节码实现的。</p>
+<p>可以看到，Java 的异常处理是通过异常表的方式来决定代码执行的路径。而<code>finally</code>的实现是通过在每个路径的最后加入<code>finally</code>块中的字节码实现的。</p>
 <p><em>参考资料</em><br>《Java 虚拟机规范》<br>《深入理解JVM虚拟机》</p>
 ]]></content>
     <summary type="html">
@@ -1906,69 +1977,6 @@ function visit(node n)
     </summary>
     
       <category term="减治法" scheme="http://blog.xiaohansong.com/tags/%E5%87%8F%E6%B2%BB%E6%B3%95/"/>
-    
-      <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
-    
-      <category term="算法学习" scheme="http://blog.xiaohansong.com/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[算法学习之分治法(divide and conquer)]]></title>
-    <link href="http://blog.xiaohansong.com/2015/06/18/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E6%B2%BB%E6%B3%95-divide-and-conquer/"/>
-    <id>http://blog.xiaohansong.com/2015/06/18/算法学习之分治法-divide-and-conquer/</id>
-    <published>2015-06-18T10:50:50.000Z</published>
-    <updated>2016-01-02T17:39:28.902Z</updated>
-    <content type="html"><![CDATA[<h2 id="u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5"><a href="#u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5" class="headerlink" title="什么是分治法"></a>什么是分治法</h2><p>字面上的解释是“分而治之”，就是把一个复杂的问题分成两个或更多的相同或相似的子问题，直到最后子问题可以简单的直接求解，原问题的解即子问题的解的合并。</p>
-<h2 id="u89E3_u51B3_u95EE_u9898_u7684_u6D41_u7A0B"><a href="#u89E3_u51B3_u95EE_u9898_u7684_u6D41_u7A0B" class="headerlink" title="解决问题的流程"></a>解决问题的流程</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer00.png" alt="divide and conquer"></p>
-<h2 id="u5206_u6CBB_u6CD5_u9002_u7528_u60C5_u51B5"><a href="#u5206_u6CBB_u6CD5_u9002_u7528_u60C5_u51B5" class="headerlink" title="分治法适用情况"></a>分治法适用情况</h2><pre><code>分治法所能解决的问题一般具有以下几个特征：
-
-1. 该问题的规模缩小到一定的程度就可以容易地解决
-
-2. 该问题可以分解为若干个规模较小的相同问题，即该问题具有最优子结构性质。
-
-3. 利用该问题分解出的子问题的解可以合并为该问题的解；
-
-4. 该问题所分解出的各个子问题是相互独立的，即子问题之间不包含公共的子问题。
-</code></pre><p>第一条特征是绝大多数问题都可以满足的，因为问题的计算复杂性一般是随着问题规模的增加而增加；</p>
-<p>第二条特征是应用分治法的前提它也是大多数问题可以满足的，此特征反映了递归思想的应用；、</p>
-<p>第三条特征是关键，能否利用分治法完全取决于问题是否具有第三条特征，如果具备了第一条和第二条特征，而不具备第三条特征，则可以考虑用贪心法或动态规划法。</p>
-<p>第四条特征涉及到分治法的效率，如果各子问题是不独立的则分治法要做许多不必要的工作，重复地解公共的子问题，此时虽然可用分治法，但一般用动态规划法较好。</p>
-<h2 id="u5E94_u7528_u95EE_u9898"><a href="#u5E94_u7528_u95EE_u9898" class="headerlink" title="应用问题"></a>应用问题</h2><h3 id="u5F52_u5E76_u6392_u5E8F"><a href="#u5F52_u5E76_u6392_u5E8F" class="headerlink" title="归并排序"></a>归并排序</h3><p>可以看到排序问题正好满足以上提到的四个特征。<br>归并排序通过将待排序数组分为两个部分，递归地处理它们，最终将两个排序好的部分合并起来。<br>值得一提的是归并排序通过数组的下标分割子问题，即每次都把数组分为两半。</p>
-<p><strong>伪代码如下</strong><br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer01.png" alt="merge_sort"></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer02.png" alt="merge"></p>
-<p><strong>例子</strong><br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer03.png" alt="例子"></p>
-<h3 id="u5FEB_u901F_u6392_u5E8F"><a href="#u5FEB_u901F_u6392_u5E8F" class="headerlink" title="快速排序"></a>快速排序</h3><p>跟归并排序的思想是类似的，但是快速排序是根据值来分割子问题，即把数组根据一个值分为大于和小于它两个部分。</p>
-<p><strong>伪代码如下</strong></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer04.png" alt="quick_sort"></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer05.jpg" alt="partition"></p>
-<p><strong>例子</strong></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer06.jpg" alt="例子"></p>
-<h3 id="u4E8C_u5206_u641C_u7D22"><a href="#u4E8C_u5206_u641C_u7D22" class="headerlink" title="二分搜索"></a>二分搜索</h3><p>对一个有序的数组进行二分搜索，每次比较中间的值，key大于它说明在右边，小于说明左边。</p>
-<p><strong>伪代码如下</strong></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer07.png" alt="binary_search"></p>
-<p><strong>例子</strong></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/divide_and_conquer_divide_and_conquer08.png" alt="例子"></p>
-<h3 id="u5927_u6574_u6570_u4E58_u6CD5"><a href="#u5927_u6574_u6570_u4E58_u6CD5" class="headerlink" title="大整数乘法"></a>大整数乘法</h3><p>对于任意位数的2个数相乘 $a * b$ ，写成：<br><span>$$a = a_{1} * 10^{(n_{1}/2)} + a_{0}$$</span><!-- Has MathJax --><br>$n_{1}$为$a$的位数</p>
-<span>$$b = b_{1} * 10^{(n_{2}/2)} + b_{0}$$</span><!-- Has MathJax -->
-<p>$n_{2}$为$b$的位数</p>
-<p>分治策略就是基于以上变换，将a，b写成前一半数字和后一半数字相加的形式，例如若$a = 5423678$，那么$a_{1} = 542$  $a_{0} = 3678$（注意若不是偶数截取较小一半）</p>
-<p>这样a和b相乘就可以写为：<br><span>$$a * b = { a_{1} * 10^{(n_{1}/2)} + a_{0} } * { b_{1} * 10^{(n_{2}/2)} + b_{0} }$$</span><!-- Has MathJax --><br>展开后整理得：<br><span>$$a * b = a_{1}*b_{1} * 10^{[(n_{1}+n_{2})/2]} + a_{1}*b_{0} * 10^{(n_{1}/2)} + a_{0}*b_{1} * 10^{(n_{2}/2)} + a_{0}*b_{0}$$</span><!-- Has MathJax --><br>这样就很容易递归的来求$a * b$，如果嫌分解后的数还太大，就可以继续分解。（你可以自己规定在何时结束递归）</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>分治法实际上就是类似于数学归纳法，找到解决本问题的求解方程公式，然后根据方程公式设计递归程序。</p>
-<ol>
-<li>一定是先找到最小问题规模时的求解方法</li>
-<li>然后考虑随着问题规模增大时的求解方法</li>
-<li>找到求解的递归函数式后（各种规模或因子），设计递归程序即可。</li>
-</ol>
-<p>参考资料：</p>
-<p><a href="http://www.cnblogs.com/steven_oyj/archive/2010/05/22/1741370.html" target="_blank" rel="external">五大常用算法之一：分治算法</a></p>
-<p><a href="http://www.cnblogs.com/kkgreen/archive/2011/06/12/2078668.html" target="_blank" rel="external">大整数乘法和Strassen矩阵乘法</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5"><a href="#u4EC0_u4E48_u662F_u5206_u6CBB_u6CD5" class="headerlink" title="什么是分治法"></a>什么是分治法</h2]]>
-    </summary>
-    
-      <category term="分治法" scheme="http://blog.xiaohansong.com/tags/%E5%88%86%E6%B2%BB%E6%B3%95/"/>
     
       <category term="算法" scheme="http://blog.xiaohansong.com/tags/%E7%AE%97%E6%B3%95/"/>
     
