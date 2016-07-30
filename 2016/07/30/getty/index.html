@@ -1,0 +1,863 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<meta name="google-site-verification" content="ozi5UMPx0UZR6p_LhY9QUf2XkOdP7WH7vjnMUnEuE8s" />
+<meta name="baidu-site-verification" content="28u1lswj4v" />
+  <meta charset="UTF-8">
+  
+    <title>【Getty】Java NIO框架设计与实现 | ShareHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Yonah-潇">
+    
+
+    
+    <meta name="description" content="前言Getty是我为了学习 Java NIO 所写的一个 NIO 框架，实现过程中参考了 Netty 的设计，同时使用 Groovy 来实现。虽然只是玩具，但是麻雀虽小，五脏俱全，在实现过程中，不仅熟悉了 NIO 的使用，还借鉴了很多 Netty 的设计思想，提升了自己的编码和设计能力。
+至于为什么用 Groovy 来写，因为我刚学了 Groovy，正好拿来练手，加上 Groovy 是兼容 Jav">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Getty】Java NIO框架设计与实现">
+<meta property="og:url" content="http://blog.xiaohansong.com/2016/07/30/getty/index.html">
+<meta property="og:site_name" content="ShareHub">
+<meta property="og:description" content="前言Getty是我为了学习 Java NIO 所写的一个 NIO 框架，实现过程中参考了 Netty 的设计，同时使用 Groovy 来实现。虽然只是玩具，但是麻雀虽小，五脏俱全，在实现过程中，不仅熟悉了 NIO 的使用，还借鉴了很多 Netty 的设计思想，提升了自己的编码和设计能力。
+至于为什么用 Groovy 来写，因为我刚学了 Groovy，正好拿来练手，加上 Groovy 是兼容 Jav">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/getty-1.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/getty-2.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/getty-3.png">
+<meta property="og:updated_time" content="2016-07-30T03:14:39.521Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Getty】Java NIO框架设计与实现">
+<meta name="twitter:description" content="前言Getty是我为了学习 Java NIO 所写的一个 NIO 框架，实现过程中参考了 Netty 的设计，同时使用 Groovy 来实现。虽然只是玩具，但是麻雀虽小，五脏俱全，在实现过程中，不仅熟悉了 NIO 的使用，还借鉴了很多 Netty 的设计思想，提升了自己的编码和设计能力。
+至于为什么用 Groovy 来写，因为我刚学了 Groovy，正好拿来练手，加上 Groovy 是兼容 Jav">
+<meta name="twitter:creator" content="@Yonah_x">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ShareHub" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ShareHub" title="ShareHub"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ShareHub">ShareHub</a></h1>
+				<h2 class="blog-motto">悲观的意志,乐观的头脑</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/30/getty/" title="【Getty】Java NIO框架设计与实现" itemprop="url">【Getty】Java NIO框架设计与实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Yonah-潇" target="_blank" itemprop="author">Yonah-潇</a>
+		
+  <p class="article-time">
+    <time datetime="2016-07-30T02:42:23.000Z" itemprop="datePublished"> 发表于 2016-07-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7EBF_u7A0B_u6A21_u578B"><span class="toc-number">2.</span> <span class="toc-text">线程模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E8B_u4EF6_u9A71_u52A8_u6A21_u578B"><span class="toc-number">3.</span> <span class="toc-text">事件驱动模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E8B_u4EF6_u5B9A_u4E49"><span class="toc-number">3.1.</span> <span class="toc-text">事件定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E8B_u4EF6_u56DE_u8C03_u673A_u5236_u7684_u5B9E_u73B0"><span class="toc-number">3.2.</span> <span class="toc-text">事件回调机制的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E8B_u4EF6_u5904_u7406_u6D41_u7A0B"><span class="toc-number">3.3.</span> <span class="toc-text">事件处理流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6838_u5FC3_u7C7B"><span class="toc-number">4.</span> <span class="toc-text">核心类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ConnectionCtx"><span class="toc-number">4.1.</span> <span class="toc-text">ConnectionCtx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NioServer"><span class="toc-number">4.2.</span> <span class="toc-text">NioServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Worker"><span class="toc-number">4.3.</span> <span class="toc-text">Worker</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8FD0_u884C_u4E00_u4E2A_u7B80_u5355_u7684_Web__u670D_u52A1_u5668"><span class="toc-number">5.</span> <span class="toc-text">运行一个简单的 Web 服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/Getty" target="_blank" rel="external">Getty</a>是我为了学习 Java NIO 所写的一个 NIO 框架，实现过程中参考了 Netty 的设计，同时使用 Groovy 来实现。虽然只是玩具，但是麻雀虽小，五脏俱全，在实现过程中，不仅熟悉了 NIO 的使用，还借鉴了很多 Netty 的设计思想，提升了自己的编码和设计能力。</p>
+<p>至于为什么用 Groovy 来写，因为我刚学了 Groovy，正好拿来练手，加上 Groovy 是兼容 Java 的，所以只是语法上的差别，底层实现还是基于 Java API的。</p>
+<p>Getty 的核心代码行数不超过 500 行，一方面得益于 Groovy 简洁的语法，另一方面是因为我只实现了核心的逻辑，最复杂的其实是解码器实现。脚手架容易搭，摩天大楼哪有那么容易盖，但用来学习 NIO 足以。</p>
+<h2 id="u7EBF_u7A0B_u6A21_u578B"><a href="#u7EBF_u7A0B_u6A21_u578B" class="headerlink" title="线程模型"></a>线程模型</h2><p>Getty 使用的是 Reactor 多线程模型<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/getty-1.png" alt="reactor"></p>
+<ol>
+<li>有专门一个 NIO 线程- Acceptor 线程用于监听服务端，接收客户端的 TCP 连接请求，然后将连接分配给工作线程，由工作线程来监听读写事件。</li>
+<li>网络 IO 操作-读/写等由多个工作线程负责，由这些工作线程负责消息的读取、解码、编码和发送。</li>
+<li>1 个工作线程可以同时处理N条链路，但是 1 个链路只对应 1 个工作线程，防止发生并发操作问题。</li>
+</ol>
+<h2 id="u4E8B_u4EF6_u9A71_u52A8_u6A21_u578B"><a href="#u4E8B_u4EF6_u9A71_u52A8_u6A21_u578B" class="headerlink" title="事件驱动模型"></a>事件驱动模型</h2><p>整个服务端的流程处理，建立于事件机制上。在 [接受连接－＞读－＞业务处理－＞写 －＞关闭连接 ]这个过程中，触发器将触发相应事件，由事件处理器对相应事件分别响应，完成服务器端的业务处理。</p>
+<h3 id="u4E8B_u4EF6_u5B9A_u4E49"><a href="#u4E8B_u4EF6_u5B9A_u4E49" class="headerlink" title="事件定义"></a>事件定义</h3><ol>
+<li><code>onRead</code>：当客户端发来数据，并已被工作线程正确读取时，触发该事件 。该事件通知各事件处理器可以对客户端发来的数据进行实际处理了。</li>
+<li><code>onWrite</code>：当客户端可以开始接受服务端发送数据时触发该事件，通过该事件，我们可以向客户端发送响应数据。（当前的实现中并未使用写事件）</li>
+<li><code>onClosed</code>：当客户端与服务器断开连接时触发该事件。</li>
+</ol>
+<h3 id="u4E8B_u4EF6_u56DE_u8C03_u673A_u5236_u7684_u5B9E_u73B0"><a href="#u4E8B_u4EF6_u56DE_u8C03_u673A_u5236_u7684_u5B9E_u73B0" class="headerlink" title="事件回调机制的实现"></a>事件回调机制的实现</h3><p>在这个模型中，事件采用广播方式，也就是所有注册的事件处理器都能获得事件通知。这样可以将不同性质的业务处理，分别用不同的处理器实现，使每个处理器的功能尽可能单一。</p>
+<p>如下图：整个事件模型由监听器、事件适配器、事件触发器（HandlerChain，PipeLine）、事件处理器组成。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/getty-2.png" alt="event"></p>
+<ul>
+<li><p><code>ServerListener</code>：这是一个事件接口，定义需监听的服务器事件</p>
+<pre><code>interface ServerListener extends Serializable{
+    /**
+     * 可读事件回调
+     * @param request
+     */
+    void onRead(ctx)
+    /**
+     * 可写事件回调
+     * @param request
+     * @param response
+     */
+    void onWrite(ctx)
+    /**
+     * 连接关闭回调
+     * @param request
+     */
+    void onClosed(ctx)
+}
+</code></pre></li>
+<li><p><code>EventAdapter</code>：对 Serverlistener 接口实现一个适配器 (EventAdapter)，这样的好处是最终的事件处理器可以只处理所关心的事件。</p>
+<pre><code>class EventAdapter implements ServerListener {
+    //下个处理器的引用
+    protected next
+    void onRead(Object ctx) {
+    }
+    void onWrite(Object ctx) {
+    }
+    void onClosed(Object ctx) {
+    }
+}
+</code></pre></li>
+<li><p><code>Notifier</code>：用于在适当的时候通过触发服务器事件，通知在册的事件处理器对事件做出响应。</p>
+<pre><code>interface Notifier extends Serializable{
+    /**
+     * 触发所有可读事件回调
+     */
+    void fireOnRead(ctx)
+    /**
+     * 触发所有可写事件回调
+     */
+    void fireOnWrite(ctx)
+    /**
+     * 触发所有连接关闭事件回调
+     */
+    void fireOnClosed(ctx)
+}
+</code></pre></li>
+<li><p><code>HandlerChain</code>：实现了<code>Notifier</code>接口，维持有序的事件处理器链条，每次从第一个处理器开始触发。</p>
+<pre><code>class HandlerChain implements Notifier{
+    EventAdapter head
+    EventAdapter tail
+    /**
+     * 添加处理器到执行链的最后
+     * @param handler
+     */
+    void addLast(handler) {
+        if (tail != null) {
+            tail.next = handler
+            tail = tail.next
+        } else {
+            head = handler
+            tail = head
+        }
+    }
+    void fireOnRead(ctx) {
+        head.onRead(ctx)
+    }
+    void fireOnWrite(ctx) {
+        head.onWrite(ctx)
+    }
+    void fireOnClosed(ctx) {
+        head.onClosed(ctx)
+    }
+}
+</code></pre></li>
+<li><p><code>PipeLine</code>：实现了<code>Notifier</code>接口，作为事件总线，维持一个事件链的列表。</p>
+<pre><code>class PipeLine implements Notifier{
+    static logger = LoggerFactory.getLogger(PipeLine.name)
+    //监听器队列
+    def listOfChain = []
+    PipeLine(){}
+    /**
+     * 添加监听器到监听队列中
+     * @param chain
+     */
+    void addChain(chain) {
+        synchronized (listOfChain) {
+            if (!listOfChain.contains(chain)) {
+                listOfChain.add(chain)
+            }
+        }
+    }
+    /**
+     * 触发所有可读事件回调
+     */
+    void fireOnRead(ctx) {
+        logger.debug(&quot;fireOnRead&quot;)
+        listOfChain.each { chain -&gt;
+            chain.fireOnRead(ctx)
+        }
+    }
+    /**
+     * 触发所有可写事件回调
+     */
+    void fireOnWrite(ctx) {
+        listOfChain.each { chain -&gt;
+            chain.fireOnWrite(ctx)
+        }
+    }
+    /**
+     * 触发所有连接关闭事件回调
+     */
+    void fireOnClosed(ctx) {
+        listOfChain.each { chain -&gt;
+            chain.fireOnClosed(ctx)
+        }
+    }
+}
+</code></pre></li>
+</ul>
+<h3 id="u4E8B_u4EF6_u5904_u7406_u6D41_u7A0B"><a href="#u4E8B_u4EF6_u5904_u7406_u6D41_u7A0B" class="headerlink" title="事件处理流程"></a>事件处理流程</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/getty-3.png" alt="编程模型"><br>事件处理采用职责链模式，每个处理器处理完数据之后会决定是否继续执行下一个处理器。如果处理器不将任务交给线程池处理，那么整个处理流程都在同一个线程中处理。而且每个连接都有单独的<code>PipeLine</code>，工作线程可以在多个连接上下文切换，但是一个连接上下文只会被一个线程处理。</p>
+<h2 id="u6838_u5FC3_u7C7B"><a href="#u6838_u5FC3_u7C7B" class="headerlink" title="核心类"></a>核心类</h2><h3 id="ConnectionCtx"><a href="#ConnectionCtx" class="headerlink" title="ConnectionCtx"></a>ConnectionCtx</h3><p>连接上下文<code>ConnectionCtx</code></p>
+<pre><code>class ConnectionCtx {
+    /**socket连接*/
+    SocketChannel channel
+    /**用于携带额外参数*/
+    Object attachment
+    /**处理当前连接的工作线程*/
+    Worker worker
+    /**连接超时时间*/
+    Long timeout
+    /**每个连接拥有自己的pipeline*/
+    PipeLine pipeLine
+}
+</code></pre><h3 id="NioServer"><a href="#NioServer" class="headerlink" title="NioServer"></a>NioServer</h3><p>主线程负责监听端口，持有工作线程的引用（使用轮转法分配连接），每次有连接到来时，将连接放入工作线程的连接队列，并唤醒线程<code>selector.wakeup()</code>（线程可能阻塞在<code>selector</code>上）。</p>
+<pre><code>class NioServer extends Thread {
+    /**服务端的套接字通道*/
+    ServerSocketChannel ssc
+    /**选择器*/
+    Selector selector
+    /**事件总线*/
+    PipeLine pipeLine
+    /**工作线程列表*/
+    def workers = []
+    /**当前工作线程索引*/
+    int index
+}
+</code></pre><h3 id="Worker"><a href="#Worker" class="headerlink" title="Worker"></a>Worker</h3><p>工作线程，负责注册server传递过来的socket连接。主要监听读事件，管理socket，处理写操作。</p>
+<pre><code>class Worker extends Thread {
+    /**选择器*/
+    Selector selector
+    /**读缓冲区*/
+    ByteBuffer buffer
+    /**主线程分配的连接队列*/
+    def queue = []
+    /**存储按超时时间从小到大的连接*/
+    TreeMap&lt;Long, ConnectionCtx&gt; ctxTreeMap
+
+    void run() {
+        while (true) {
+            selector.select()
+            //注册主线程发送过来的连接
+            registerCtx()
+            //关闭超时的连接
+            closeTimeoutCtx()
+            //处理事件
+            dispatchEvent()
+        }
+    }
+}
+</code></pre><h2 id="u8FD0_u884C_u4E00_u4E2A_u7B80_u5355_u7684_Web__u670D_u52A1_u5668"><a href="#u8FD0_u884C_u4E00_u4E2A_u7B80_u5355_u7684_Web__u670D_u52A1_u5668" class="headerlink" title="运行一个简单的 Web 服务器"></a>运行一个简单的 Web 服务器</h2><p>我实现了一系列处理<code>HTTP</code>请求的处理器，具体实现看代码。</p>
+<ul>
+<li><code>LineBasedDecoder</code>：行解码器，按行解析数据</li>
+<li><code>HttpRequestDecoder</code>：HTTP请求解析，目前只支持GET请求</li>
+<li><code>HttpRequestHandler</code>：Http 请求处理器，目前只支持GET方法</li>
+<li><code>HttpResponseHandler</code>：Http响应处理器</li>
+</ul>
+<p>下面是写在<code>test</code>中的例子</p>
+<pre><code>class WebServerTest {
+    static void main(args) {
+        def pipeLine = new PipeLine()
+
+        def readChain = new HandlerChain()
+        readChain.addLast(new LineBasedDecoder())
+        readChain.addLast(new HttpRequestDecoder())
+        readChain.addLast(new HttpRequestHandler())
+        readChain.addLast(new HttpResponseHandler())
+
+        def closeChain = new HandlerChain()
+        closeChain.addLast(new ClosedHandler())
+
+        pipeLine.addChain(readChain)
+        pipeLine.addChain(closeChain)
+
+        NioServer nioServer = new NioServer(pipeLine)
+        nioServer.start()
+    }
+}
+</code></pre><p>另外，还可以使用配置文件<code>getty.properties</code>设置程序的运行参数。</p>
+<pre><code>#用于拼接消息时使用的二进制数组的缓存区
+common_buffer_size=1024
+#工作线程读取tcp数据的缓存大小
+worker_rcv_buffer_size=1024
+#监听的端口
+port=4399
+#工作线程的数量
+worker_num=1
+#连接超时自动断开时间
+timeout=900
+#根目录
+root=.
+</code></pre><h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p><a href="https://github.com/x-hansong/Getty" target="_blank" rel="external">Getty</a>是我造的第二个小轮子，第一个是<a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a>。都说不要重复造轮子。这话我是认同的，但是掌握一门技术最好的方法就是实践，在没有合适项目可以使用新技术的时候，造一个简单的轮子是不错的实践手段。</p>
+<p><a href="https://github.com/x-hansong/Getty" target="_blank" rel="external">Getty</a> 的缺点或者说还可以优化的点：</p>
+<ol>
+<li>线程的使用直接用了<code>Thread</code>类，看起来有点low。等以后水平提升了再来抽象一下。</li>
+<li>目前只有读事件是异步的，写事件是同步的。未来将写事件也改为异步的。</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/NIO/">NIO</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.xiaohansong.com/2016/07/30/getty/" data-title="【Getty】Java NIO框架设计与实现 | ShareHub" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/07/12/java-executor/"  title="Java 线程池框架核心代码分析">
+ <strong>下一篇：</strong><br/> 
+ <span>Java 线程池框架核心代码分析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/07/30/getty/" data-title="【Getty】Java NIO框架设计与实现" data-url="http://blog.xiaohansong.com/2016/07/30/getty/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7EBF_u7A0B_u6A21_u578B"><span class="toc-number">2.</span> <span class="toc-text">线程模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E8B_u4EF6_u9A71_u52A8_u6A21_u578B"><span class="toc-number">3.</span> <span class="toc-text">事件驱动模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E8B_u4EF6_u5B9A_u4E49"><span class="toc-number">3.1.</span> <span class="toc-text">事件定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E8B_u4EF6_u56DE_u8C03_u673A_u5236_u7684_u5B9E_u73B0"><span class="toc-number">3.2.</span> <span class="toc-text">事件回调机制的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E8B_u4EF6_u5904_u7406_u6D41_u7A0B"><span class="toc-number">3.3.</span> <span class="toc-text">事件处理流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6838_u5FC3_u7C7B"><span class="toc-number">4.</span> <span class="toc-text">核心类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ConnectionCtx"><span class="toc-number">4.1.</span> <span class="toc-text">ConnectionCtx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NioServer"><span class="toc-number">4.2.</span> <span class="toc-text">NioServer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Worker"><span class="toc-number">4.3.</span> <span class="toc-text">Worker</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8FD0_u884C_u4E00_u4E2A_u7B80_u5355_u7684_Web__u670D_u52A1_u5668"><span class="toc-number">5.</span> <span class="toc-text">运行一个简单的 Web 服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux内核/" title="Linux内核">Linux内核<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux工具/" title="Linux工具">Linux工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/个人随想/" title="个人随想">个人随想<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/理解链接/" title="理解链接">理解链接<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法学习/" title="算法学习">算法学习<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/虚拟化/" title="虚拟化">虚拟化<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/解题报告/" title="解题报告">解题报告<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/spice/" title="spice">spice<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/设计/" title="设计">设计<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/减治法/" title="减治法">减治法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/String/" title="String">String<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/知识管理/" title="知识管理">知识管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Executor/" title="Executor">Executor<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m XiaoHanSong, a student majoring in SE. <br/>
+			This is my blog for sharing my ideas.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/x-hansong" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		<a href="https://twitter.com/Yonah_x" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/xhansong" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		<a href="https://www.linkedin.com/in/xhansong" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:x.hansong.scut@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="Yonah-潇">Yonah-潇</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yonah"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+  	  <script type="text/javascript">
+  		var duoshuo_user_ID = 7607035
+  	  </script>
+<script src="/js/ua-parser.min.js"></script>
+<script src="/js/hook-duoshuo.js"></script>
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256629854'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1256629854' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '084e2ef4b40406a66fd1'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-07-11T16:18:00.861Z</updated>
+  <updated>2016-07-30T03:14:39.521Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -15,11 +15,266 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[【Getty】Java NIO框架设计与实现]]></title>
+    <link href="http://blog.xiaohansong.com/2016/07/30/getty/"/>
+    <id>http://blog.xiaohansong.com/2016/07/30/getty/</id>
+    <published>2016-07-30T02:42:23.000Z</published>
+    <updated>2016-07-30T03:14:39.521Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/Getty" target="_blank" rel="external">Getty</a>是我为了学习 Java NIO 所写的一个 NIO 框架，实现过程中参考了 Netty 的设计，同时使用 Groovy 来实现。虽然只是玩具，但是麻雀虽小，五脏俱全，在实现过程中，不仅熟悉了 NIO 的使用，还借鉴了很多 Netty 的设计思想，提升了自己的编码和设计能力。</p>
+<p>至于为什么用 Groovy 来写，因为我刚学了 Groovy，正好拿来练手，加上 Groovy 是兼容 Java 的，所以只是语法上的差别，底层实现还是基于 Java API的。</p>
+<p>Getty 的核心代码行数不超过 500 行，一方面得益于 Groovy 简洁的语法，另一方面是因为我只实现了核心的逻辑，最复杂的其实是解码器实现。脚手架容易搭，摩天大楼哪有那么容易盖，但用来学习 NIO 足以。</p>
+<h2 id="u7EBF_u7A0B_u6A21_u578B"><a href="#u7EBF_u7A0B_u6A21_u578B" class="headerlink" title="线程模型"></a>线程模型</h2><p>Getty 使用的是 Reactor 多线程模型<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/getty-1.png" alt="reactor"></p>
+<ol>
+<li>有专门一个 NIO 线程- Acceptor 线程用于监听服务端，接收客户端的 TCP 连接请求，然后将连接分配给工作线程，由工作线程来监听读写事件。</li>
+<li>网络 IO 操作-读/写等由多个工作线程负责，由这些工作线程负责消息的读取、解码、编码和发送。</li>
+<li>1 个工作线程可以同时处理N条链路，但是 1 个链路只对应 1 个工作线程，防止发生并发操作问题。</li>
+</ol>
+<h2 id="u4E8B_u4EF6_u9A71_u52A8_u6A21_u578B"><a href="#u4E8B_u4EF6_u9A71_u52A8_u6A21_u578B" class="headerlink" title="事件驱动模型"></a>事件驱动模型</h2><p>整个服务端的流程处理，建立于事件机制上。在 [接受连接－＞读－＞业务处理－＞写 －＞关闭连接 ]这个过程中，触发器将触发相应事件，由事件处理器对相应事件分别响应，完成服务器端的业务处理。</p>
+<h3 id="u4E8B_u4EF6_u5B9A_u4E49"><a href="#u4E8B_u4EF6_u5B9A_u4E49" class="headerlink" title="事件定义"></a>事件定义</h3><ol>
+<li><code>onRead</code>：当客户端发来数据，并已被工作线程正确读取时，触发该事件 。该事件通知各事件处理器可以对客户端发来的数据进行实际处理了。</li>
+<li><code>onWrite</code>：当客户端可以开始接受服务端发送数据时触发该事件，通过该事件，我们可以向客户端发送响应数据。（当前的实现中并未使用写事件）</li>
+<li><code>onClosed</code>：当客户端与服务器断开连接时触发该事件。</li>
+</ol>
+<h3 id="u4E8B_u4EF6_u56DE_u8C03_u673A_u5236_u7684_u5B9E_u73B0"><a href="#u4E8B_u4EF6_u56DE_u8C03_u673A_u5236_u7684_u5B9E_u73B0" class="headerlink" title="事件回调机制的实现"></a>事件回调机制的实现</h3><p>在这个模型中，事件采用广播方式，也就是所有注册的事件处理器都能获得事件通知。这样可以将不同性质的业务处理，分别用不同的处理器实现，使每个处理器的功能尽可能单一。</p>
+<p>如下图：整个事件模型由监听器、事件适配器、事件触发器（HandlerChain，PipeLine）、事件处理器组成。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/getty-2.png" alt="event"></p>
+<ul>
+<li><p><code>ServerListener</code>：这是一个事件接口，定义需监听的服务器事件</p>
+<pre><code>interface ServerListener extends Serializable{
+    /**
+     * 可读事件回调
+     * @param request
+     */
+    void onRead(ctx)
+    /**
+     * 可写事件回调
+     * @param request
+     * @param response
+     */
+    void onWrite(ctx)
+    /**
+     * 连接关闭回调
+     * @param request
+     */
+    void onClosed(ctx)
+}
+</code></pre></li>
+<li><p><code>EventAdapter</code>：对 Serverlistener 接口实现一个适配器 (EventAdapter)，这样的好处是最终的事件处理器可以只处理所关心的事件。</p>
+<pre><code>class EventAdapter implements ServerListener {
+    //下个处理器的引用
+    protected next
+    void onRead(Object ctx) {
+    }
+    void onWrite(Object ctx) {
+    }
+    void onClosed(Object ctx) {
+    }
+}
+</code></pre></li>
+<li><p><code>Notifier</code>：用于在适当的时候通过触发服务器事件，通知在册的事件处理器对事件做出响应。</p>
+<pre><code>interface Notifier extends Serializable{
+    /**
+     * 触发所有可读事件回调
+     */
+    void fireOnRead(ctx)
+    /**
+     * 触发所有可写事件回调
+     */
+    void fireOnWrite(ctx)
+    /**
+     * 触发所有连接关闭事件回调
+     */
+    void fireOnClosed(ctx)
+}
+</code></pre></li>
+<li><p><code>HandlerChain</code>：实现了<code>Notifier</code>接口，维持有序的事件处理器链条，每次从第一个处理器开始触发。</p>
+<pre><code>class HandlerChain implements Notifier{
+    EventAdapter head
+    EventAdapter tail
+    /**
+     * 添加处理器到执行链的最后
+     * @param handler
+     */
+    void addLast(handler) {
+        if (tail != null) {
+            tail.next = handler
+            tail = tail.next
+        } else {
+            head = handler
+            tail = head
+        }
+    }
+    void fireOnRead(ctx) {
+        head.onRead(ctx)
+    }
+    void fireOnWrite(ctx) {
+        head.onWrite(ctx)
+    }
+    void fireOnClosed(ctx) {
+        head.onClosed(ctx)
+    }
+}
+</code></pre></li>
+<li><p><code>PipeLine</code>：实现了<code>Notifier</code>接口，作为事件总线，维持一个事件链的列表。</p>
+<pre><code>class PipeLine implements Notifier{
+    static logger = LoggerFactory.getLogger(PipeLine.name)
+    //监听器队列
+    def listOfChain = []
+    PipeLine(){}
+    /**
+     * 添加监听器到监听队列中
+     * @param chain
+     */
+    void addChain(chain) {
+        synchronized (listOfChain) {
+            if (!listOfChain.contains(chain)) {
+                listOfChain.add(chain)
+            }
+        }
+    }
+    /**
+     * 触发所有可读事件回调
+     */
+    void fireOnRead(ctx) {
+        logger.debug(&quot;fireOnRead&quot;)
+        listOfChain.each { chain -&gt;
+            chain.fireOnRead(ctx)
+        }
+    }
+    /**
+     * 触发所有可写事件回调
+     */
+    void fireOnWrite(ctx) {
+        listOfChain.each { chain -&gt;
+            chain.fireOnWrite(ctx)
+        }
+    }
+    /**
+     * 触发所有连接关闭事件回调
+     */
+    void fireOnClosed(ctx) {
+        listOfChain.each { chain -&gt;
+            chain.fireOnClosed(ctx)
+        }
+    }
+}
+</code></pre></li>
+</ul>
+<h3 id="u4E8B_u4EF6_u5904_u7406_u6D41_u7A0B"><a href="#u4E8B_u4EF6_u5904_u7406_u6D41_u7A0B" class="headerlink" title="事件处理流程"></a>事件处理流程</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/getty-3.png" alt="编程模型"><br>事件处理采用职责链模式，每个处理器处理完数据之后会决定是否继续执行下一个处理器。如果处理器不将任务交给线程池处理，那么整个处理流程都在同一个线程中处理。而且每个连接都有单独的<code>PipeLine</code>，工作线程可以在多个连接上下文切换，但是一个连接上下文只会被一个线程处理。</p>
+<h2 id="u6838_u5FC3_u7C7B"><a href="#u6838_u5FC3_u7C7B" class="headerlink" title="核心类"></a>核心类</h2><h3 id="ConnectionCtx"><a href="#ConnectionCtx" class="headerlink" title="ConnectionCtx"></a>ConnectionCtx</h3><p>连接上下文<code>ConnectionCtx</code></p>
+<pre><code>class ConnectionCtx {
+    /**socket连接*/
+    SocketChannel channel
+    /**用于携带额外参数*/
+    Object attachment
+    /**处理当前连接的工作线程*/
+    Worker worker
+    /**连接超时时间*/
+    Long timeout
+    /**每个连接拥有自己的pipeline*/
+    PipeLine pipeLine
+}
+</code></pre><h3 id="NioServer"><a href="#NioServer" class="headerlink" title="NioServer"></a>NioServer</h3><p>主线程负责监听端口，持有工作线程的引用（使用轮转法分配连接），每次有连接到来时，将连接放入工作线程的连接队列，并唤醒线程<code>selector.wakeup()</code>（线程可能阻塞在<code>selector</code>上）。</p>
+<pre><code>class NioServer extends Thread {
+    /**服务端的套接字通道*/
+    ServerSocketChannel ssc
+    /**选择器*/
+    Selector selector
+    /**事件总线*/
+    PipeLine pipeLine
+    /**工作线程列表*/
+    def workers = []
+    /**当前工作线程索引*/
+    int index
+}
+</code></pre><h3 id="Worker"><a href="#Worker" class="headerlink" title="Worker"></a>Worker</h3><p>工作线程，负责注册server传递过来的socket连接。主要监听读事件，管理socket，处理写操作。</p>
+<pre><code>class Worker extends Thread {
+    /**选择器*/
+    Selector selector
+    /**读缓冲区*/
+    ByteBuffer buffer
+    /**主线程分配的连接队列*/
+    def queue = []
+    /**存储按超时时间从小到大的连接*/
+    TreeMap&lt;Long, ConnectionCtx&gt; ctxTreeMap
+
+    void run() {
+        while (true) {
+            selector.select()
+            //注册主线程发送过来的连接
+            registerCtx()
+            //关闭超时的连接
+            closeTimeoutCtx()
+            //处理事件
+            dispatchEvent()
+        }
+    }
+}
+</code></pre><h2 id="u8FD0_u884C_u4E00_u4E2A_u7B80_u5355_u7684_Web__u670D_u52A1_u5668"><a href="#u8FD0_u884C_u4E00_u4E2A_u7B80_u5355_u7684_Web__u670D_u52A1_u5668" class="headerlink" title="运行一个简单的 Web 服务器"></a>运行一个简单的 Web 服务器</h2><p>我实现了一系列处理<code>HTTP</code>请求的处理器，具体实现看代码。</p>
+<ul>
+<li><code>LineBasedDecoder</code>：行解码器，按行解析数据</li>
+<li><code>HttpRequestDecoder</code>：HTTP请求解析，目前只支持GET请求</li>
+<li><code>HttpRequestHandler</code>：Http 请求处理器，目前只支持GET方法</li>
+<li><code>HttpResponseHandler</code>：Http响应处理器</li>
+</ul>
+<p>下面是写在<code>test</code>中的例子</p>
+<pre><code>class WebServerTest {
+    static void main(args) {
+        def pipeLine = new PipeLine()
+
+        def readChain = new HandlerChain()
+        readChain.addLast(new LineBasedDecoder())
+        readChain.addLast(new HttpRequestDecoder())
+        readChain.addLast(new HttpRequestHandler())
+        readChain.addLast(new HttpResponseHandler())
+
+        def closeChain = new HandlerChain()
+        closeChain.addLast(new ClosedHandler())
+
+        pipeLine.addChain(readChain)
+        pipeLine.addChain(closeChain)
+
+        NioServer nioServer = new NioServer(pipeLine)
+        nioServer.start()
+    }
+}
+</code></pre><p>另外，还可以使用配置文件<code>getty.properties</code>设置程序的运行参数。</p>
+<pre><code>#用于拼接消息时使用的二进制数组的缓存区
+common_buffer_size=1024
+#工作线程读取tcp数据的缓存大小
+worker_rcv_buffer_size=1024
+#监听的端口
+port=4399
+#工作线程的数量
+worker_num=1
+#连接超时自动断开时间
+timeout=900
+#根目录
+root=.
+</code></pre><h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p><a href="https://github.com/x-hansong/Getty" target="_blank" rel="external">Getty</a>是我造的第二个小轮子，第一个是<a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a>。都说不要重复造轮子。这话我是认同的，但是掌握一门技术最好的方法就是实践，在没有合适项目可以使用新技术的时候，造一个简单的轮子是不错的实践手段。</p>
+<p><a href="https://github.com/x-hansong/Getty" target="_blank" rel="external">Getty</a> 的缺点或者说还可以优化的点：</p>
+<ol>
+<li>线程的使用直接用了<code>Thread</code>类，看起来有点low。等以后水平提升了再来抽象一下。</li>
+<li>目前只有读事件是异步的，写事件是同步的。未来将写事件也改为异步的。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/Getty" target=]]>
+    </summary>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
+    
+      <category term="NIO" scheme="http://blog.xiaohansong.com/tags/NIO/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Java 线程池框架核心代码分析]]></title>
     <link href="http://blog.xiaohansong.com/2016/07/12/java-executor/"/>
     <id>http://blog.xiaohansong.com/2016/07/12/java-executor/</id>
     <published>2016-07-11T16:13:44.000Z</published>
-    <updated>2016-07-11T16:18:00.861Z</updated>
+    <updated>2016-07-11T16:22:12.990Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>多线程编程中，为每个任务分配一个线程是不现实的，线程创建的开销和资源消耗都是很高的。线程池应运而生，成为我们管理线程的利器。Java 通过<code>Executor</code>接口，提供了一种标准的方法将任务的提交过程和执行过程解耦开来，并用<code>Runnable</code>表示任务。</p>
 <p>下面，我们来分析一下 Java 线程池框架的实现<code>ThreadPoolExecutor</code>。</p>
 <p><em>下面的分析基于JDK1.7</em></p>
@@ -143,7 +398,7 @@ Runnable r = timed ?
     <link href="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/"/>
     <id>http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/</id>
     <published>2016-05-15T02:49:39.000Z</published>
-    <updated>2016-05-15T02:53:41.153Z</updated>
+    <updated>2016-07-30T03:14:59.252Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。</p>
 <h2 id="RedisHttpSession"><a href="#RedisHttpSession" class="headerlink" title="RedisHttpSession"></a>RedisHttpSession</h2><p>这个类实现了<code>HttpSession</code>接口，用于替换默认的<code>HttpSession</code>实现。<code>RedisHttpSession</code>将<code>HttpSession</code>的接口方法重写了一遍，将<code>HttpSession</code>的属性存储到了 Redis 中。</p>
 <p>每个<code>RedisHttpSession</code>都有一个 UUID 与之对应，该字段加上<code>session:</code>前缀作为存储在 Redis 中的键值。例如：</p>
@@ -954,7 +1209,7 @@ private AbstractStringBuilder appendNull() {
     <link href="http://blog.xiaohansong.com/2016/01/16/kownledge-Management/"/>
     <id>http://blog.xiaohansong.com/2016/01/16/kownledge-Management/</id>
     <published>2016-01-16T05:01:51.000Z</published>
-    <updated>2016-04-23T03:10:22.011Z</updated>
+    <updated>2016-07-30T03:05:14.308Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文从一个程序员的视角来讨论知识管理，包括以下几个方面：</p>
 <ul>
 <li>什么是知识管理</li>
@@ -1998,47 +2253,6 @@ class ColonMovieFinder...
       <category term="链接" scheme="http://blog.xiaohansong.com/tags/%E9%93%BE%E6%8E%A5/"/>
     
       <category term="理解链接" scheme="http://blog.xiaohansong.com/categories/%E7%90%86%E8%A7%A3%E9%93%BE%E6%8E%A5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[桌面虚拟化传输协议之android spice]]></title>
-    <link href="http://blog.xiaohansong.com/2015/07/16/%E6%A1%8C%E9%9D%A2%E8%99%9A%E6%8B%9F%E5%8C%96%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E4%B9%8Bandroid-spice/"/>
-    <id>http://blog.xiaohansong.com/2015/07/16/桌面虚拟化传输协议之android-spice/</id>
-    <published>2015-07-16T04:46:15.000Z</published>
-    <updated>2016-01-02T17:39:28.900Z</updated>
-    <content type="html"><![CDATA[<h1 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h1><p>云计算是目前计算机领域的一个热门领域，桌面虚拟化是其中的一个重要应用，即把桌面系统在服务器端虚拟化，然后通过传输协议传输数据到客户端来实现桌面虚拟化，这样的好处就在于不管用什么设备，只要通过客户端都可以访问到云端的系统，随时随地都可以在一个系统上工作。</p>
-<p>目前有两大标准的桌面传输协议，分别是RBP和RDP。</p>
-<ul>
-<li>RBP有一个简单的架构，即直接把虚拟机的图形数据直接传输给客户端，客户端直接显示图像，有点类似于看网络视频。这样子就对网络的要求较高，高延迟情况下效果很差，但是客户端压力比较小，因此对客户机的性能要求较低，毕竟它只负责显示图像。</li>
-</ul>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/android_spice_01.png" alt="RBP"></p>
-<ul>
-<li>RDP稍微复杂一点，使用的是图像局部刷新，它发送事件消息给客户端，提示需要刷新的图像区域并且提供数据，客户端根据消息数据生成图像数据显示出来。因此传输的数据量较少，适合于网络不好情况，但是缺点是客户端需要生成图像数据，对客户机有一定压力。</li>
-</ul>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/android_spice_02.png" alt="RDP"></p>
-<p>那么对于移动设备来说，很显然，RDP协议更适合移动设备，因为移动设备在3G，4G情况下不可能用耗费大流量的RFB协议，并且延迟比较高。而RDP协议由于传输的数据量较少，对网络条件要求不高。所以，针对于移动平台来说，RDP协议比较合适。</p>
-<p>但是，由于RDP协议是微软的产品，受限于其证书，并不是开源产品，所以不能用于移动设备。那么，开源的类RDP协议的<a href="http://www.spice-space.org" target="_blank" rel="external">SPICE</a>协议,就隆重登场了，结合我们的主题，在android平台上应用spice协议。下面，我们来介绍spice在android平台上的应用。</p>
-<h1 id="SPICE__u534F_u8BAE_u5728android_u5E73_u53F0_u7684_u5E94_u7528"><a href="#SPICE__u534F_u8BAE_u5728android_u5E73_u53F0_u7684_u5E94_u7528" class="headerlink" title="SPICE 协议在android平台的应用"></a>SPICE 协议在android平台的应用</h1><p>Spice事实上并没有android版本，但是它有linux版本，而android是基于linux的，所以，我们可以通过使用NDK来交叉编译Spice库到android上使用。也就是说，我们可以通过使用JNI来调用libspice.so（通过NDK交叉编译），从而在android平台上使用Spice。</p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/android_spice_04.png" alt="android spice"></p>
-<p>Spice服务器通过通道(Channel)来与客户端通信，其中jpeg模块是通过NDK编译好的库，使用JNI调用，把服务器发送过来图像命令转化为图像，再把图像交给android的View显示出来。</p>
-<p>在实际使用中，需要对图像的解析过程进行优化，否则显示的延迟很大。一个解决方案是使用更快的jpeg解析库。</p>
-<p>最后,推荐一个开源的spice安卓客户端<a href="https://github.com/iiordanov/remote-desktop-clients" target="_blank" rel="external">remote-desktop-clients</a></p>
-<p>以上只是对Spice工作原理的简单描述，详细介绍查看官方文档：</p>
-<ul>
-<li><a href="http://www.spice-space.org/docs/spice_for_newbies.pdf" target="_blank" rel="external">spice_for_newbies</a></li>
-<li><a href="http://xhansong.gitbooks.io/spice-guidebook/" target="_blank" rel="external">spice入门</a>(这是我根据spice官方文档翻译的中文版本)</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u80CC_u666F"><a href="#u80CC_u666F" class="headerlink" title="背景"></a>背景</h1><p>云计算是目前计算机领域的一个热门领域，桌面虚拟化是其中的一个重要应用，即把桌面系统在服务器端虚拟化，然后]]>
-    </summary>
-    
-      <category term="spice" scheme="http://blog.xiaohansong.com/tags/spice/"/>
-    
-      <category term="虚拟化" scheme="http://blog.xiaohansong.com/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
-    
-      <category term="虚拟化" scheme="http://blog.xiaohansong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
     
   </entry>
   

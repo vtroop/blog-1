@@ -27,7 +27,7 @@
 下面的分析基于JDK1.7
 生命周期ThreadPoolEx">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/executor_lifecycle.png">
-<meta property="og:updated_time" content="2016-07-11T16:18:00.861Z">
+<meta property="og:updated_time" content="2016-07-11T16:22:12.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 线程池框架核心代码分析">
 <meta name="twitter:description" content="前言多线程编程中，为每个任务分配一个线程是不现实的，线程创建的开销和资源消耗都是很高的。线程池应运而生，成为我们管理线程的利器。Java 通过Executor接口，提供了一种标准的方法将任务的提交过程和执行过程解耦开来，并用Runnable表示任务。
@@ -250,6 +250,14 @@ Runnable r = timed ?
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2016/07/30/getty/" title="【Getty】Java NIO框架设计与实现">
+  <strong>上一篇：</strong><br/>
+  <span>
+  【Getty】Java NIO框架设计与实现</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2016/05/15/RedisHttpSession/"  title="RedisHttpSession 的设计与实现">
@@ -287,7 +295,7 @@ Runnable r = timed ?
 		<ul>
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>6</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>7</sup></a></li>
 		  
 		
 		  
@@ -340,11 +348,11 @@ Runnable r = timed ?
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
+				<li><a href="/tags/Java/" title="Java">Java<sup>5</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Java/" title="Java">Java<sup>4</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
 			
 		
 			
@@ -364,7 +372,7 @@ Runnable r = timed ?
 			
 		
 			
-				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
 			
 		
 			
@@ -396,11 +404,11 @@ Runnable r = timed ?
 			
 		
 			
-				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
+				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
 			
 		
 			
