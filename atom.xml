@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-07-30T03:14:39.521Z</updated>
+  <updated>2016-08-06T12:28:15.869Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[深入分析 ThreadLocal 内存泄漏问题]]></title>
+    <link href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/"/>
+    <id>http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/</id>
+    <published>2016-08-06T12:12:16.000Z</published>
+    <updated>2016-08-06T12:28:15.869Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><code>ThreadLocal</code> 的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度。但是如果滥用 <code>ThreadLocal</code>，就可能会导致内存泄漏。下面，我们将围绕三个方面来分析 <code>ThreadLocal</code> 内存泄漏的问题</p>
+<ul>
+<li><code>ThreadLocal</code> 实现原理</li>
+<li><code>ThreadLocal</code>为什么会内存泄漏</li>
+<li><code>ThreadLocal</code> 最佳实践</li>
+</ul>
+<h2 id="ThreadLocal__u5B9E_u73B0_u539F_u7406"><a href="#ThreadLocal__u5B9E_u73B0_u539F_u7406" class="headerlink" title="ThreadLocal 实现原理"></a>ThreadLocal 实现原理</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/threadlocal.jpg" alt="ThreadLocal"><br><code>ThreadLocal</code>的实现是这样的：每个<code>Thread</code> 维护一个 <code>ThreadLocalMap</code> 映射表，这个映射表的 <code>key</code> 是 <code>ThreadLocal</code> 实例本身，<code>value</code> 是真正需要存储的 <code>Object</code>。</p>
+<p>也就是说 <code>ThreadLocal</code> 本身并不存储值，它只是作为一个 <code>key</code> 来让线程从 <code>ThreadLocalMap</code> 获取 <code>value</code>。值得注意的是图中的虚线，表示 <code>ThreadLocalMap</code> 是使用 <code>ThreadLocal</code> 的弱引用作为 <code>Key</code> 的，弱引用的对象在 GC 时会被回收。</p>
+<h2 id="ThreadLocal_u4E3A_u4EC0_u4E48_u4F1A_u5185_u5B58_u6CC4_u6F0F"><a href="#ThreadLocal_u4E3A_u4EC0_u4E48_u4F1A_u5185_u5B58_u6CC4_u6F0F" class="headerlink" title="ThreadLocal为什么会内存泄漏"></a><code>ThreadLocal</code>为什么会内存泄漏</h2><p><code>ThreadLocalMap</code>使用<code>ThreadLocal</code>的弱引用作为<code>key</code>，如果一个<code>ThreadLocal</code>没有外部强引用来引用它，那么系统 GC 的时候，这个<code>ThreadLocal</code>势必会被回收，这样一来，<code>ThreadLocalMap</code>中就会出现<code>key</code>为<code>null</code>的<code>Entry</code>，就没有办法访问这些<code>key</code>为<code>null</code>的<code>Entry</code>的<code>value</code>，如果当前线程再迟迟不结束的话，这些<code>key</code>为<code>null</code>的<code>Entry</code>的<code>value</code>就会一直存在一条强引用链：<code>Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value</code>永远无法回收，造成内存泄漏。</p>
+<p>其实，<code>ThreadLocalMap</code>的设计中已经考虑到这种情况，也加上了一些防护措施：在<code>ThreadLocal</code>的<code>get()</code>,<code>set()</code>,<code>remove()</code>的时候都会清除线程<code>ThreadLocalMap</code>里所有<code>key</code>为<code>null</code>的<code>value</code>。</p>
+<p>但是这些被动的预防措施并不能保证不会内存泄漏：</p>
+<ul>
+<li>使用线程池的时候，这个线程执行任务结束，<code>ThreadLocal</code>对象被回收了，线程放回线程池中不销毁，这个线程一直不被使用，导致内存泄漏。</li>
+<li>分配使用了<code>ThreadLocal</code>又不再调用<code>get()</code>,<code>set()</code>,<code>remove()</code>方法，那么这个期间就会发生内存泄漏。</li>
+</ul>
+<h3 id="u4E3A_u4EC0_u4E48_u4F7F_u7528_u5F31_u5F15_u7528"><a href="#u4E3A_u4EC0_u4E48_u4F7F_u7528_u5F31_u5F15_u7528" class="headerlink" title="为什么使用弱引用"></a>为什么使用弱引用</h3><p>从表面上看内存泄漏的根源在于使用了弱引用。网上的文章大多着重分析为什么会内存泄漏，但是另一个问题也同样值得思考：为什么使用弱引用？为什么不用强引用？</p>
+<p>我们先来看看官方文档的说法：</p>
+<blockquote>
+<p>To help deal with very large and long-lived usages, the hash table entries use WeakReferences for keys.<br>为了应对非常大和长时间的用途，哈希表使用弱引用的 key。</p>
+</blockquote>
+<p>下面我们分两种情况讨论：</p>
+<ul>
+<li><strong>key 使用强引用</strong>：引用的<code>ThreadLocal</code>的对象被回收了，但是<code>ThreadLocalMap</code>还持有<code>ThreadLocal</code>的强引用，如果没有手动删除，<code>ThreadLocal</code>不会被回收，导致<code>Entry</code>内存泄漏。</li>
+<li><strong>key 使用弱引用</strong>：引用的<code>ThreadLocal</code>的对象被回收了，由于<code>ThreadLocalMap</code>持有<code>ThreadLocal</code>的弱引用，即使没有手动删除，<code>ThreadLocal</code>也会被回收。<code>value</code>在下一次<code>ThreadLocalMap</code>调用<code>set</code>,<code>get</code>的时候会被清除。</li>
+</ul>
+<p>比较两种情况，我们可以发现：由于<code>ThreadLocalMap</code>的生命周期跟<code>Thread</code>一样长，如果都没有手动删除对应<code>key</code>，都会导致内存泄漏，但是使用弱引用可以多一层保障：<strong>弱引用<code>ThreadLocal</code>不会内存泄漏，对应的<code>value</code>在下一次<code>ThreadLocalMap</code>调用<code>set</code>,<code>get</code>,<code>remove</code>的时候会被清除</strong>。</p>
+<p>因此，<code>ThreadLocal</code>内存泄漏的根源是：由于<code>ThreadLocalMap</code>的生命周期跟<code>Thread</code>一样长，如果没有手动删除对应<code>key</code>就会导致内存泄漏，而不是因为弱引用。</p>
+<h2 id="ThreadLocal__u6700_u4F73_u5B9E_u8DF5"><a href="#ThreadLocal__u6700_u4F73_u5B9E_u8DF5" class="headerlink" title="ThreadLocal 最佳实践"></a>ThreadLocal 最佳实践</h2><p>综合上面的分析，我们可以理解<code>ThreadLocal</code>内存泄漏的前因后果，那么怎么避免内存泄漏呢？</p>
+<ul>
+<li>每次使用完<code>ThreadLocal</code>，都调用它的<code>remove()</code>方法，清除数据。</li>
+</ul>
+<p>在使用线程池的情况下，没有及时清理<code>ThreadLocal</code>，不仅是内存泄漏的问题，更严重的是可能导致业务逻辑出现问题。所以，使用<code>ThreadLocal</code>就跟加锁完要解锁一样，用完就清理。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><code>ThreadLocal</code> 的作用是提供线程内的局部变量，这种变量在线程的生命周期]]>
+    </summary>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
+    
+      <category term="ThreadLocal" scheme="http://blog.xiaohansong.com/tags/ThreadLocal/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[【Getty】Java NIO框架设计与实现]]></title>
@@ -2178,81 +2229,6 @@ class ColonMovieFinder...
       <category term="spice" scheme="http://blog.xiaohansong.com/tags/spice/"/>
     
       <category term="虚拟化" scheme="http://blog.xiaohansong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[理解链接之链接的基本概念]]></title>
-    <link href="http://blog.xiaohansong.com/2015/07/19/%E9%93%BE%E6%8E%A5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
-    <id>http://blog.xiaohansong.com/2015/07/19/链接的基本概念/</id>
-    <published>2015-07-19T05:29:13.000Z</published>
-    <updated>2016-01-02T17:39:28.903Z</updated>
-    <content type="html"><![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行</p>
-<p>每一个步骤展开都是一个很大的课题，链接是一个被人忽略的课题，因为它并不是很复杂，相对于编译来说它还是比较简单的，但是并不代表它不重要。<br>现在编译链接的环节基本上由IDE帮助我们完成了，于是我们很少关注编译链接。虽然说不懂编译链接对开发程序并没有很大影响，但是如果要成为大牛，计算机底层的知识还是要掌握的。<br>编译的知识很多，不是几篇文章能说完的，推荐看《编译原理》。</p>
-<p>这篇文章以及几篇相关的文章将参考《深入理解计算机系统》这本书，对链接作一些介绍。</p>
-<h1 id="u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5"><a href="#u94FE_u63A5_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="链接的基本概念"></a>链接的基本概念</h1><blockquote>
-<p>链接(linking)就是将不同部分的代码和数据收集和组合成为一个单一文件的过程，这个文件可被加载或拷贝到内存并执行。</p>
-</blockquote>
-<p>简单来说，就是把程序用到的所有源文件的目标文件合成一个可执行目标文件，是一个“多合一”的过程。</p>
-<p>链接的执行时机包括：</p>
-<ul>
-<li><strong>编译时</strong>：源代码被翻译为机器码的时候。</li>
-<li><strong>加载时</strong>：程序被加载器加载到内存并执行的时候。</li>
-<li><strong>运行时</strong>：由应用程序执行。</li>
-</ul>
-<p>在早期计算机系统中，链接是手动执行的。在现代计算机系统中，链接是由链接器自动执行的。</p>
-<h1 id="u94FE_u63A5_u7684_u610F_u4E49"><a href="#u94FE_u63A5_u7684_u610F_u4E49" class="headerlink" title="链接的意义"></a>链接的意义</h1><p>链接器在软件开发中扮演了关键的角色，它使得分离编译成为可能。我们不用将一个大小的应用程序组织成一个巨大的源文件，而是可以把它分解成为更小的，更好管理的模块，可以独立的修改和编译这些模块，最终由链接器链接成为一个可执行文件。</p>
-<h1 id="u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6"><a href="#u4E3A_u4EC0_u4E48_u8981_u5B66_u4E60_u94FE_u63A5_u7684_u77E5_u8BC6" class="headerlink" title="为什么要学习链接的知识"></a>为什么要学习链接的知识</h1><p>链接通常是由链接器处理的，不需要我们插手。但是这是在没有错误产生的情况下，一旦错误产生，不理解链接的工作过程和知识，我们就无法排除错误。以下列出学习链接的几个理由：</p>
-<ul>
-<li><strong>理解链接器将帮助你构造大型程序</strong>。构造大型程序的程序员经常会遇到由于缺少模块，库和不兼容库版本引起的链接器错误。除非你理解链接器是如何解析引用，什么是库，以及链接器是如何使用库来解析引用的，否则你无处着手处理错误。</li>
-<li><strong>理解链接器将帮助你避免一些危险的编程错误</strong>。默认情况下，乱用全局变量在链接时是不会产生警告的，这样的错误难以调试。理解链接器将让你知道原因，如何避免。</li>
-<li><strong>理解链接将帮助你理解语言的作用域规则是如何实现的</strong>。</li>
-<li><strong>理解链接将帮助你理解其他重要的系统概念</strong>。</li>
-<li><strong>理解链接将使你能够开发共享库</strong>。</li>
-</ul>
-<h1 id="u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B"><a href="#u7B80_u5355_u7684_u94FE_u63A5_u8FC7_u7A0B" class="headerlink" title="简单的链接过程"></a>简单的链接过程</h1><p>来看一个简单的静态链接过程，对链接有一个感性的认识。</p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_00.png" alt="static linking"></p>
-<p>源代码经过编译器翻译为汇编语言文件，再经过汇编器翻译为可重定向目标文件，最后由链接器链接为可执行目标文件。<br>(ccl:C编译器, as:汇编器, ld:链接器)</p>
-<p>为了创建可执行文件，链接器要完成两个任务：</p>
-<ul>
-<li><strong>符号解析</strong>。目标文件定义和引用符号。符号解析的目的是将每个符号引用和一个符号定义联系起来。</li>
-<li><strong>重定位</strong>。编译器和汇编器生产从地址零开始的代码和数据节。链接器通过把每个符号定义与一个存储器地址联系起来，然后修改所有对这些符号的引用，使得它们指向这个存储器地址，从而重定位这些节。</li>
-</ul>
-<h1 id="u76EE_u6807_u6587_u4EF6"><a href="#u76EE_u6807_u6587_u4EF6" class="headerlink" title="目标文件"></a>目标文件</h1><ul>
-<li><strong>可重定位目标文件</strong>。包含二进制代码和数据，其形式可以在编译时与其他可重定位目标文件合并起来，创建一个可执行目标文件。</li>
-<li><strong>可执行目标文件</strong>。包含二进制代码和数据，其形式可以直接被拷贝到内存并执行。</li>
-<li><strong>共享目标文件</strong>。一种特殊类型的可重定位目标文件，可以在加载或运行时，被动态加载到存储器并链接。</li>
-</ul>
-<h2 id="u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6"><a href="#u53EF_u91CD_u5B9A_u4F4D_u76EE_u6807_u6587_u4EF6" class="headerlink" title="可重定位目标文件"></a>可重定位目标文件</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_01.png" alt="典型的ELF可重定位目标文件"></p>
-<ul>
-<li><strong>ELF header</strong>:前16个字节描述了字的大小和生产该文件系统的字节顺序，剩下的包含帮助链接器解析和解释目标文件的信息。</li>
-<li><strong>.text</strong>:已编译程序的机器代码</li>
-<li><strong>.rodata</strong>:只读数据</li>
-<li><strong>.data</strong>:已初始化的全局C变量</li>
-<li><strong>.bss</strong>:未初始化的全局C变量，不占空间</li>
-<li><strong>.symtab</strong>:符号表，存放程序中被定义和引用的函数和全局变量的信息。</li>
-<li><strong>.rel.text</strong>:一个.text节位置列表，保存跟其他文件链接之后需要修改的项</li>
-<li><strong>.rel.data</strong>:记录被模块定义或引用的全局变量的重定位信息</li>
-<li><strong>.debug</strong>:调试符号表</li>
-<li><strong>.line</strong>:源代码行号和.text节中机器码的映射,用于调试.</li>
-<li><strong>.strtab</strong>:一个字符串表包含.symtab和.debug的符号表还有其节头部名.</li>
-</ul>
-<h2 id="u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6"><a href="#u53EF_u6267_u884C_u76EE_u6807_u6587_u4EF6" class="headerlink" title="可执行目标文件"></a>可执行目标文件</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/link_05.png" alt="典型的ELF可执行目标文件"></p>
-<p>从上图可以看出，可执行目标文件被分为三个部分：</p>
-<ul>
-<li><strong>代码段</strong>:只读内存段</li>
-<li><strong>数据段</strong>:可读写内存段</li>
-<li><strong>符号表和调试信息</strong>:这些数据不会在执行时不会被加载到内存中.</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h1 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h1><p>我们知道，开发程序的基本流程是：设计-代码编写-编译-链接-执行</p>
-<p>每一个步骤展开都是一个很]]>
-    </summary>
-    
-      <category term="链接" scheme="http://blog.xiaohansong.com/tags/%E9%93%BE%E6%8E%A5/"/>
-    
-      <category term="理解链接" scheme="http://blog.xiaohansong.com/categories/%E7%90%86%E8%A7%A3%E9%93%BE%E6%8E%A5/"/>
     
   </entry>
   

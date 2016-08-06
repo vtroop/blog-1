@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/</loc>
+    <lastmod>2016-08-06T12:28:15.869Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/</loc>
     <lastmod>2016-07-30T03:14:59.252Z</lastmod>
   </url>
