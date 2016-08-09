@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-08-08T14:22:57.317Z</updated>
+  <updated>2016-08-09T14:11:15.573Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,135 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ThreadLocal 内存泄露的实例分析]]></title>
+    <link href="http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/"/>
+    <id>http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/</id>
+    <published>2016-08-09T14:10:04.000Z</published>
+    <updated>2016-08-09T14:11:15.573Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>是从理论上分析<code>ThreadLocal</code>的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。</p>
+<h2 id="u6848_u4F8B_u4E0E_u5206_u6790"><a href="#u6848_u4F8B_u4E0E_u5206_u6790" class="headerlink" title="案例与分析"></a>案例与分析</h2><h3 id="u95EE_u9898_u80CC_u666F"><a href="#u95EE_u9898_u80CC_u666F" class="headerlink" title="问题背景"></a>问题背景</h3><p>在 Tomcat 中，下面的代码都在 webapp 内，会导致<code>WebappClassLoader</code>泄漏，无法被回收。</p>
+<pre><code>public class MyCounter {
+        private int count = 0;
+
+        public void increment() {
+                count++;
+        }
+
+        public int getCount() {
+                return count;
+        }
+}
+
+public class MyThreadLocal extends ThreadLocal&lt;MyCounter&gt; {
+}
+
+public class LeakingServlet extends HttpServlet {
+        private static MyThreadLocal myThreadLocal = new MyThreadLocal();
+
+        protected void doGet(HttpServletRequest request,
+                        HttpServletResponse response) throws ServletException, IOException {
+
+                MyCounter counter = myThreadLocal.get();
+                if (counter == null) {
+                        counter = new MyCounter();
+                        myThreadLocal.set(counter);
+                }
+
+                response.getWriter().println(
+                                &quot;The current thread served this servlet &quot; + counter.getCount()
+                                                + &quot; times&quot;);
+                counter.increment();
+        }
+}
+</code></pre><p>上面的代码中，只要<code>LeakingServlet</code>被调用过一次，且执行它的线程没有停止，就会导致<code>WebappClassLoader</code>泄漏。每次你 reload 一下应用，就会多一份<code>WebappClassLoader</code>实例，最后导致 PermGen <code>OutOfMemoryException</code>。</p>
+<h3 id="u89E3_u51B3_u95EE_u9898"><a href="#u89E3_u51B3_u95EE_u9898" class="headerlink" title="解决问题"></a>解决问题</h3><p>现在我们来思考一下：为什么上面的<code>ThreadLocal</code>子类会导致内存泄漏？</p>
+<h4 id="WebappClassLoader"><a href="#WebappClassLoader" class="headerlink" title="WebappClassLoader"></a>WebappClassLoader</h4><p>首先，我们要搞清楚<code>WebappClassLoader</code>是什么鬼？</p>
+<blockquote>
+<p>对于运行在 Java EE容器中的 Web 应用来说，类加载器的实现方式与一般的 Java 应用有所不同。不同的 Web 容器的实现方式也会有所不同。以 Apache Tomcat 来说，每个 Web 应用都有一个对应的类加载器实例。该类加载器也使用代理模式，所不同的是它是首先尝试去加载某个类，如果找不到再代理给父类加载器。这与一般类加载器的顺序是相反的。这是 Java Servlet 规范中的推荐做法，其目的是使得 Web 应用自己的类的优先级高于 Web 容器提供的类。这种代理模式的一个例外是：Java 核心库的类是不在查找范围之内的。这也是为了保证 Java 核心库的类型安全。</p>
+</blockquote>
+<p>也就是说<code>WebappClassLoader</code>是 Tomcat 加载 webapp 的自定义类加载器，每个 webapp 的类加载器都是不一样的，这是为了隔离不同应用加载的类。</p>
+<p>那么<code>WebappClassLoader</code>的特性跟内存泄漏有什么关系呢？目前还看不出来，但是它的一个很重要的特点值得我们注意：每个 webapp 都会自己的<code>WebappClassLoader</code>，这跟 Java 核心的类加载器不一样。</p>
+<p>我们知道：导致<code>WebappClassLoader</code>泄漏必然是因为它被别的对象强引用了，那么我们可以尝试画出它们的引用关系图。等等！类加载器的作用到底是啥？为什么会被强引用？</p>
+<h4 id="u7C7B_u7684_u751F_u547D_u5468_u671F_u4E0E_u7C7B_u52A0_u8F7D_u5668"><a href="#u7C7B_u7684_u751F_u547D_u5468_u671F_u4E0E_u7C7B_u52A0_u8F7D_u5668" class="headerlink" title="类的生命周期与类加载器"></a>类的生命周期与类加载器</h4><p>要解决上面的问题，我们得去研究一下类的生命周期和类加载器的关系。这个问题说起来又是一篇文章，参考我做的笔记<a href="http://wiki.xiaohansong.com/java/class_lifecycle.html" target="_blank" rel="external">类的生命周期</a>。</p>
+<p>跟我们这个案例相关的主要是类的卸载：</p>
+<p>在类使用完之后，如果满足下面的情况，类就会被卸载：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是 Java 堆中不存在该类的任何实例。</li>
+<li>加载该类的<code>ClassLoader</code>已经被回收。</li>
+<li>该类对应的<code>java.lang.Class</code>对象没有任何地方被引用，没有在任何地方通过反射访问该类的方法。</li>
+</ol>
+<p>如果以上三个条件全部满足，JVM 就会在方法区垃圾回收的时候对类进行卸载，类的卸载过程其实就是在方法区中清空类信息，Java 类的整个生命周期就结束了。</p>
+<p>由Java虚拟机自带的类加载器所加载的类，在虚拟机的生命周期中，始终不会被卸载。Java虚拟机自带的类加载器包括根类加载器、扩展类加载器和系统类加载器。Java虚拟机本身会始终引用这些类加载器，而这些类加载器则会始终引用它们所加载的类的Class对象，因此这些Class对象始终是可触及的。</p>
+<p><strong>由用户自定义的类加载器加载的类是可以被卸载的。</strong></p>
+<p>注意上面这句话，<code>WebappClassLoader</code>如果泄漏了，意味着它加载的类都无法被卸载，这就解释了为什么上面的代码会导致 PermGen <code>OutOfMemoryException</code>。</p>
+<p>关键点看下面这幅图<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/111825528931093.png" alt=""></p>
+<p>我们可以发现：类加载器对象跟它加载的 Class 对象是双向关联的。这意味着，Class 对象可能就是强引用<code>WebappClassLoader</code>，导致它泄漏的元凶。</p>
+<h3 id="u5F15_u7528_u5173_u7CFB_u56FE"><a href="#u5F15_u7528_u5173_u7CFB_u56FE" class="headerlink" title="引用关系图"></a>引用关系图</h3><p>理解类加载器与类的生命周期的关系之后，我们可以开始画引用关系图了。（图中的<code>LeakingServlet.class</code>与<code>myThreadLocal</code>引用画的不严谨，主要是想表达<code>myThreadLocal</code>是类变量的意思）<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/leak_1.png" alt="leak_1"></p>
+<p>下面，我们根据上面的图来分析<code>WebappClassLoader</code>泄漏的原因。</p>
+<ol>
+<li><code>LeakingServlet</code>持有<code>static</code>的<code>MyThreadLocal</code>，导致<code>myThreadLocal</code>的生命周期跟<code>LeakingServlet</code>类的生命周期一样长。意味着<code>myThreadLocal</code>不会被回收，弱引用形同虚设，所以当前线程无法通过<code>ThreadLocalMap</code>的防护措施清除<code>counter</code>的强引用（见<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>）。</li>
+<li>强引用链：<code>thread -&gt; threadLocalMap -&gt; counter -&gt; MyCounter.class -&gt; WebappClassLocader</code>，导致<code>WebappClassLoader</code>泄漏。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>内存泄漏是很难发现的问题，往往由于多方面原因造成。<code>ThreadLocal</code>由于它与线程绑定的生命周期成为了内存泄漏的常客，稍有不慎就酿成大祸。</p>
+<p>本文只是对一个特定案例的分析，若能以此举一反三，那便是极好的。最后我留另一个类似的案例供读者分析。</p>
+<h2 id="u8BFE_u540E_u9898"><a href="#u8BFE_u540E_u9898" class="headerlink" title="课后题"></a>课后题</h2><p>假设我们有一个定义在 Tomcat Common Classpath 下的类（例如说在 <code>tomcat/lib</code> 目录下）</p>
+<pre><code>public class ThreadScopedHolder {
+        private final static ThreadLocal&lt;Object&gt; threadLocal = new ThreadLocal&lt;Object&gt;();
+
+        public static void saveInHolder(Object o) {
+                threadLocal.set(o);
+        }
+
+        public static Object getFromHolder() {
+                return threadLocal.get();
+        }
+}
+</code></pre><p>两个在 webapp 的类：</p>
+<pre><code>public class MyCounter {
+        private int count = 0;
+
+        public void increment() {
+                count++;
+        }
+
+        public int getCount() {
+                return count;
+        }
+}
+public class LeakingServlet extends HttpServlet {
+
+        protected void doGet(HttpServletRequest request,
+                        HttpServletResponse response) throws ServletException, IOException {
+
+                MyCounter counter = (MyCounter)ThreadScopedHolder.getFromHolder();
+                if (counter == null) {
+                        counter = new MyCounter();
+                        ThreadScopedHolder.saveInHolder(counter);
+                }
+
+                response.getWriter().println(
+                                &quot;The current thread served this servlet &quot; + counter.getCount()
+                                                + &quot; times&quot;);
+                counter.increment();
+        }
+}
+</code></pre><h3 id="u63D0_u793A"><a href="#u63D0_u793A" class="headerlink" title="提示"></a>提示</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/leak_2.png" alt="leak_2"></p>
+<p><strong>欢迎大家批评指正，留言交流。</strong></p>
+<p><em>参考文章</em><br><a href="http://www.tuicool.com/articles/6BJJzin" target="_blank" rel="external">ClassLoader内存溢出-从tomcat的reload说起</a><br><a href="http://blog.csdn.net/u010723709/article/details/50291315" target="_blank" rel="external">类加载器内存泄露与tomcat自定义加载器</a><br><a href="http://wiki.xiaohansong.com/java/class_lifecycle.html" target="_blank" rel="external">类的生命周期</a><br><a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a><br><a href="http://lengyun3566.iteye.com/blog/1683972" target="_blank" rel="external">Tomcat源码解读系列（四）——Tomcat类加载机制概述</a><br><a href="https://wiki.apache.org/tomcat/MemoryLeakProtection" target="_blank" rel="external">MemoryLeakProtection</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇<a href="http://blog.xiaohansong.com/2016/08/0]]>
+    </summary>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
+    
+      <category term="ThreadLocal" scheme="http://blog.xiaohansong.com/tags/ThreadLocal/"/>
+    
+      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入分析 ThreadLocal 内存泄漏问题]]></title>
@@ -2116,120 +2245,6 @@ class ColonMovieFinder...
       <category term="源代码分析" scheme="http://blog.xiaohansong.com/tags/%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
       <category term="Linux工具" scheme="http://blog.xiaohansong.com/categories/Linux%E5%B7%A5%E5%85%B7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[spice源码分析之server(1)]]></title>
-    <link href="http://blog.xiaohansong.com/2015/08/19/spice%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%B9%8Bserver-1/"/>
-    <id>http://blog.xiaohansong.com/2015/08/19/spice源码分析之server-1/</id>
-    <published>2015-08-19T07:36:41.000Z</published>
-    <updated>2016-01-02T17:39:28.898Z</updated>
-    <content type="html"><![CDATA[<p><em>前言:本文是结合我自己阅读代码的心得总结而来,同时会忽略很多细节,只能作为阅读源码时的参考.如有错误,欢迎指正.</em></p>
-<h2 id="Spice_u7B80_u4ECB"><a href="#Spice_u7B80_u4ECB" class="headerlink" title="Spice简介"></a>Spice简介</h2><blockquote>
-<p>Spice是一个开源的云计算解决方案，使客户端能显示远程虚拟主机的操作界面并且使用其设备，如键盘，鼠标，声音等。Spice给用户提供了一种如同操作本地机器一样的体验，同时尽可能把密集的CPU和GPU任务在客户端上执行。Spice能在局域网和互联网间使用，而不减少用户体验。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/spice_server_01.png" alt="图0"></p>
-</blockquote>
-<p>Spice的基本组成包括:</p>
-<ul>
-<li>Spice协议</li>
-<li>Spice服务器</li>
-<li>Spice客户端</li>
-</ul>
-<p>Spice的相关组件包括:</p>
-<ul>
-<li>QXL设备</li>
-<li>QXL驱动</li>
-</ul>
-<p>其中,Spice服务器基于libspice（一个虚拟设备接口可插拔库）。VDI提供了一个通过软件组件来发布虚拟设备接口的标准方式，使得软件组件能够与虚拟设备交互。</p>
-<ul>
-<li>服务器使用Spice协议与客户端交互。</li>
-<li>服务器通过VDI接口与VDI主机程序（如QEMU）交互。</li>
-</ul>
-<p>也就是说spice服务器处于主机与客户端中间,是整个Spice的核心所在.下面我们开始从代码层面分析spice服务器<br>更多资料查看本人翻译的spice新手文档<a href="https://www.gitbook.com/book/xhansong/spice-guidebook" target="_blank" rel="external">Spice入门</a>,以及<a href="http://www.spice-space.org/" target="_blank" rel="external">官方网站</a></p>
-<h2 id="Spice_server"><a href="#Spice_server" class="headerlink" title="Spice server"></a>Spice server</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/spice_server_00.png" alt="图1"><br>图1是spice服务器的核心架构,贯穿整个源码的组织结构.<br>值得一提的是,spice server是作为一个库提供给qemu使用的,编译出来就是libspice,所以代码中没有main函数.<br>下面我们先了解一个server源码中使用到的一些核心概念,在看源码之前推荐大家先看一遍<a href="https://www.gitbook.com/book/xhansong/spice-guidebook" target="_blank" rel="external">Spice入门</a>,否则理解代码中的某些核心概念会很吃力.</p>
-<h3 id="u90E8_u5206_u5B8F_u5B9A_u4E49"><a href="#u90E8_u5206_u5B8F_u5B9A_u4E49" class="headerlink" title="部分宏定义"></a>部分宏定义</h3><ul>
-<li><strong>SPICE_GNUC_DEPRECATED</strong>,其定义是<code>#define SPICE_GNUC_DEPRECATED  __attribute__((__deprecated__))</code>表示该函数以及被弃用,在编译时会给出警告</li>
-<li><strong>SPICE_GNUC_VISIBLE</strong>,其定义是<code>#define SPICE_GNUC_VISIBLE __attribute__ ((visibility (&quot;default&quot;)))</code>用于控制符号的可见性,设置为对外可见.spice作为动态链接库给qemu使用,默认隐藏函数对外部的可见性,即外部文件不能调用库里面的函数,有这个声明的函数可以被外部文件调用,即为公共函数.</li>
-</ul>
-<h3 id="u516C_u5171_u51FD_u6570"><a href="#u516C_u5171_u51FD_u6570" class="headerlink" title="公共函数"></a>公共函数</h3><p>Server的公共函数主要在两个头文件中:</p>
-<ul>
-<li><strong>spice.h</strong>:与SpiceServer结构体相关的函数,是qemu调用spice的主要函数</li>
-<li><strong>red_dispatcher.h</strong>:与QXL设备相关的函数</li>
-</ul>
-<p>对server的分析,主要围绕这三个公共函数:</p>
-<ul>
-<li><strong>spice_server_init</strong>:负责初始化spice_server</li>
-<li><strong>spice_server_add_interface</strong>:给server注册VDI接口</li>
-<li><strong>spice_server_add_client</strong>:处理qemu接收到的客户端连接消息</li>
-</ul>
-<h3 id="VDI_u63A5_u53E3"><a href="#VDI_u63A5_u53E3" class="headerlink" title="VDI接口"></a>VDI接口</h3><p>从图1中可以看到,VDI接口是spice server离qemu最近的一层,qemu主要是通过VDI接口来与spice交互的.<br>VDI接口的定义在spice.h中,结构体内部的函数指针实现都在qemu的源码里面(ui/spice-core.c)</p>
-<ul>
-<li><p><strong>SpiceCoreInterface</strong>:核心接口,用于创建,添加,取消定时和监听事件</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SpiceTimer *<span class="list">(<span class="keyword">*timer_add</span>)</span><span class="list">(<span class="keyword">SpiceTimerFunc</span> func, void <span class="variable">*opaque);</span><br><span class="line">void (*</span>timer_start)</span><span class="list">(<span class="keyword">SpiceTimer</span> <span class="variable">*timer, uint32_t ms);</span><br><span class="line">void (*</span>timer_cancel)</span><span class="list">(<span class="keyword">SpiceTimer</span> <span class="variable">*timer);</span><br><span class="line">void (*</span>timer_remove)</span><span class="list">(<span class="keyword">SpiceTimer</span> <span class="variable">*timer);</span><br><span class="line">SpiceWatch *</span><span class="list">(<span class="keyword">*watch_add</span>)</span><span class="list">(<span class="keyword">int</span> fd, int event_mask, SpiceWatchFunc func, void <span class="variable">*opaque);</span><br><span class="line">void (*</span>watch_update_mask)</span><span class="list">(<span class="keyword">SpiceWatch</span> <span class="variable">*watch, int event_mask);</span><br><span class="line">void (*</span>watch_remove)</span><span class="list">(<span class="keyword">SpiceWatch</span> <span class="variable">*watch);</span><br><span class="line">void (*</span>channel_event)</span><span class="list">(<span class="keyword">int</span> event, SpiceChannelEventInfo <span class="variable">*info);</span></span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>QXLInterface</strong>:QXL设备接口</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*attache_worker</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, QXLWorker *</span>qxl_worker)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*set_compression_level</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, int level);</span><br><span class="line">void (*</span>set_mm_time)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint32_t mm_time);</span><br><span class="line">void (*</span>get_init_info)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, QXLDevInitInfo *</span>info)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*get_command</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, struct QXLCommandExt *</span>cmd)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*req_cmd_notification</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin);</span><br><span class="line">void (*</span>release_resource)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, struct QXLReleaseInfoExt release_info);</span><br><span class="line">int (*</span>get_cursor_command)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, struct QXLCommandExt *</span>cmd)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*req_cursor_notification</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin);</span><br><span class="line">void (*</span>notify_update)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint32_t update_id);</span><br><span class="line">int (*</span>flush_resources)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin);</span><br><span class="line">void (*</span>async_complete)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint64_t cookie);</span><br><span class="line">void (*</span>update_area_complete)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin, uint32_t surface_id,struct QXLRect *</span>updated_rects,uint32_t num_updated_rects)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*set_client_capabilities</span>)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin,uint8_t client_present,uint8_t caps[58]);</span><br><span class="line">/*</span> returns <span class="number">1</span> if the interface is supported, <span class="number">0</span> otherwise.</span><br><span class="line"> <span class="variable">* if monitors_config is NULL nothing is done except reporting the</span><br><span class="line"> *</span> return code. <span class="variable">*/</span><br><span class="line">int (*</span>client_monitors_config)</span><span class="list">(<span class="keyword">QXLInstance</span> <span class="variable">*qin,VDAgentMonitorsConfig *</span>monitors_config)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>SpiceCharDeviceInterface</strong>:字符型设备接口</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*state</span>)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, int connected);</span><br><span class="line">int (*</span>write)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, const uint8_t *</span>buf, int len)</span><span class="comment">;</span></span><br><span class="line">int <span class="list">(<span class="keyword">*read</span>)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, uint8_t *</span>buf, int len)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*event</span>)</span><span class="list">(<span class="keyword">SpiceCharDeviceInstance</span> <span class="variable">*sin, uint8_t event);</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>SpiceKbdInterface</strong>:键盘接口</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*push_scan_freg</span>)</span><span class="list">(<span class="keyword">SpiceKbdInstance</span> <span class="variable">*sin, uint8_t frag);</span><br><span class="line">uint8_t (*</span>get_leds)</span><span class="list">(<span class="keyword">SpiceKbdInstance</span> <span class="variable">*sin);</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>SpiceMigrateInterface</strong>:迁移接口</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*migrate_connect_complete</span>)</span><span class="list">(<span class="keyword">SpiceMigrateInstance</span> <span class="variable">*sin);</span><br><span class="line">void (*</span>migrate_end_complete)</span><span class="list">(<span class="keyword">SpiceMigrateInstance</span> <span class="variable">*sin);</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>SpiceMouseInterface</strong>:鼠标接口</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> (*motion)(SpiceMouseInstance *<span class="built_in">sin</span>, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span> dz,<span class="keyword">uint32_t</span> buttons_state);</span><br><span class="line"><span class="keyword">void</span> (*buttons)(SpiceMouseInstance *<span class="built_in">sin</span>, <span class="keyword">uint32_t</span> buttons_state);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>SpiceTabletInterface</strong>:触摸板接口</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void <span class="list">(<span class="keyword">*set_logical_size</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, int width, int height)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*position</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, int x, int y, uint32_t buttons_state)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*wheel</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, int wheel_moution, uint32_t buttons_state)</span><span class="comment">;</span></span><br><span class="line">void <span class="list">(<span class="keyword">*buttons</span>)</span><span class="list">(<span class="keyword">SpiceTabletInstance*</span> tablet, uint32_t buttons_state)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>SpicePlaybackInterface</strong>:声音接口</p>
-</li>
-<li><strong>SpiceRecordInterface</strong>:录音接口</li>
-</ul>
-<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><p>从图1可以看到,VDI接口之后即是Channel(QXLInterface比较特殊,这个后面再说).<br>Channel的主要作用是使用对应的TCP连接传输消息给客户端,保证其传输的可靠性,其本质是通道,不同的Channel传输不同的消息.</p>
-<p>spice中主要有六种Channel:</p>
-<ul>
-<li><strong>MainChannel</strong>:与客户端连接的建立和断开有关</li>
-<li><strong>InputsChannel</strong>:跟鼠标,键盘,触摸板的输入有关</li>
-<li><strong>DisplayChannel</strong>:跟图像传输有关</li>
-<li><strong>CursorChannel</strong>:跟鼠标指针的显示有关</li>
-<li><strong>PlaybackChannel</strong>:跟播放宿机的声音有关</li>
-<li><strong>RecordChannel</strong>:跟录制客户端的声音有关</li>
-</ul>
-<p>这六种Channel并不是平行的关系,虽然都继承与RedChannel,但是在实现以及逻辑上的作用有很大不同,大致可以分成三类.</p>
-<ul>
-<li>Main和Input通道被相应的处理函数控制(reds.c)</li>
-<li>Display和Cursor通道被每个display工作线程使用(red_worker.c)</li>
-<li>Playback和Record通道有它们各自的处理程序(snd_worker.c)</li>
-</ul>
-<p>六种Channel中只有DisplayChannel和CursorChannel是单独在工作线程工作的,其他都是在qemu线程工作.</p>
-<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/spice_server_03.png" alt="图3"><br>前面提到Channel负责传输消息,而Dispatcher则负责处理消息,并且调度Channel.<br>Dispatcher使用socketpair来与外界交互,例如监听事件,传输结果等.<br>这里存在两种Dispatcher</p>
-<ul>
-<li><strong>MainDispatcher</strong>:在qemu线程中监听socket事件,处理客户端连接的初始化,建立和断开等,跟MainChannel相关</li>
-<li><strong>RedDispatcher</strong>:在worker线程中监听socket事件,处理QXL设备有关的消息,跟DisplayChannel,CursorChannel相关,图3描述的就是RedDispatcher的工作流程.在图1我们看到QXLInterface与其他接口不一样,与Channel的联系中间多了一个RedDispatcher,它们在单独的Worker线程中工作,提供了QEMU与接收的图像命令处理和渲染过程的独立性</li>
-</ul>
-<h3 id="RedWorker"><a href="#RedWorker" class="headerlink" title="RedWorker"></a>RedWorker</h3><p>RedWorker可以说是server的核心,80%代码跟它有关,毕竟它负责图像渲染和传输,这是spice最难最复杂的部分,涉及图像的压缩,渲染,局部刷新等核心技术.<br>RedWorker在单独线程上工作,通过QXLInterface与QEMU的QXL设备直接交互,同时控制DisplayChannel,CursorChannel,并且拥有自己的poll事件驱动核心.而其他的Channel都依赖于QEMU线程.</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>Spice server作为一个库给QEMU调用,用于支持Spice协议.</li>
-<li>server通过使用VDI接口与QEMU交互</li>
-<li>server通过使用Channel与客户端交互</li>
-<li>Dispatcher用于处理消息</li>
-<li>Channel用于传输消息</li>
-<li>图像在RedWorker线程中处理</li>
-</ul>
-<p>以上是我分析的server源代码的核心概念,为了方便理解,描述并不全面.其中关于迁移,声音,录音等功能并没有看过,我主要关注server的工作原理,在了解它工作流程之后,就好比有了一张地图,剩下的就是一个个去探险了.<br>当然了,没有代码的分析就是耍流氓.这篇就当是开胃菜,之后,我会结合代码,分析server的启动流程以及工作流程.先挖个坑.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><em>前言:本文是结合我自己阅读代码的心得总结而来,同时会忽略很多细节,只能作为阅读源码时的参考.如有错误,欢迎指正.</em></p>
-<h2 id="Spice_u7B80_u4ECB"><a href="#Spice_u7B80_u4ECB" class="head]]>
-    </summary>
-    
-      <category term="spice" scheme="http://blog.xiaohansong.com/tags/spice/"/>
-    
-      <category term="虚拟化" scheme="http://blog.xiaohansong.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
     
   </entry>
   

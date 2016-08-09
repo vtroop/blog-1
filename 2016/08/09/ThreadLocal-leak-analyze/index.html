@@ -1,0 +1,740 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<meta name="google-site-verification" content="ozi5UMPx0UZR6p_LhY9QUf2XkOdP7WH7vjnMUnEuE8s" />
+<meta name="baidu-site-verification" content="28u1lswj4v" />
+  <meta charset="UTF-8">
+  
+    <title>ThreadLocal 内存泄露的实例分析 | ShareHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="肖汉松">
+    
+
+    
+    <meta name="description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。
+案例与分析问题背景在 Tomcat 中，下面的代码都在 webapp 内，会导致WebappClassLoader泄漏，无法被回收。
+public class MyCoun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal 内存泄露的实例分析">
+<meta property="og:url" content="http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/index.html">
+<meta property="og:site_name" content="ShareHub">
+<meta property="og:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。
+案例与分析问题背景在 Tomcat 中，下面的代码都在 webapp 内，会导致WebappClassLoader泄漏，无法被回收。
+public class MyCoun">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/111825528931093.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/leak_1.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/leak_2.png">
+<meta property="og:updated_time" content="2016-08-09T14:11:15.573Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ThreadLocal 内存泄露的实例分析">
+<meta name="twitter:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。
+案例与分析问题背景在 Tomcat 中，下面的代码都在 webapp 内，会导致WebappClassLoader泄漏，无法被回收。
+public class MyCoun">
+<meta name="twitter:creator" content="@Yonah_x">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ShareHub" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ShareHub" title="ShareHub"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ShareHub">ShareHub</a></h1>
+				<h2 class="blog-motto">悲观的意志,乐观的头脑</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/09/ThreadLocal-leak-analyze/" title="ThreadLocal 内存泄露的实例分析" itemprop="url">ThreadLocal 内存泄露的实例分析</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="肖汉松" target="_blank" itemprop="author">肖汉松</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-09T14:10:04.000Z" itemprop="datePublished"> 发表于 2016-08-09</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6848_u4F8B_u4E0E_u5206_u6790"><span class="toc-number">2.</span> <span class="toc-text">案例与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u95EE_u9898_u80CC_u666F"><span class="toc-number">2.1.</span> <span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u89E3_u51B3_u95EE_u9898"><span class="toc-number">2.2.</span> <span class="toc-text">解决问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WebappClassLoader"><span class="toc-number">2.2.1.</span> <span class="toc-text">WebappClassLoader</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u7C7B_u7684_u751F_u547D_u5468_u671F_u4E0E_u7C7B_u52A0_u8F7D_u5668"><span class="toc-number">2.2.2.</span> <span class="toc-text">类的生命周期与类加载器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5F15_u7528_u5173_u7CFB_u56FE"><span class="toc-number">2.3.</span> <span class="toc-text">引用关系图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BFE_u540E_u9898"><span class="toc-number">4.</span> <span class="toc-text">课后题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u63D0_u793A"><span class="toc-number">4.1.</span> <span class="toc-text">提示</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>是从理论上分析<code>ThreadLocal</code>的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。</p>
+<h2 id="u6848_u4F8B_u4E0E_u5206_u6790"><a href="#u6848_u4F8B_u4E0E_u5206_u6790" class="headerlink" title="案例与分析"></a>案例与分析</h2><h3 id="u95EE_u9898_u80CC_u666F"><a href="#u95EE_u9898_u80CC_u666F" class="headerlink" title="问题背景"></a>问题背景</h3><p>在 Tomcat 中，下面的代码都在 webapp 内，会导致<code>WebappClassLoader</code>泄漏，无法被回收。</p>
+<pre><code>public class MyCounter {
+        private int count = 0;
+
+        public void increment() {
+                count++;
+        }
+
+        public int getCount() {
+                return count;
+        }
+}
+
+public class MyThreadLocal extends ThreadLocal&lt;MyCounter&gt; {
+}
+
+public class LeakingServlet extends HttpServlet {
+        private static MyThreadLocal myThreadLocal = new MyThreadLocal();
+
+        protected void doGet(HttpServletRequest request,
+                        HttpServletResponse response) throws ServletException, IOException {
+
+                MyCounter counter = myThreadLocal.get();
+                if (counter == null) {
+                        counter = new MyCounter();
+                        myThreadLocal.set(counter);
+                }
+
+                response.getWriter().println(
+                                &quot;The current thread served this servlet &quot; + counter.getCount()
+                                                + &quot; times&quot;);
+                counter.increment();
+        }
+}
+</code></pre><p>上面的代码中，只要<code>LeakingServlet</code>被调用过一次，且执行它的线程没有停止，就会导致<code>WebappClassLoader</code>泄漏。每次你 reload 一下应用，就会多一份<code>WebappClassLoader</code>实例，最后导致 PermGen <code>OutOfMemoryException</code>。</p>
+<h3 id="u89E3_u51B3_u95EE_u9898"><a href="#u89E3_u51B3_u95EE_u9898" class="headerlink" title="解决问题"></a>解决问题</h3><p>现在我们来思考一下：为什么上面的<code>ThreadLocal</code>子类会导致内存泄漏？</p>
+<h4 id="WebappClassLoader"><a href="#WebappClassLoader" class="headerlink" title="WebappClassLoader"></a>WebappClassLoader</h4><p>首先，我们要搞清楚<code>WebappClassLoader</code>是什么鬼？</p>
+<blockquote>
+<p>对于运行在 Java EE容器中的 Web 应用来说，类加载器的实现方式与一般的 Java 应用有所不同。不同的 Web 容器的实现方式也会有所不同。以 Apache Tomcat 来说，每个 Web 应用都有一个对应的类加载器实例。该类加载器也使用代理模式，所不同的是它是首先尝试去加载某个类，如果找不到再代理给父类加载器。这与一般类加载器的顺序是相反的。这是 Java Servlet 规范中的推荐做法，其目的是使得 Web 应用自己的类的优先级高于 Web 容器提供的类。这种代理模式的一个例外是：Java 核心库的类是不在查找范围之内的。这也是为了保证 Java 核心库的类型安全。</p>
+</blockquote>
+<p>也就是说<code>WebappClassLoader</code>是 Tomcat 加载 webapp 的自定义类加载器，每个 webapp 的类加载器都是不一样的，这是为了隔离不同应用加载的类。</p>
+<p>那么<code>WebappClassLoader</code>的特性跟内存泄漏有什么关系呢？目前还看不出来，但是它的一个很重要的特点值得我们注意：每个 webapp 都会自己的<code>WebappClassLoader</code>，这跟 Java 核心的类加载器不一样。</p>
+<p>我们知道：导致<code>WebappClassLoader</code>泄漏必然是因为它被别的对象强引用了，那么我们可以尝试画出它们的引用关系图。等等！类加载器的作用到底是啥？为什么会被强引用？</p>
+<h4 id="u7C7B_u7684_u751F_u547D_u5468_u671F_u4E0E_u7C7B_u52A0_u8F7D_u5668"><a href="#u7C7B_u7684_u751F_u547D_u5468_u671F_u4E0E_u7C7B_u52A0_u8F7D_u5668" class="headerlink" title="类的生命周期与类加载器"></a>类的生命周期与类加载器</h4><p>要解决上面的问题，我们得去研究一下类的生命周期和类加载器的关系。这个问题说起来又是一篇文章，参考我做的笔记<a href="http://wiki.xiaohansong.com/java/class_lifecycle.html" target="_blank" rel="external">类的生命周期</a>。</p>
+<p>跟我们这个案例相关的主要是类的卸载：</p>
+<p>在类使用完之后，如果满足下面的情况，类就会被卸载：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是 Java 堆中不存在该类的任何实例。</li>
+<li>加载该类的<code>ClassLoader</code>已经被回收。</li>
+<li>该类对应的<code>java.lang.Class</code>对象没有任何地方被引用，没有在任何地方通过反射访问该类的方法。</li>
+</ol>
+<p>如果以上三个条件全部满足，JVM 就会在方法区垃圾回收的时候对类进行卸载，类的卸载过程其实就是在方法区中清空类信息，Java 类的整个生命周期就结束了。</p>
+<p>由Java虚拟机自带的类加载器所加载的类，在虚拟机的生命周期中，始终不会被卸载。Java虚拟机自带的类加载器包括根类加载器、扩展类加载器和系统类加载器。Java虚拟机本身会始终引用这些类加载器，而这些类加载器则会始终引用它们所加载的类的Class对象，因此这些Class对象始终是可触及的。</p>
+<p><strong>由用户自定义的类加载器加载的类是可以被卸载的。</strong></p>
+<p>注意上面这句话，<code>WebappClassLoader</code>如果泄漏了，意味着它加载的类都无法被卸载，这就解释了为什么上面的代码会导致 PermGen <code>OutOfMemoryException</code>。</p>
+<p>关键点看下面这幅图<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/111825528931093.png" alt=""></p>
+<p>我们可以发现：类加载器对象跟它加载的 Class 对象是双向关联的。这意味着，Class 对象可能就是强引用<code>WebappClassLoader</code>，导致它泄漏的元凶。</p>
+<h3 id="u5F15_u7528_u5173_u7CFB_u56FE"><a href="#u5F15_u7528_u5173_u7CFB_u56FE" class="headerlink" title="引用关系图"></a>引用关系图</h3><p>理解类加载器与类的生命周期的关系之后，我们可以开始画引用关系图了。（图中的<code>LeakingServlet.class</code>与<code>myThreadLocal</code>引用画的不严谨，主要是想表达<code>myThreadLocal</code>是类变量的意思）<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/leak_1.png" alt="leak_1"></p>
+<p>下面，我们根据上面的图来分析<code>WebappClassLoader</code>泄漏的原因。</p>
+<ol>
+<li><code>LeakingServlet</code>持有<code>static</code>的<code>MyThreadLocal</code>，导致<code>myThreadLocal</code>的生命周期跟<code>LeakingServlet</code>类的生命周期一样长。意味着<code>myThreadLocal</code>不会被回收，弱引用形同虚设，所以当前线程无法通过<code>ThreadLocalMap</code>的防护措施清除<code>counter</code>的强引用（见<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>）。</li>
+<li>强引用链：<code>thread -&gt; threadLocalMap -&gt; counter -&gt; MyCounter.class -&gt; WebappClassLocader</code>，导致<code>WebappClassLoader</code>泄漏。</li>
+</ol>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>内存泄漏是很难发现的问题，往往由于多方面原因造成。<code>ThreadLocal</code>由于它与线程绑定的生命周期成为了内存泄漏的常客，稍有不慎就酿成大祸。</p>
+<p>本文只是对一个特定案例的分析，若能以此举一反三，那便是极好的。最后我留另一个类似的案例供读者分析。</p>
+<h2 id="u8BFE_u540E_u9898"><a href="#u8BFE_u540E_u9898" class="headerlink" title="课后题"></a>课后题</h2><p>假设我们有一个定义在 Tomcat Common Classpath 下的类（例如说在 <code>tomcat/lib</code> 目录下）</p>
+<pre><code>public class ThreadScopedHolder {
+        private final static ThreadLocal&lt;Object&gt; threadLocal = new ThreadLocal&lt;Object&gt;();
+
+        public static void saveInHolder(Object o) {
+                threadLocal.set(o);
+        }
+
+        public static Object getFromHolder() {
+                return threadLocal.get();
+        }
+}
+</code></pre><p>两个在 webapp 的类：</p>
+<pre><code>public class MyCounter {
+        private int count = 0;
+
+        public void increment() {
+                count++;
+        }
+
+        public int getCount() {
+                return count;
+        }
+}
+public class LeakingServlet extends HttpServlet {
+
+        protected void doGet(HttpServletRequest request,
+                        HttpServletResponse response) throws ServletException, IOException {
+
+                MyCounter counter = (MyCounter)ThreadScopedHolder.getFromHolder();
+                if (counter == null) {
+                        counter = new MyCounter();
+                        ThreadScopedHolder.saveInHolder(counter);
+                }
+
+                response.getWriter().println(
+                                &quot;The current thread served this servlet &quot; + counter.getCount()
+                                                + &quot; times&quot;);
+                counter.increment();
+        }
+}
+</code></pre><h3 id="u63D0_u793A"><a href="#u63D0_u793A" class="headerlink" title="提示"></a>提示</h3><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/leak_2.png" alt="leak_2"></p>
+<p><strong>欢迎大家批评指正，留言交流。</strong></p>
+<p><em>参考文章</em><br><a href="http://www.tuicool.com/articles/6BJJzin" target="_blank" rel="external">ClassLoader内存溢出-从tomcat的reload说起</a><br><a href="http://blog.csdn.net/u010723709/article/details/50291315" target="_blank" rel="external">类加载器内存泄露与tomcat自定义加载器</a><br><a href="http://wiki.xiaohansong.com/java/class_lifecycle.html" target="_blank" rel="external">类的生命周期</a><br><a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a><br><a href="http://lengyun3566.iteye.com/blog/1683972" target="_blank" rel="external">Tomcat源码解读系列（四）——Tomcat类加载机制概述</a><br><a href="https://wiki.apache.org/tomcat/MemoryLeakProtection" target="_blank" rel="external">MemoryLeakProtection</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/ThreadLocal/">ThreadLocal</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/" data-title="ThreadLocal 内存泄露的实例分析 | ShareHub" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/08/06/ThreadLocal-memory-leak/"  title="深入分析 ThreadLocal 内存泄漏问题">
+ <strong>下一篇：</strong><br/> 
+ <span>深入分析 ThreadLocal 内存泄漏问题
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/09/ThreadLocal-leak-analyze/" data-title="ThreadLocal 内存泄露的实例分析" data-url="http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6848_u4F8B_u4E0E_u5206_u6790"><span class="toc-number">2.</span> <span class="toc-text">案例与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u95EE_u9898_u80CC_u666F"><span class="toc-number">2.1.</span> <span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u89E3_u51B3_u95EE_u9898"><span class="toc-number">2.2.</span> <span class="toc-text">解决问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WebappClassLoader"><span class="toc-number">2.2.1.</span> <span class="toc-text">WebappClassLoader</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u7C7B_u7684_u751F_u547D_u5468_u671F_u4E0E_u7C7B_u52A0_u8F7D_u5668"><span class="toc-number">2.2.2.</span> <span class="toc-text">类的生命周期与类加载器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5F15_u7528_u5173_u7CFB_u56FE"><span class="toc-number">2.3.</span> <span class="toc-text">引用关系图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BFE_u540E_u9898"><span class="toc-number">4.</span> <span class="toc-text">课后题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u63D0_u793A"><span class="toc-number">4.1.</span> <span class="toc-text">提示</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux内核/" title="Linux内核">Linux内核<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux工具/" title="Linux工具">Linux工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/个人随想/" title="个人随想">个人随想<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/理解链接/" title="理解链接">理解链接<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法学习/" title="算法学习">算法学习<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/虚拟化/" title="虚拟化">虚拟化<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/解题报告/" title="解题报告">解题报告<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Java/" title="Java">Java<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/spice/" title="spice">spice<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/设计/" title="设计">设计<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ThreadLocal/" title="ThreadLocal">ThreadLocal<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/操作系统/" title="操作系统">操作系统<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ucore/" title="ucore">ucore<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/String/" title="String">String<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/知识管理/" title="知识管理">知识管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Executor/" title="Executor">Executor<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m XiaoHanSong, a student majoring in SE. <br/>
+			This is my blog for sharing my ideas.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/x-hansong" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		<a href="https://twitter.com/Yonah_x" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/xhansong" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		<a href="https://www.linkedin.com/in/xhansong" target="_blank" class="icon-linkedin" title="linkedin"></a>
+		
+		
+		
+		
+		
+		<a href="mailto:x.hansong.scut@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="肖汉松">肖汉松</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"yonah"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+  	  <script type="text/javascript">
+  		var duoshuo_user_ID = 7607035
+  	  </script>
+<script src="/js/ua-parser.min.js"></script>
+<script src="/js/hook-duoshuo.js"></script>
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256629854'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1256629854' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '084e2ef4b40406a66fd1'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</body>
+</html>
