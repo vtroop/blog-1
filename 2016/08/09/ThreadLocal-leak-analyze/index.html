@@ -14,25 +14,25 @@
     
 
     
-    <meta name="description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。
+    <meta name="description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析出内存泄漏的原因。
 案例与分析问题背景在 Tomcat 中，下面的代码都在 webapp 内，会导致WebappClassLoader泄漏，无法被回收。
-public class MyCoun">
+public class MyCou">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ThreadLocal 内存泄露的实例分析">
 <meta property="og:url" content="http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/index.html">
 <meta property="og:site_name" content="ShareHub">
-<meta property="og:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。
+<meta property="og:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析出内存泄漏的原因。
 案例与分析问题背景在 Tomcat 中，下面的代码都在 webapp 内，会导致WebappClassLoader泄漏，无法被回收。
-public class MyCoun">
+public class MyCou">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/111825528931093.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/leak_1.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/leak_2.png">
-<meta property="og:updated_time" content="2016-08-09T14:11:15.573Z">
+<meta property="og:updated_time" content="2016-08-09T14:21:32.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadLocal 内存泄露的实例分析">
-<meta name="twitter:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。
+<meta name="twitter:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析出内存泄漏的原因。
 案例与分析问题背景在 Tomcat 中，下面的代码都在 webapp 内，会导致WebappClassLoader泄漏，无法被回收。
-public class MyCoun">
+public class MyCou">
 <meta name="twitter:creator" content="@Yonah_x">
 
     
@@ -109,7 +109,7 @@ public class MyCoun">
 		
 		</div>
 		
-		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>是从理论上分析<code>ThreadLocal</code>的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析内存泄漏的原因。</p>
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>是从理论上分析<code>ThreadLocal</code>的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析出内存泄漏的原因。</p>
 <h2 id="u6848_u4F8B_u4E0E_u5206_u6790"><a href="#u6848_u4F8B_u4E0E_u5206_u6790" class="headerlink" title="案例与分析"></a>案例与分析</h2><h3 id="u95EE_u9898_u80CC_u666F"><a href="#u95EE_u9898_u80CC_u666F" class="headerlink" title="问题背景"></a>问题背景</h3><p>在 Tomcat 中，下面的代码都在 webapp 内，会导致<code>WebappClassLoader</code>泄漏，无法被回收。</p>
 <pre><code>public class MyCounter {
         private int count = 0;
