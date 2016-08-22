@@ -151,7 +151,7 @@ private volatile Watcher defaultWatcher;
     <link href="http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/"/>
     <id>http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/</id>
     <published>2016-08-09T14:10:04.000Z</published>
-    <updated>2016-08-09T14:21:32.930Z</updated>
+    <updated>2016-08-22T14:45:01.112Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇<a href="http://blog.xiaohansong.com/2016/08/06/ThreadLocal-memory-leak/">深入分析 ThreadLocal 内存泄漏问题</a>是从理论上分析<code>ThreadLocal</code>的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析出内存泄漏的原因。</p>
 <h2 id="u6848_u4F8B_u4E0E_u5206_u6790"><a href="#u6848_u4F8B_u4E0E_u5206_u6790" class="headerlink" title="案例与分析"></a>案例与分析</h2><h3 id="u95EE_u9898_u80CC_u666F"><a href="#u95EE_u9898_u80CC_u666F" class="headerlink" title="问题背景"></a>问题背景</h3><p>在 Tomcat 中，下面的代码都在 webapp 内，会导致<code>WebappClassLoader</code>泄漏，无法被回收。</p>
 <pre><code>public class MyCounter {
@@ -218,6 +218,7 @@ public class LeakingServlet extends HttpServlet {
 </ol>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>内存泄漏是很难发现的问题，往往由于多方面原因造成。<code>ThreadLocal</code>由于它与线程绑定的生命周期成为了内存泄漏的常客，稍有不慎就酿成大祸。</p>
 <p>本文只是对一个特定案例的分析，若能以此举一反三，那便是极好的。最后我留另一个类似的案例供读者分析。</p>
+<p><em>本文的案例来自于 Tomcat 的 Wiki <a href="https://wiki.apache.org/tomcat/MemoryLeakProtection" target="_blank" rel="external">MemoryLeakProtection</a></em></p>
 <h2 id="u8BFE_u540E_u9898"><a href="#u8BFE_u540E_u9898" class="headerlink" title="课后题"></a>课后题</h2><p>假设我们有一个定义在 Tomcat Common Classpath 下的类（例如说在 <code>tomcat/lib</code> 目录下）</p>
 <pre><code>public class ThreadScopedHolder {
         private final static ThreadLocal&lt;Object&gt; threadLocal = new ThreadLocal&lt;Object&gt;();
