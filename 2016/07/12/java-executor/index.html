@@ -27,7 +27,7 @@
 下面的分析基于JDK1.7
 生命周期ThreadPoolEx">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/executor_lifecycle.png">
-<meta property="og:updated_time" content="2016-07-11T16:22:12.990Z">
+<meta property="og:updated_time" content="2016-08-13T14:35:47.881Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 线程池框架核心代码分析">
 <meta name="twitter:description" content="前言多线程编程中，为每个任务分配一个线程是不现实的，线程创建的开销和资源消耗都是很高的。线程池应运而生，成为我们管理线程的利器。Java 通过Executor接口，提供了一种标准的方法将任务的提交过程和执行过程解耦开来，并用Runnable表示任务。
@@ -117,7 +117,7 @@
 <ol>
 <li>RUNNING：接收新任务，并且处理任务队列中的任务</li>
 <li>SHUTDOWN：不接收新任务，但是处理任务队列的任务</li>
-<li>STOP：不接收新任务，不出来任务队列，同时中断所有进行中的任务</li>
+<li>STOP：不接收新任务，不处理任务队列，同时中断所有进行中的任务</li>
 <li>TIDYING：所有任务已经被终止，工作线程数量为 0，到达该状态会执行<code>terminated()</code></li>
 <li>TERMINATED：<code>terminated()</code>执行完毕</li>
 </ol>

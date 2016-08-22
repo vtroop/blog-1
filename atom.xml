@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-08-09T14:21:32.930Z</updated>
+  <updated>2016-08-22T14:18:04.416Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,138 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ZooKeeper Watcher 和 AsyncCallback 的区别与实现]]></title>
+    <link href="http://blog.xiaohansong.com/2016/08/22/zookeeper-watch-async/"/>
+    <id>http://blog.xiaohansong.com/2016/08/22/zookeeper-watch-async/</id>
+    <published>2016-08-22T14:15:08.000Z</published>
+    <updated>2016-08-22T14:18:04.416Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>初学 Zookeeper 会发现客户端有两种回调方式： Watcher 和 AsyncCallback，而 Zookeeper 的使用是离不开这两种方式的，搞清楚它们之间的区别与实现显得尤为重要。本文将围绕下面几个方面展开</p>
+<ul>
+<li>Watcher 和 AsyncCallback 的区别</li>
+<li>Watcher 的回调实现</li>
+<li>AsyncCallback 的回调实现</li>
+<li>IO 与事件处理</li>
+</ul>
+<h2 id="Watcher__u548C_AsyncCallback__u7684_u533A_u522B"><a href="#Watcher__u548C_AsyncCallback__u7684_u533A_u522B" class="headerlink" title="Watcher 和 AsyncCallback 的区别"></a>Watcher 和 AsyncCallback 的区别</h2><p>我们先通过一个例子来感受一下：</p>
+<pre><code>zooKeeper.getData(root, new Watcher() {
+            public void process(WatchedEvent event) {
+
+            }
+        }, new AsyncCallback.DataCallback() {
+            public void processResult(int rc, String path, Object ctx, byte[] data, Stat stat) {
+
+            }
+        }, null);
+</code></pre><p>可以看到，<code>getData</code>方法可以同时设置两个回调：Watcher 和 AsyncCallback，同样是回调，它们的区别是什么呢？要解决这个问题，我们就得从这两个接口的功能入手。</p>
+<ul>
+<li><code>Watcher</code>：<code>Watcher</code>是用于监听节点，session 状态的，比如<code>getData</code>对数据节点<code>a</code>设置了<code>watcher</code>，那么当<code>a</code>的数据内容发生改变时，客户端会收到<code>NodeDataChanged</code>通知，然后进行<code>watcher</code>的回调。</li>
+<li><code>AsyncCallback</code>:<code>AsyncCallback</code>是在以异步方式使用 ZooKeeper API 时，用于处理返回结果的。例如：<code>getData</code>同步调用的版本是：<code>byte[] getData(String path, boolean watch,Stat stat)</code>，异步调用的版本是：<code>void getData(String path,Watcher watcher,AsyncCallback.DataCallback cb,Object ctx)</code>，可以看到，前者是直接返回获取的结果，后者是通过<code>AsyncCallback</code>回调处理结果的。</li>
+</ul>
+<h2 id="Watcher"><a href="#Watcher" class="headerlink" title="Watcher"></a>Watcher</h2><p>Watcher 主要是通过<code>ClientWatchManager</code>进行管理的。</p>
+<h3 id="Watcher__u7684_u7C7B_u578B"><a href="#Watcher__u7684_u7C7B_u578B" class="headerlink" title="Watcher 的类型"></a>Watcher 的类型</h3><p><code>ClientWatchManager</code>中有四种<code>Watcher</code></p>
+<ul>
+<li><code>defaultWatcher</code>：创建<code>Zookeeper</code>连接时传入的<code>Watcher</code>，用于监听 session 状态</li>
+<li><code>dataWatches</code>：存放<code>getData</code>传入的<code>Watcher</code></li>
+<li><code>existWatches</code>：存放<code>exists</code>传入的<code>Watcher</code>，如果节点已存在，则<code>Watcher</code>会被添加到<code>dataWatches</code></li>
+<li><code>childWatches</code>：存放<code>getChildren</code>传入的<code>Watcher</code></li>
+</ul>
+<p>从代码上可以发现，监听器是存在<code>HashMap</code>中的，<code>key</code>是节点名称<code>path</code>，<code>value</code>是<code>Set&lt;Watcher&gt;</code></p>
+<pre><code>private final Map&lt;String, Set&lt;Watcher&gt;&gt; dataWatches =
+        new HashMap&lt;String, Set&lt;Watcher&gt;&gt;();
+private final Map&lt;String, Set&lt;Watcher&gt;&gt; existWatches =
+        new HashMap&lt;String, Set&lt;Watcher&gt;&gt;();
+private final Map&lt;String, Set&lt;Watcher&gt;&gt; childWatches =
+        new HashMap&lt;String, Set&lt;Watcher&gt;&gt;();
+
+private volatile Watcher defaultWatcher;
+</code></pre><h3 id="u901A_u77E5_u7684_u72B6_u6001_u7C7B_u578B_u4E0E_u4E8B_u4EF6_u7C7B_u578B"><a href="#u901A_u77E5_u7684_u72B6_u6001_u7C7B_u578B_u4E0E_u4E8B_u4EF6_u7C7B_u578B" class="headerlink" title="通知的状态类型与事件类型"></a>通知的状态类型与事件类型</h3><p>在<code>Watcher</code>接口中，已经定义了所有的状态类型和事件类型</p>
+<ul>
+<li><p>KeeperState.Disconnected(0)</p>
+<p>  此时客户端处于断开连接状态，和ZK集群都没有建立连接。</p>
+<ul>
+<li><p>EventType.None(-1)</p>
+<p>  触发条件：一般是在与服务器断开连接的时候，客户端会收到这个事件。</p>
+</li>
+</ul>
+</li>
+<li><p>KeeperState. SyncConnected(3)</p>
+<p>  此时客户端处于连接状态</p>
+<ul>
+<li><p>EventType.None(-1)</p>
+<p>  触发条件：客户端与服务器成功建立会话之后，会收到这个通知。</p>
+</li>
+<li><p>EventType. NodeCreated (1)</p>
+<p>  触发条件：所关注的节点被创建。</p>
+</li>
+<li><p>EventType. NodeDeleted (2)</p>
+<p>  触发条件：所关注的节点被删除。</p>
+</li>
+<li><p>EventType. NodeDataChanged (3)</p>
+<p>  触发条件：所关注的节点的内容有更新。注意，这个地方说的内容是指数据的版本<code>号dataVersion</code>。因此，即使使用相同的数据内容来更新，还是会收到这个事件通知的。无论如何，调用了更新接口，就一定会更新<code>dataVersion</code>的。</p>
+</li>
+<li><p>EventType. NodeChildrenChanged (4)</p>
+<p>  触发条件：所关注的节点的子节点有变化。这里说的变化是指子节点的个数和组成，具体到子节点内容的变化是不会通知的。</p>
+</li>
+</ul>
+</li>
+<li><p>KeeperState. AuthFailed(4)</p>
+<p>  认证失败</p>
+<ul>
+<li>EventType.None(-1)</li>
+</ul>
+</li>
+<li><p>KeeperState. Expired(-112)</p>
+<p>  session 超时</p>
+<ul>
+<li>EventType.None(-1)</li>
+</ul>
+</li>
+</ul>
+<h3 id="materialize__u65B9_u6CD5"><a href="#materialize__u65B9_u6CD5" class="headerlink" title="materialize 方法"></a>materialize 方法</h3><p><code>ClientWatchManager</code>只有一个方法，那就是<code>materialize</code>，它根据事件类型<code>type</code>和<code>path</code>返回监听该节点的特定类型的<code>Watcher</code>。</p>
+<pre><code>public Set&lt;Watcher&gt; materialize(Watcher.Event.KeeperState state,
+    Watcher.Event.EventType type, String path);
+</code></pre><p>核心逻辑如下：</p>
+<ol>
+<li><code>type == None</code>:返回所有<code>Watcher</code>，也就是说所有的<code>Watcher</code>都会被触发。如果<code>disableAutoWatchReset == true</code>且当前<code>state != SyncConnected</code>，那么还会清空<code>Watcher</code>，意味着移除所有在节点上的<code>Watcher</code>。</li>
+<li><code>type == NodeDataChanged | NodeCreated</code>:返回监听<code>path</code>节点的<code>dataWatches &amp; existWatches</code></li>
+<li><code>type == NodeChildrenChanged</code>:返回监听<code>path</code>节点的<code>childWatches</code></li>
+<li><code>type == NodeDeleted</code>:返回监听<code>path</code>节点的<code>dataWatches | childWatches</code></li>
+</ol>
+<p>每次返回都会从<code>HashMap</code>中移除节点对应的<code>Watcher</code>，例如：<code>addTo(dataWatches.remove(clientPath), result);</code>，这就是为什么<code>Watcher</code>是一次性的原因（<code>defaultWatcher</code>除外）。值得注意的是，由于使用的是<code>HashSet</code>存储<code>Watcher</code>，重复添加同一个实例的<code>Watcher</code>也只会被触发一次。</p>
+<h2 id="AsyncCallback"><a href="#AsyncCallback" class="headerlink" title="AsyncCallback"></a>AsyncCallback</h2><p>Zookeeper 的<code>exists</code>,<code>getData</code>,<code>getChildren</code>方法都有异步的版本，它们与同步方法的区别仅仅在于是否等待响应，底层发送都是通过<code>sendThread</code>异步发送的。下面我们用一幅图来说明：</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/async.png" alt=""><br>上面的图展示了同步/异步调用<code>getData</code>的流程，其他方法也是类似的。</p>
+<h2 id="IO__u4E0E_u4E8B_u4EF6_u5904_u7406"><a href="#IO__u4E0E_u4E8B_u4EF6_u5904_u7406" class="headerlink" title="IO 与事件处理"></a>IO 与事件处理</h2><p>Zookeeper 客户端会启动两个常驻线程</p>
+<ul>
+<li><code>SendThread</code>：负责 IO 操作，包括发送，接受响应，发送 ping 等。</li>
+<li><code>EventThread</code>：负责处理事件，执行回调函数。</li>
+</ul>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/event.png" alt=""></p>
+<h3 id="readResponse"><a href="#readResponse" class="headerlink" title="readResponse"></a>readResponse</h3><p><code>readResponse</code>是<code>SendThread</code>处理响应的核心函数，核心逻辑如下：</p>
+<ol>
+<li>接受服务器的响应，并反序列化出<code>ReplyHeader</code>： 有一个单独的线程<code>SendThread</code>，负责接收服务器端的响应。假设接受到的服务器传递过来的字节流是<code>incomingBuffer</code>，那么就将这个<code>incomingBuffer</code>反序列化为<code>ReplyHeader</code>。</li>
+<li><p>判断响应类型：判断<code>ReplyHeader</code>是<code>Watcher</code>响应还是<code>AsyncCallback</code>响应：<code>ReplyHeader.getXid()</code>存储了响应类型。</p>
+<ol>
+<li>如果是<code>Watcher</code>类型响应：从<code>ReplyHeader</code>中创建<code>WatchedEvent</code>，<code>WatchedEvent</code>里面存储了节点的路径，然后去<code>WatcherManager</code>中找到和这个节点相关联的所有<code>Watcher</code>，将他们写入到<code>EventThread</code>的<code>waitingEvents</code>中。</li>
+<li>如果是<code>AsyncCallback</code>类型响应：从<code>ReplyHeader</code>中读取<code>response</code>，这个<code>response</code>描述了是<code>Exists，setData，getData，getChildren，create.....</code>中的哪一个异步回调。从<code>pendingQueue</code>中拿到<code>Packet</code>，<code>Packet</code>中的<code>cb</code>存储了<code>AsyncCallback</code>，也就是异步 API 的结果回调。最后将<code>Packet</code>写入到<code>EventThread</code>的<code>waitingEvents</code>中。</li>
+</ol>
+</li>
+</ol>
+<h3 id="processEvent"><a href="#processEvent" class="headerlink" title="processEvent"></a>processEvent</h3><p><code>processEvent</code>是<code>EventThread</code>处理事件核心函数，核心逻辑如下：</p>
+<ol>
+<li>如果<code>event instanceof WatcherSetEventPair</code>，取出<code>pair</code>中的<code>Watchers</code>，逐个调用<code>watcher.process(pair.event)</code></li>
+<li>否则<code>event</code>为<code>AsyncCallback</code>，根据<code>p.response</code>判断为哪种响应类型，执行响应的回调<code>processResult</code>。</li>
+</ol>
+<p>可见，<code>Watcher</code>和<code>AsyncCallback</code>都是由<code>EventThread</code>处理的，通过<code>processEvent</code>进行区分处理。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>Zookeeper 客户端中<code>Watcher</code>和<code>AsyncCallback</code>都是异步回调的方式，但它们回调的时机是不一样的，前者是由服务器发送事件触发客户端回调，后者是在执行了请求后得到响应后客户端主动触发的。它们的共同点在于都需要在获取了服务器响应之后，由<code>SendThread</code>写入<code>EventThread</code>的<code>waitingEvents</code>中，然后由<code>EventThread</code>逐个从事件队列中获取并处理。</p>
+<p><em>参考资料</em><br><a href="http://www.cnblogs.com/francisYoung/p/5225703.html" target="_blank" rel="external">ZooKeeper个人笔记客户端watcher和AsycCallback回调</a><br><a href="http://nileader.blog.51cto.com/1381108/954670" target="_blank" rel="external">【ZooKeeper Notes 13】ZooKeeper Watcher的事件通知类型</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>初学 Zookeeper 会发现客户端有两种回调方式： Watcher 和 AsyncCallback，]]>
+    </summary>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[ThreadLocal 内存泄露的实例分析]]></title>
@@ -455,7 +587,7 @@ root=.
     <link href="http://blog.xiaohansong.com/2016/07/12/java-executor/"/>
     <id>http://blog.xiaohansong.com/2016/07/12/java-executor/</id>
     <published>2016-07-11T16:13:44.000Z</published>
-    <updated>2016-07-11T16:22:12.990Z</updated>
+    <updated>2016-08-13T14:35:47.881Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>多线程编程中，为每个任务分配一个线程是不现实的，线程创建的开销和资源消耗都是很高的。线程池应运而生，成为我们管理线程的利器。Java 通过<code>Executor</code>接口，提供了一种标准的方法将任务的提交过程和执行过程解耦开来，并用<code>Runnable</code>表示任务。</p>
 <p>下面，我们来分析一下 Java 线程池框架的实现<code>ThreadPoolExecutor</code>。</p>
 <p><em>下面的分析基于JDK1.7</em></p>
@@ -463,7 +595,7 @@ root=.
 <ol>
 <li>RUNNING：接收新任务，并且处理任务队列中的任务</li>
 <li>SHUTDOWN：不接收新任务，但是处理任务队列的任务</li>
-<li>STOP：不接收新任务，不出来任务队列，同时中断所有进行中的任务</li>
+<li>STOP：不接收新任务，不处理任务队列，同时中断所有进行中的任务</li>
 <li>TIDYING：所有任务已经被终止，工作线程数量为 0，到达该状态会执行<code>terminated()</code></li>
 <li>TERMINATED：<code>terminated()</code>执行完毕</li>
 </ol>
@@ -579,7 +711,7 @@ Runnable r = timed ?
     <link href="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/"/>
     <id>http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/</id>
     <published>2016-05-15T02:49:39.000Z</published>
-    <updated>2016-07-30T03:14:59.252Z</updated>
+    <updated>2016-08-13T14:37:59.220Z</updated>
     <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。</p>
 <h2 id="RedisHttpSession"><a href="#RedisHttpSession" class="headerlink" title="RedisHttpSession"></a>RedisHttpSession</h2><p>这个类实现了<code>HttpSession</code>接口，用于替换默认的<code>HttpSession</code>实现。<code>RedisHttpSession</code>将<code>HttpSession</code>的接口方法重写了一遍，将<code>HttpSession</code>的属性存储到了 Redis 中。</p>
 <p>每个<code>RedisHttpSession</code>都有一个 UUID 与之对应，该字段加上<code>session:</code>前缀作为存储在 Redis 中的键值。例如：</p>
@@ -2166,85 +2298,6 @@ class ColonMovieFinder...
       <category term="操作系统" scheme="http://blog.xiaohansong.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
       <category term="ucore" scheme="http://blog.xiaohansong.com/categories/ucore/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Linux 平台下阅读源码的工具]]></title>
-    <link href="http://blog.xiaohansong.com/2015/08/24/Linux%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E9%93%BE/"/>
-    <id>http://blog.xiaohansong.com/2015/08/24/Linux源码分析工具链/</id>
-    <published>2015-08-24T02:02:11.000Z</published>
-    <updated>2016-05-23T01:36:25.444Z</updated>
-    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>看源代码是一个程序员必须经历的事情,也是可以提升能力的一个捷径.个人认为: <strong>要完全掌握一个软件的方法只有阅读源码</strong><br>在Windows下有sourceinsight这个源码阅读软件(虽然我没用过,但是网上评价还不错),由于我是个Linuxer,并不喜欢用Windows,所以自然是选择在Linux下阅读源码的工具了.<br>下面我将逐一介绍在Linux下阅读源码的工具.</p>
-<h2 id="vim+ctags+cscope"><a href="#vim+ctags+cscope" class="headerlink" title="vim+ctags+cscope"></a>vim+ctags+cscope</h2><p>源码阅读三剑客.vim配合ctags和cscope,足以在源代码里面自由翱翔,在函数和变量间自由跳转.</p>
-<h3 id="u5B89_u88C5"><a href="#u5B89_u88C5" class="headerlink" title="安装"></a>安装</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> install <span class="keyword">vim</span> ctags <span class="keyword">cscope</span></span><br></pre></td></tr></table></figure>
-<h3 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h3><h4 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h4><p>vim的使用就略过了,网上资料很多,不是一篇文章能说完的,未来我可能会写一篇vim的使用心得<br>推荐一篇<a href="http://coolshell.cn/articles/5426.html" target="_blank" rel="external">简明 Vim 练级攻略</a>,看完就差不多会用了.</p>
-<h4 id="ctags"><a href="#ctags" class="headerlink" title="ctags"></a>ctags</h4><p>ctags的使用很简单,vim已经内置了对ctags的支持<br>首先在源代码根目录执行<code>ctags -R</code>,递归的为源码建立tags,在根目录会生成一个Tags的文件,存放各种函数和变量的tag,便于跳转</p>
-<ul>
-<li>使光标在函数或变量上,<code>Ctrl + ]</code>即可跳转到其定义处</li>
-<li><code>Ctrl + t</code>可以回到你跳转之前的位置</li>
-</ul>
-<p>对于简单的代码,ctags就够用了,但是对于比较复杂的代码来说,ctags显得有点力不从心,于是,下一位剑客就登场了.</p>
-<h4 id="cscope"><a href="#cscope" class="headerlink" title="cscope"></a>cscope</h4><p>vim同样内置了对cscope的支持.<br>首先在源代码根目录执行<code>cscope -Rbq</code>,就会生成cscope.out文件(索引数据库)</p>
-<ul>
-<li>-R: 在生成索引文件时，搜索子目录树中的代码</li>
-<li>-b: 只生成索引文件，不进入cscope的界面</li>
-<li>-q: 生成cscope.in.out和cscope.po.out文件，加快cscope的索引速度</li>
-</ul>
-<p>然后在vim中执行<code>:cs add cscope.out</code>,添加数据库.<br>接下来就可以使用<code>:cs find x var</code>进行查找.(x代表查询选项,var表示要查找的函数或变量名)<br>cscope支持8种查询方式</p>
-<ul>
-<li>s: 查找C语言符号，即查找函数名、宏、枚举值等出现的地方</li>
-<li>g: 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能</li>
-<li>d: 查找本函数调用的函数</li>
-<li>c: 查找调用本函数的函数</li>
-<li>t: 查找指定的字符串</li>
-<li>e: 查找egrep模式，相当于egrep功能，但查找速度快多了</li>
-<li>f: 查找并打开文件，类似vim的find功能</li>
-<li>i: 查找包含本文件的文件</li>
-</ul>
-<p>例如，我们想在vim 7.0的源代码中查找调用do_cscope()函数的函数，我们可以输入：”:cs find c do_cscope“，回车后发现没有找到匹配的功能，可能并没有函数调用do_cscope()。我们再输入”:cs find s do_cscope“，查找这个C符号出现的位置，现在vim列出了这个符号出现的所有位置。</p>
-<p>每次都有输入<code>cs find</code>来查找数据是不是有点麻烦,有没有更方便的方法呢.当然有,vim的神奇之处在其可定制性.提供一份cscope的配置,将其放在.vimrc中即可.<br><figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">"""</span><br><span class="line">" cscope setting</span><br><span class="line">"""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span><span class="string">""""""</span></span><br><span class="line"><span class="keyword">if</span> has(<span class="string">"cscope"</span>)</span><br><span class="line">  set csprg=/usr/bin/cscope</span><br><span class="line">  set csto=<span class="number">1</span></span><br><span class="line">  set cst</span><br><span class="line">  set nocsverb</span><br><span class="line">  <span class="string">" add any database in current directory</span><br><span class="line">  if filereadable("</span>cscope.<span class="keyword">out</span><span class="string">")</span><br><span class="line">      cs add cscope.out</span><br><span class="line">  endif</span><br><span class="line">  set csverb</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">nmap &lt;C-@&gt;s :cs find s &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;g :cs find g &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;c :cs find c &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;t :cs find t &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;e :cs find e &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;f :cs find f &lt;C-R&gt;=expand("</span>&lt;cfile&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;i :cs find i ^&lt;C-R&gt;=expand("</span>&lt;cfile&gt;<span class="string">")&lt;CR&gt;$&lt;CR&gt;</span><br><span class="line">nmap &lt;C-@&gt;d :cs find d &lt;C-R&gt;=expand("</span>&lt;cword&gt;<span class="string">")&lt;CR&gt;&lt;CR&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>上面的配置即把<code>Ctrl + @</code>作为<code>:cs find</code>的快捷键,也就是说要查找某个函数名,只需要把光标放在函数名上,按下<code>Ctrl + @ + s</code>即可,简直不能更方便.而且你可以自己修改配置,映射到自己觉得舒服的快捷键上.</p>
-<p>本着不重复造轮子的原则,我就简单的写了cscope的基本用法,其实基本上就够用了,进阶的用法参考这篇文章<a href="http://easwy.com/blog/archives/advanced-vim-skills-cscope/" target="_blank" rel="external">vi/vim使用进阶: 程序员的利器 – cscope</a></p>
-<h2 id="doxygen"><a href="#doxygen" class="headerlink" title="doxygen"></a>doxygen</h2><p>上面我们讲的是用vim来查看源代码,但是面对几十万代码的时候,想要看清楚各个结构体之间的关系就不是vim能够做到的了.这时候我们就需要doxygen来帮手了.</p>
-<blockquote>
-<p>Doxygen is the de facto standard tool for generating documentation from annotated C++ sources, but it also supports other popular programming languages such as C, Objective-C, C#, PHP, Java, Python, IDL (Corba, Microsoft, and UNO/OpenOffice flavors), Fortran, VHDL, Tcl, and to some extent D.</p>
-</blockquote>
-<p>doxygen是一个根据源代码生成文档的工具,这货虽然主要是给C++用的,但是它也对其他语言有支持.<br>安装直接去<a href="http://www.stack.nl/~dimitri/doxygen/index.html" target="_blank" rel="external">官网</a>,按照其指导安装即可<br>下面介绍一下doxygen的使用方法.</p>
-<p>首先,在源代码根目录执行<code>doxygen -g</code>,然后在根目录就会突然冒出一个名为<strong>Doxyfile</strong>的文件,这个文件就是doxygen生成文档的配置文件了.<br>那么,重点来了,怎么配置这个文件,默认的配置是根据代码生成各个结构体的成员数据,然后生成html和latex两个文件夹,分别是网页和latex文档.<br>说实话,默认生成的文档并没有什么卵用,除了让你更方便的看到各个结构体的组成成员.我们关心的是各个结构体之间的关系,这是针对C而言的.对与C++和java而言,关心的是类之间的关系.所以,默认的配置肯定是要修改的.至于怎么改,看<a href="http://www.stack.nl/~dimitri/doxygen/manual/index.html" target="_blank" rel="external">官方文档</a>.</p>
-<p>当然了,如果这篇文章唯一给出的建议就是看文档,那这篇文章有什么意义呢.大家都知道看文档可以解决问题,但是时间成本太高,而且是英文的.写这篇文章的目的是分享自己学习得到的经验,让大家少走弯路,如果不能解决你的问题,只能去看文档了</p>
-<p>接下来我根据我自己看文档用到的配置跟大家解释一下.<br>首先,Doxygen里面的配置可谓又臭又长,你绝对不会有读完它的欲望.所以我给出几个关键的配置项,到时候搜索它修改即可</p>
-<ul>
-<li><p>这是针对各种语言优化输出的选项,默认都是NO,因为它不清楚你用的是什么语言(话说看一下后缀不就知道了吗…)</p>
-  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">OPTIMIZE_OUTPUT_FOR_C</span></span><br><span class="line">OPTIMIZE_OUTPUT_JAVA</span><br><span class="line">OPTIMIZE_FOR_FORTRAN</span><br><span class="line">OPTIMIZE_OUTPUT_VHDL</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>这个是生成文档的类型的选项,默认生成html和latex,共支持六种类型的文档,每种类型的生成配置也是很多,具体根据需要配置</p>
-  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">GENERATE_HTML</span></span><br><span class="line">GENERATE_LATEX</span><br><span class="line">GENERATE_RTF</span><br><span class="line">GENERATE_XML</span><br><span class="line">GENERATE_DOCBOOK</span><br><span class="line">GENERATE_MAN</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>关于生成图像的选项.doxygen使用dot这个工具来绘图,所以要先执行<code>sudo apt-get install graphviz</code>安装dot.在设置好这个绘图选项之后,doxygen就会生成各个结构体的关系,对于类会生成函数调用关系(我没试过,因为只试过C的).</p>
-  <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">H<span class="built_in">AVE_DOT</span> (一定要置为<span class="literal">YES</span>,后面的选项都依赖这个)</span><br><span class="line">DOT_NUM_THREADS (使用dot绘图的线程数量,越多越快,我一般是设置跟cpu的核数一样)</span><br><span class="line"><span class="comment">//以下两个选项跟生成函数调用关系图有关</span></span><br><span class="line"><span class="built_in">CALL_GRAPH</span></span><br><span class="line"><span class="built_in">CALLER_GRAPH</span></span><br><span class="line">EXTRACT_ALL <span class="comment">//把所有实体都输出到文档,不管它是否能被描述</span></span><br><span class="line">EXTRACT_STATIC <span class="comment">//把静态变量也输出到文档中</span></span><br><span class="line">EXTRACT_PRIVATE <span class="comment">//把私有变量也输出到文档中</span></span><br></pre></td></tr></table></figure>
-<p>  给一个结构体关系图,就是doxygen生成的.<br>  <img src="http://7xjtfr.com1.z0.glb.clouddn.com/source_00.png" alt="machine_class"></p>
-</li>
-<li><p>关于源码搜索路径,默认是搜索本目录的源代码,大部分情况下源码是分布在各个子目录的.</p>
-  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">RECURSIVE = <span class="value"><span class="keyword">YES</span></span></span></span><br></pre></td></tr></table></figure>
-<p>  默认RECURSIVE是NO,所以记得把它设置为YES,递归搜索子目录. <em>感谢soglad的留言提醒</em></p>
-</li>
-</ul>
-<p>最后一步,在源码根目录执行<code>doxygen</code>,它会自动找到Doxygen配置,根据配置生成文档.</p>
-<h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><p>最后一个工具,大名鼎鼎的gdb.分析源码执行流程的最好方式的是运行它,然后一步步执行.用来观察它最好的工具当然是gdb了(针对C/C++).<br>gdb的使用我也不打算造轮子,直接参考<a href="http://wiki.ubuntu.org.cn/index.php?title=%E7%94%A8GDB%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F&amp;variant=zh-hans" target="_blank" rel="external">用GDB调试程序</a>,这篇写的很好,通俗易懂.</p>
-<h2 id="u540E_u8BB0"><a href="#u540E_u8BB0" class="headerlink" title="后记"></a>后记</h2><p>以上就是我在阅读源码的时候使用的Linux工具,三剑客<strong>vim+ctags+cscope</strong>,两板斧<strong>doxygen gdb</strong>,足以驰骋源代码的江湖.</p>
-<p>以上工具,vim和gdb是最难学的,学习曲线很陡峭.但是学好之后,就能守得云开见月明.</p>
-<p><em>参考文章,感谢帮助</em><br><a href="http://easwy.com/blog/archives/advanced-vim-skills-cscope/" target="_blank" rel="external">vi/vim使用进阶: 程序员的利器 – cscope</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>看源代码是一个程序员必须经历的事情,也是可以提升能力的一个捷径.个人认为: <strong>要完全掌握一]]>
-    </summary>
-    
-      <category term="Linux" scheme="http://blog.xiaohansong.com/tags/Linux/"/>
-    
-      <category term="源代码分析" scheme="http://blog.xiaohansong.com/tags/%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    
-      <category term="Linux工具" scheme="http://blog.xiaohansong.com/categories/Linux%E5%B7%A5%E5%85%B7/"/>
     
   </entry>
   
