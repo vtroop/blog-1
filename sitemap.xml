@@ -2,13 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/</loc>
-    <lastmod>2016-08-22T14:45:01.112Z</lastmod>
+    <loc>http://blog.xiaohansong.com/2016/08/25/zab/</loc>
+    <lastmod>2016-08-25T16:04:09.970Z</lastmod>
   </url>
   
   <url>
     <loc>http://blog.xiaohansong.com/2016/08/22/zookeeper-watch-async/</loc>
-    <lastmod>2016-08-22T14:18:04.416Z</lastmod>
+    <lastmod>2016-08-23T15:39:18.835Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaohansong.com/2016/08/09/ThreadLocal-leak-analyze/</loc>
+    <lastmod>2016-08-22T14:45:01.112Z</lastmod>
   </url>
   
   <url>
