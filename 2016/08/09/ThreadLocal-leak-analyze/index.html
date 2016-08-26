@@ -27,7 +27,7 @@ public class MyCou">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/111825528931093.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/leak_1.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/leak_2.png">
-<meta property="og:updated_time" content="2016-08-22T14:45:01.112Z">
+<meta property="og:updated_time" content="2016-08-26T13:56:55.101Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadLocal 内存泄露的实例分析">
 <meta name="twitter:description" content="前言之前写了一篇深入分析 ThreadLocal 内存泄漏问题是从理论上分析ThreadLocal的内存泄漏问题，这一篇文章我们来分析一下实际的内存泄漏案例。分析问题的过程比结果更重要，理论结合实际才能彻底分析出内存泄漏的原因。
@@ -233,7 +233,7 @@ public class LeakingServlet extends HttpServlet {
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/ThreadLocal/">ThreadLocal</a>
+  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/ThreadLocal/">ThreadLocal</a><a href="/tags/并发/">并发</a>
   </div>
 
 </div>
@@ -304,11 +304,7 @@ public class LeakingServlet extends HttpServlet {
 		  
 		
 		  
-			<li><a href="/categories/Linux内核/" title="Linux内核">Linux内核<sup>3</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Linux工具/" title="Linux工具">Linux工具<sup>2</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>4</sup></a></li>
 		  
 		
 		  
@@ -316,31 +312,19 @@ public class LeakingServlet extends HttpServlet {
 		  
 		
 		  
-			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/个人随想/" title="个人随想">个人随想<sup>1</sup></a></li>
-		  
 		
 		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/理解链接/" title="理解链接">理解链接<sup>1</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/算法学习/" title="算法学习">算法学习<sup>4</sup></a></li>
+			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>3</sup></a></li>
 		  
 		
-		  
-			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/虚拟化/" title="虚拟化">虚拟化<sup>2</sup></a></li>
 		  
 		
 		  
@@ -357,7 +341,11 @@ public class LeakingServlet extends HttpServlet {
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Java/" title="Java">Java<sup>7</sup></a></li>
+				<li><a href="/tags/Java/" title="Java">Java<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/并发/" title="并发">并发<sup>4</sup></a></li>
 			
 		
 			
@@ -366,6 +354,10 @@ public class LeakingServlet extends HttpServlet {
 		
 			
 				<li><a href="/tags/Linux/" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>2</sup></a></li>
 			
 		
 			
@@ -389,23 +381,15 @@ public class LeakingServlet extends HttpServlet {
 			
 		
 			
-				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
 			
 		
 			
@@ -421,15 +405,15 @@ public class LeakingServlet extends HttpServlet {
 			
 		
 			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
+				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
 			
 		
 			

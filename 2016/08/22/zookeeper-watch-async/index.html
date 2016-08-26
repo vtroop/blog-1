@@ -34,9 +34,11 @@ AsyncCallback 的回调实现
 IO 与事件处理
 
 Watcher 和 Asy">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/WatcherClass.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/regist_watch.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/async.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/event.png">
-<meta property="og:updated_time" content="2016-08-23T15:39:18.835Z">
+<meta property="og:updated_time" content="2016-08-26T13:57:15.595Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper Watcher 和 AsyncCallback 的区别与实现">
 <meta name="twitter:description" content="前言初学 Zookeeper 会发现客户端有两种回调方式： Watcher 和 AsyncCallback，而 Zookeeper 的使用是离不开这两种方式的，搞清楚它们之间的区别与实现显得尤为重要。本文将围绕下面几个方面展开
@@ -145,7 +147,10 @@ Watcher 和 Asy">
 <li><code>Watcher</code>：<code>Watcher</code>是用于监听节点，session 状态的，比如<code>getData</code>对数据节点<code>a</code>设置了<code>watcher</code>，那么当<code>a</code>的数据内容发生改变时，客户端会收到<code>NodeDataChanged</code>通知，然后进行<code>watcher</code>的回调。</li>
 <li><code>AsyncCallback</code>:<code>AsyncCallback</code>是在以异步方式使用 ZooKeeper API 时，用于处理返回结果的。例如：<code>getData</code>同步调用的版本是：<code>byte[] getData(String path, boolean watch,Stat stat)</code>，异步调用的版本是：<code>void getData(String path,Watcher watcher,AsyncCallback.DataCallback cb,Object ctx)</code>，可以看到，前者是直接返回获取的结果，后者是通过<code>AsyncCallback</code>回调处理结果的。</li>
 </ul>
-<h2 id="Watcher"><a href="#Watcher" class="headerlink" title="Watcher"></a>Watcher</h2><p>Watcher 主要是通过<code>ClientWatchManager</code>进行管理的。</p>
+<h2 id="Watcher"><a href="#Watcher" class="headerlink" title="Watcher"></a>Watcher</h2><p>Watcher 主要是通过<code>ClientWatchManager</code>进行管理的。下面是 Watcher 相关类图</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/WatcherClass.png" alt="WatcherClass"></p>
+<p>添加 Watcher 的流程如下：</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/regist_watch.png" alt="添加Watcher"></p>
 <h3 id="Watcher__u7684_u7C7B_u578B"><a href="#Watcher__u7684_u7C7B_u578B" class="headerlink" title="Watcher 的类型"></a>Watcher 的类型</h3><p><code>ClientWatchManager</code>中有四种<code>Watcher</code></p>
 <ul>
 <li><code>defaultWatcher</code>：创建<code>Zookeeper</code>连接时传入的<code>Watcher</code>，用于监听 session 状态</li>
@@ -255,7 +260,7 @@ private volatile Watcher defaultWatcher;
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Zookeeper/">Zookeeper</a>
+  <span></span> <a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/分布式/">分布式</a>
   </div>
 
 </div>
@@ -326,11 +331,7 @@ private volatile Watcher defaultWatcher;
 		  
 		
 		  
-			<li><a href="/categories/Linux内核/" title="Linux内核">Linux内核<sup>3</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Linux工具/" title="Linux工具">Linux工具<sup>2</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>4</sup></a></li>
 		  
 		
 		  
@@ -338,31 +339,19 @@ private volatile Watcher defaultWatcher;
 		  
 		
 		  
-			<li><a href="/categories/ucore/" title="ucore">ucore<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/个人随想/" title="个人随想">个人随想<sup>1</sup></a></li>
-		  
 		
 		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/理解链接/" title="理解链接">理解链接<sup>1</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/算法学习/" title="算法学习">算法学习<sup>4</sup></a></li>
+			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>3</sup></a></li>
 		  
 		
-		  
-			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>2</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/虚拟化/" title="虚拟化">虚拟化<sup>2</sup></a></li>
 		  
 		
 		  
@@ -379,7 +368,11 @@ private volatile Watcher defaultWatcher;
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Java/" title="Java">Java<sup>7</sup></a></li>
+				<li><a href="/tags/Java/" title="Java">Java<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/并发/" title="并发">并发<sup>4</sup></a></li>
 			
 		
 			
@@ -388,6 +381,10 @@ private volatile Watcher defaultWatcher;
 		
 			
 				<li><a href="/tags/Linux/" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分布式/" title="分布式">分布式<sup>2</sup></a></li>
 			
 		
 			
@@ -411,23 +408,15 @@ private volatile Watcher defaultWatcher;
 			
 		
 			
-				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
 			
 		
 			
@@ -443,15 +432,15 @@ private volatile Watcher defaultWatcher;
 			
 		
 			
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/暴力求解/" title="暴力求解">暴力求解<sup>1</sup></a></li>
+				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
 			
 		
 			
