@@ -27,7 +27,7 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/phase3.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/FLE.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/recovery.png">
-<meta property="og:updated_time" content="2016-08-26T13:57:24.713Z">
+<meta property="og:updated_time" content="2016-09-30T02:21:31.232Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper ZAB 协议分析">
 <meta name="twitter:description" content="前言ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩溃恢复的原子广播协议。在 ZooKeeper 中，主要依赖 ZAB 协议来实现分布式数据一致性，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。
@@ -186,7 +186,7 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ZAB/">ZAB</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/分布式/">分布式</a>
+  <span></span> <a href="/tags/ZAB/">ZAB</a><a href="/tags/Zookeeper/">Zookeeper</a><a href="/tags/一致性协议/">一致性协议</a><a href="/tags/分布式/">分布式</a>
   </div>
 
 </div>
@@ -208,6 +208,14 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2016/09/30/Paxos/" title="图解 Paxos 一致性协议">
+  <strong>上一篇：</strong><br/>
+  <span>
+  图解 Paxos 一致性协议</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2016/08/22/zookeeper-watch-async/"  title="ZooKeeper Watcher 和 AsyncCallback 的区别与实现">
@@ -257,8 +265,6 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 		  
 		
@@ -268,8 +274,6 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 		
 		  
 			<li><a href="/categories/编程实践/" title="编程实践">编程实践<sup>3</sup></a></li>
-		  
-		
 		  
 		
 		  
@@ -290,11 +294,11 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 			
 		
 			
-				<li><a href="/tags/并发/" title="并发">并发<sup>4</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>4</sup></a></li>
+				<li><a href="/tags/并发/" title="并发">并发<sup>4</sup></a></li>
 			
 		
 			
@@ -302,7 +306,15 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 			
 		
 			
+				<li><a href="/tags/一致性协议/" title="一致性协议">一致性协议<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/分布式/" title="分布式">分布式<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ThreadLocal/" title="ThreadLocal">ThreadLocal<sup>2</sup></a></li>
 			
 		
 			
@@ -322,15 +334,7 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 			
 		
 			
-				<li><a href="/tags/ThreadLocal/" title="ThreadLocal">ThreadLocal<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/链接/" title="链接">链接<sup>1</sup></a></li>
+				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
 			
 		
 			
@@ -338,7 +342,15 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 			
 		
 			
+				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/ZAB/" title="ZAB">ZAB<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/分治法/" title="分治法">分治法<sup>1</sup></a></li>
 			
 		
 			
@@ -350,19 +362,11 @@ Atomic broadcast protocolZAB 是 Zookeeper 原子广播协议的简称，下面�
 			
 		
 			
-				<li><a href="/tags/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/DI/" title="DI">DI<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/IoC/" title="IoC">IoC<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/String/" title="String">String<sup>1</sup></a></li>
+				<li><a href="/tags/join/" title="join">join<sup>1</sup></a></li>
 			
 		
 		</ul>

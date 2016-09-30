@@ -7,26 +7,42 @@
 <meta name="baidu-site-verification" content="28u1lswj4v" />
   <meta charset="UTF-8">
   
-    <title>RedisHttpSession 的设计与实现 | ShareHub</title>
+    <title>图解 Paxos 一致性协议 | ShareHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="肖汉松">
     
 
     
-    <meta name="description" content="前言RedisHttpSession 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。
-RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpSession实现。RedisH">
+    <meta name="description" content="前言Paxos 一致性协议可以说是一致性协议研究的起点，也以难以理解闻名。其实协议本身并没有多难理解，它的难理解性主要体现在：为何如此设计协议以及如何证明其正确性。本文尝试通过流程图来说明协议的内容以及基本应用过程，不涉及如何证明其正确性。
+基本概念Paxos 可以分为两种：
+
+Single-Decree Paxos：决策单个 Value
+Multi-Paxos：连续决策多个 Value，并且保证">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RedisHttpSession 的设计与实现">
-<meta property="og:url" content="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/index.html">
+<meta property="og:title" content="图解 Paxos 一致性协议">
+<meta property="og:url" content="http://blog.xiaohansong.com/2016/09/30/Paxos/index.html">
 <meta property="og:site_name" content="ShareHub">
-<meta property="og:description" content="前言RedisHttpSession 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。
-RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpSession实现。RedisH">
-<meta property="og:updated_time" content="2016-08-13T14:37:59.220Z">
+<meta property="og:description" content="前言Paxos 一致性协议可以说是一致性协议研究的起点，也以难以理解闻名。其实协议本身并没有多难理解，它的难理解性主要体现在：为何如此设计协议以及如何证明其正确性。本文尝试通过流程图来说明协议的内容以及基本应用过程，不涉及如何证明其正确性。
+基本概念Paxos 可以分为两种：
+
+Single-Decree Paxos：决策单个 Value
+Multi-Paxos：连续决策多个 Value，并且保证">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-1.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-2.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-3.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-4.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-5.png">
+<meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-6.png">
+<meta property="og:updated_time" content="2016-09-30T02:30:14.206Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RedisHttpSession 的设计与实现">
-<meta name="twitter:description" content="前言RedisHttpSession 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。
-RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpSession实现。RedisH">
+<meta name="twitter:title" content="图解 Paxos 一致性协议">
+<meta name="twitter:description" content="前言Paxos 一致性协议可以说是一致性协议研究的起点，也以难以理解闻名。其实协议本身并没有多难理解，它的难理解性主要体现在：为何如此设计协议以及如何证明其正确性。本文尝试通过流程图来说明协议的内容以及基本应用过程，不涉及如何证明其正确性。
+基本概念Paxos 可以分为两种：
+
+Single-Decree Paxos：决策单个 Value
+Multi-Paxos：连续决策多个 Value，并且保证">
 <meta name="twitter:creator" content="@Yonah_x">
 
     
@@ -83,14 +99,14 @@ RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpS
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/05/15/RedisHttpSession/" title="RedisHttpSession 的设计与实现" itemprop="url">RedisHttpSession 的设计与实现</a>
+      <a href="/2016/09/30/Paxos/" title="图解 Paxos 一致性协议" itemprop="url">图解 Paxos 一致性协议</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="肖汉松" target="_blank" itemprop="author">肖汉松</a>
 		
   <p class="article-time">
-    <time datetime="2016-05-15T02:49:39.000Z" itemprop="datePublished"> 发表于 2016-05-15</time>
+    <time datetime="2016-09-30T02:17:52.000Z" itemprop="datePublished"> 发表于 2016-09-30</time>
     
   </p>
 </header>
@@ -99,76 +115,47 @@ RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpS
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSession"><span class="toc-number">2.</span> <span class="toc-text">RedisHttpSession</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionProxy"><span class="toc-number">3.</span> <span class="toc-text">RedisHttpSessionProxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionFilter"><span class="toc-number">4.</span> <span class="toc-text">RedisHttpSessionFilter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u57FA_u672C_u6982_u5FF5"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Paxos__u534F_u8BAE_u4E2D_u7684_u4E09_u79CD_u89D2_u8272"><span class="toc-number">2.1.</span> <span class="toc-text">Paxos 协议中的三种角色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Paxos__u7684_u7279_u70B9"><span class="toc-number">2.2.</span> <span class="toc-text">Paxos 的特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u534F_u8BAE_u56FE_u793A"><span class="toc-number">3.</span> <span class="toc-text">协议图示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B9E_u4F8B"><span class="toc-number">4.</span> <span class="toc-text">实例</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 是我的一个 Java 开源项目，通过将 Session 存储在 Redis 中实现多服务器间共享 Session，同时这一过程是完全透明的。主要用于支持 RESTfuls API。下面我将对其核心类进行分析，阐述它的设计以及实现细节。</p>
-<h2 id="RedisHttpSession"><a href="#RedisHttpSession" class="headerlink" title="RedisHttpSession"></a>RedisHttpSession</h2><p>这个类实现了<code>HttpSession</code>接口，用于替换默认的<code>HttpSession</code>实现。<code>RedisHttpSession</code>将<code>HttpSession</code>的接口方法重写了一遍，将<code>HttpSession</code>的属性存储到了 Redis 中。</p>
-<p>每个<code>RedisHttpSession</code>都有一个 UUID 与之对应，该字段加上<code>session:</code>前缀作为存储在 Redis 中的键值。例如：</p>
-<pre><code>localhost:63679&gt; keys *
-1) &quot;session:fd9ec3cf-fb9b-4672-ade6-67a810e7db9f&quot;
-2) &quot;session:cbaa057c-85a4-475d-b399-38c320e85dcc&quot;
-3) &quot;session:13e030f5-de3d-458f-8d25-fd5643c40ff0&quot;
-4) &quot;session:262596b3-3d13-4df1-8328-714153c1ae83&quot;
-5) &quot;session:0b7d04c6-eaac-4eed-a9aa-8366f25f04f0&quot;
-</code></pre><p>同时，<code>RedisHttpSession</code>中的属性是直接序列化成字节数组存储在 Redis 中的，存储在对应键中的哈希表里面。例如：</p>
-<pre><code>localhost:63679&gt; hgetall session:fd9ec3cf-fb9b-4672-ade6-67a810e7db9f
-1) &quot;lastAccessedTime&quot;
-2) &quot;\xac\xed\x00\x05sr\x00\x0ejava.lang.Long;\x8b\xe4\x90\xcc\x8f#\xdf\x02\x00\x01J\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x01T\x91\x03\&quot;\xec&quot;
-3) &quot;maxInactiveInterval&quot;
-4) &quot;\xac\xed\x00\x05sr\x00\x11java.lang.Integer\x12\xe2\xa0\xa4\xf7\x81\x878\x02\x00\x01I\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\a\b&quot;
-5) &quot;creationTime&quot;
-6) &quot;\xac\xed\x00\x05sr\x00\x0ejava.lang.Long;\x8b\xe4\x90\xcc\x8f#\xdf\x02\x00\x01J\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x01T\x91\x03\&quot;\xb4&quot;
-</code></pre><p>另外，Session 的自动过期是通过 Redis 设置键的过期时间实现的。</p>
-<h2 id="RedisHttpSessionProxy"><a href="#RedisHttpSessionProxy" class="headerlink" title="RedisHttpSessionProxy"></a>RedisHttpSessionProxy</h2><p><code>RedisHttpSessionProxy</code>是<code>RedisHttpSession</code>的代理类，使用了 JDK 的动态代理。为什么要引入代理？这是基于下面的考虑做出的设计。</p>
-<ol>
-<li>由于 Session 存储在 Redis 中，在执行每个<code>RedisHttpSession</code>的接口方法之前都需要检查 Redis 连接是否可用。</li>
-<li>访问一个已经被注销的 Session 需要抛出异常。</li>
-<li>每次访问 Session 需要刷新过期时间和最后访问时间。</li>
-</ol>
-<p>基于上面的考虑，对于每个<code>RedisHttpSession</code>的接口方法，我们都需要进行重复的操作，因此使用动态代理对每个接口方法进行增强是最合适的。代码如下：</p>
-<pre><code>public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    RedisHttpSession session = (RedisHttpSession) originalObj;
-    //check redis connection
-    RedisConnection connection = session.getRedisConnection();
-    if (!connection.isConnected()){
-        connection.close();
-        session.setRedisConnection(repository.getRedisConnection());
-    }
-    //For every methods of interface, check it valid or not
-    if (session.isInvalidated()){
-        throw new IllegalStateException(&quot;The HttpSession has already be invalidated.&quot;);
-    } else {
-        Object result =  method.invoke(originalObj, args);
-        //if not invalidate method, refresh expireTime and lastAccessedTime;
-        if (!method.getName().equals(&quot;invalidate&quot;)) {
-            session.refresh();
-            session.setLastAccessedTime(System.currentTimeMillis());
-        }
-        return result;
-    }
-}
-</code></pre><h2 id="RedisHttpSessionFilter"><a href="#RedisHttpSessionFilter" class="headerlink" title="RedisHttpSessionFilter"></a>RedisHttpSessionFilter</h2><p><code>RedisHttpSessionFilter</code>作为过滤器，将请求和响应替换成<code>RedisSessionRequestWrapper</code>和<code>RedisSessionResponseWrapper</code>，利用了装饰器模式动态的给请求和响应进行增强：</p>
-<ol>
-<li><code>RedisSessionRequestWrapper</code>：重写了<code>getSession</code>，替换默认的<code>HttpSession</code>实现为<code>RedisHttpSession</code>。</li>
-<li><code>RedisSessionResponseWrapper</code>：在响应的头部中加入<code>x-auth-token</code>字段，作为 Session 的 ID。客户端之后的请求都需要附带该字段，以便服务端识别对应的 Session。</li>
-</ol>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p><a href="https://github.com/x-hansong/RedisHttpSession" target="_blank" rel="external">RedisHttpSession</a> 利用 Filter 将请求的 Session 替换成 <code>RedisHttpSession</code>，在过滤阶段偷梁换柱，在之后对 Session 的操作都无需关心其内部实现，整个过程都是透明的。</p>
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>Paxos 一致性协议可以说是一致性协议研究的起点，也以难以理解闻名。其实协议本身并没有多难理解，它的难理解性主要体现在：为何如此设计协议以及如何证明其正确性。本文尝试通过流程图来说明协议的内容以及基本应用过程，不涉及如何证明其正确性。</p>
+<h2 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h2><p>Paxos 可以分为两种：</p>
+<ul>
+<li><strong>Single-Decree Paxos</strong>：决策单个 Value</li>
+<li><strong>Multi-Paxos</strong>：连续决策多个 Value，并且保证每个节点上的顺序完全一致，多 Paxos 往往是同事运行多个单 Paxos 协议共同执行的结果。</li>
+</ul>
+<p>本文只关注单 Paxos 的原理，理解了单 Paxos，多 Paxos 也就不难理解了。</p>
+<h3 id="Paxos__u534F_u8BAE_u4E2D_u7684_u4E09_u79CD_u89D2_u8272"><a href="#Paxos__u534F_u8BAE_u4E2D_u7684_u4E09_u79CD_u89D2_u8272" class="headerlink" title="Paxos 协议中的三种角色"></a>Paxos 协议中的三种角色</h3><ul>
+<li><strong>倡议者（Proposer）</strong>：倡议者可以提出提议（数值或者操作命令）以供投票表决</li>
+<li><strong>接受者（Acceptor）</strong>：接受者可以对倡议者提出的提议进行投票表决，提议有超半数的接受者投票即被选中</li>
+<li><strong>学习者（Learner）</strong>：学习者无投票权，只是从接受者那里获知哪个提议被选中</li>
+</ul>
+<p>在协议中，每个节点可以同时扮演以上多个角色。</p>
+<h3 id="Paxos__u7684_u7279_u70B9"><a href="#Paxos__u7684_u7279_u70B9" class="headerlink" title="Paxos 的特点"></a>Paxos 的特点</h3><ul>
+<li>一个或多个节点可以提出提议</li>
+<li>系统必须针对所有提案中的某个提案达成一致（超过半数的接受者选中）</li>
+<li>最多只能对一个确定的提议达成一致</li>
+<li>只要超半数的节点存活且可互相通信，整个系统一定能达成一致状态，即选择一个确定的提议</li>
+</ul>
+<h2 id="u534F_u8BAE_u56FE_u793A"><a href="#u534F_u8BAE_u56FE_u793A" class="headerlink" title="协议图示"></a>协议图示</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos.png" alt="Paxos"><br>通过上面的流程，如果有多个节点同时提出各自的提议，Paxos 就可以保证从中选出一个唯一确定的值，保证分布式系统的一致性。</p>
+<h2 id="u5B9E_u4F8B"><a href="#u5B9E_u4F8B" class="headerlink" title="实例"></a>实例</h2><p>下面我们通过例子来理解 Paxos 的实际应用过程。</p>
+<p>假设现在有五个节点的分布式系统，此时 A 节点打算提议 X 值，E 节点打算提议 Y 值，其他节点没有提议。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-1.png" alt="Paxos-1"></p>
+<p>假设现在 A 节点广播它的提议（也会发送给自己），由于网络延迟的原因，只有 A，B，C 节点收到了。注意即使 A，E 节点的提议同时到达某个节点，它也必然有个先后处理的顺序，这里的“同时”不是真正意义上的“同时”。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-2.png" alt="Paxos-2"></p>
+<p>A，B，C接收提议之后，由于这是第一个它们接收到的提议，acceptedProposal 和 acceptedValue 都为空。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-3.png" alt="Paxos-3"></p>
+<p>由于 A 节点已经收到超半数的节点响应，且返回的 acceptedValue 都为空，也就是说它可以用 X 作为提议的值来发生 Accept 请求，A，B，C接收到请求之后，将 acceptedValue 更新为 X。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-4.png" alt="Paxos-4"></p>
+<p>A，B，C 会发生 minProposal 给 A，A 检查发现没有大于 1 的 minProposal 出现，此时 X 已经被选中。等等，我们是不是忘了D，E节点？它们的 acceptedValue 并不是 X，系统还处于不一致状态。至此，Paxos 过程还没有结束，我们继续看。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-5.png" alt="Paxos-5"></p>
+<p>此时 E 节点选择 Proposal ID 为 2 发送 Prepare 请求，结果就和上面不一样了，因为 C 节点已经接受了 A 节点的提议，它不会三心二意，所以就告诉 E 节点它的选择，E 节点也很绅士，既然 C 选择了 A 的提议，那我也选它吧。于是，E 发起 Accept 请求，使用 X 作为提议值，至此，整个分布式系统达成了一致，大家都选择了 X。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/Paxos-6.png" alt="Paxos-6"></p>
+<p>上面是 Paxos 的一个简单应用过程，其他复杂的场景也可以根据流程图慢慢推导，这里只是抛砖引玉。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Java/">Java</a><a href="/tags/Session/">Session</a>
+  <span></span> <a href="/tags/Paxos/">Paxos</a><a href="/tags/一致性协议/">一致性协议</a>
   </div>
 
 </div>
@@ -177,7 +164,7 @@ RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpS
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/" data-title="RedisHttpSession 的设计与实现 | ShareHub" data-tsina="null" class="share clearfix">
+	  <div data-url="http://blog.xiaohansong.com/2016/09/30/Paxos/" data-title="图解 Paxos 一致性协议 | ShareHub" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -190,19 +177,11 @@ RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpS
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2016/07/12/java-executor/" title="Java 线程池框架核心代码分析">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Java 线程池框架核心代码分析</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2016/04/26/java-bytecode/"  title="三言两语：JVM 字节码执行实例分析">
+<a href="/2016/08/25/zab/"  title="Zookeeper ZAB 协议分析">
  <strong>下一篇：</strong><br/> 
- <span>三言两语：JVM 字节码执行实例分析
+ <span>Zookeeper ZAB 协议分析
 </span>
 </a>
 </div>
@@ -211,7 +190,7 @@ RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpS
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/05/15/RedisHttpSession/" data-title="RedisHttpSession 的设计与实现" data-url="http://blog.xiaohansong.com/2016/05/15/RedisHttpSession/"></div>
+	<div class="ds-thread" data-thread-key="2016/09/30/Paxos/" data-title="图解 Paxos 一致性协议" data-url="http://blog.xiaohansong.com/2016/09/30/Paxos/"></div>
 </section>
 
 
@@ -221,7 +200,7 @@ RedisHttpSession这个类实现了HttpSession接口，用于替换默认的HttpS
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSession"><span class="toc-number">2.</span> <span class="toc-text">RedisHttpSession</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionProxy"><span class="toc-number">3.</span> <span class="toc-text">RedisHttpSessionProxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedisHttpSessionFilter"><span class="toc-number">4.</span> <span class="toc-text">RedisHttpSessionFilter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u603B_u7ED3"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u57FA_u672C_u6982_u5FF5"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Paxos__u534F_u8BAE_u4E2D_u7684_u4E09_u79CD_u89D2_u8272"><span class="toc-number">2.1.</span> <span class="toc-text">Paxos 协议中的三种角色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Paxos__u7684_u7279_u70B9"><span class="toc-number">2.2.</span> <span class="toc-text">Paxos 的特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u534F_u8BAE_u56FE_u793A"><span class="toc-number">3.</span> <span class="toc-text">协议图示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B9E_u4F8B"><span class="toc-number">4.</span> <span class="toc-text">实例</span></a></li></ol>
  
   </div>
 

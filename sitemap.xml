@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.xiaohansong.com/2016/09/30/Paxos/</loc>
+    <lastmod>2016-09-30T02:30:14.206Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaohansong.com/about/index.html</loc>
+    <lastmod>2016-09-30T02:26:20.465Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaohansong.com/2016/08/25/zab/</loc>
+    <lastmod>2016-09-30T02:21:31.232Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/</loc>
     <lastmod>2016-08-26T13:58:28.574Z</lastmod>
   </url>
@@ -14,11 +29,6 @@
   <url>
     <loc>http://blog.xiaohansong.com/2016/04/23/JVM-Synchronized/</loc>
     <lastmod>2016-08-26T13:57:41.590Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.xiaohansong.com/2016/08/25/zab/</loc>
-    <lastmod>2016-08-26T13:57:24.713Z</lastmod>
   </url>
   
   <url>
@@ -38,7 +48,7 @@
   
   <url>
     <loc>http://blog.xiaohansong.com/2016/01/16/kownledge-Management/</loc>
-    <lastmod>2016-08-26T13:55:15.733Z</lastmod>
+    <lastmod>2016-08-26T13:55:56.864Z</lastmod>
   </url>
   
   <url>
@@ -119,11 +129,6 @@
   <url>
     <loc>http://blog.xiaohansong.com/2016/07/30/getty/</loc>
     <lastmod>2016-07-30T03:14:39.521Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.xiaohansong.com/about/index.html</loc>
-    <lastmod>2016-07-30T03:09:42.726Z</lastmod>
   </url>
   
   <url>
