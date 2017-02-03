@@ -4,7 +4,7 @@
   <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2016-11-25T14:02:02.297Z</updated>
+  <updated>2017-02-03T14:43:54.742Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[IDEA代码生成插件CodeMaker]]></title>
+    <link href="http://blog.xiaohansong.com/2017/02/03/codemaker/"/>
+    <id>http://blog.xiaohansong.com/2017/02/03/codemaker/</id>
+    <published>2017-02-03T12:11:34.000Z</published>
+    <updated>2017-02-03T14:43:54.742Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>Java 开发过程中经常会遇到手工编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。所以开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。</p>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker.gif" alt="demonstration"></p>
+<p><strong>项目地址</strong>：<a href="https://github.com/x-hansong/CodeMaker" target="_blank" rel="external">CodeMaker</a></p>
+<h2 id="u4E3B_u8981_u529F_u80FD"><a href="#u4E3B_u8981_u529F_u80FD" class="headerlink" title="主要功能"></a>主要功能</h2><ol>
+<li>支持增加自定义代码模板（Velocity）</li>
+<li>支持选择多个类作为代码模板的上下文</li>
+</ol>
+<h2 id="u5B89_u88C5"><a href="#u5B89_u88C5" class="headerlink" title="安装"></a>安装</h2><p>下载插件：<a href="https://github.com/x-hansong/CodeMaker/releases/download/1.0/CodeMaker.zip" target="_blank" rel="external">CodeMaker.zip</a></p>
+<ol>
+<li>打开设置，选择“Plugin”</li>
+<li>在右边的框中点击“Install plugin from disk”</li>
+<li>选择上面下载的“CodeMaker.zip”</li>
+<li>点击“Apply”，然后重启 IDEA。</li>
+</ol>
+<h2 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h2><p>在 Java 类编辑界面右键“Generate”，选择对应模板即可自动生成代码到当前类的包，然后进行修改，并且移动到合适的位置。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker0.png" alt="codemaker0"></p>
+<p>如果代码模板需要除了当前类之外的类作为上下文，可以通过类选择框进行选择。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker1.png" alt="codemaker1"></p>
+<p>目前自带的两个模板：</p>
+<ol>
+<li><strong>Model</strong>：根据当前类生成一个与其拥有类似属性的类，用于自动生成持久类对应的领域类</li>
+<li><strong>Converter</strong>：该模板需要两个类作为输入的上下文，用于自动生成领域类与持久类的转化类。</li>
+</ol>
+<p>上面两个模板是我自己工作中常用的模板，大家可以参考其写法，自己定义新的代码模板。</p>
+<h2 id="u6A21_u677F_u914D_u7F6E"><a href="#u6A21_u677F_u914D_u7F6E" class="headerlink" title="模板配置"></a>模板配置</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker3.png" alt="codemaker3"></p>
+<ol>
+<li><strong>增加模板</strong>：点击“Add Template”后，填写相关配置（都不能为空），点击保存后重启 IDEA 才能生效。</li>
+<li><strong>删除模板</strong>：点击“Delete Template”就能将该模板删除，同样需要重启才能生效。</li>
+</ol>
+<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker2.png" alt="codemaker2"></p>
+<ol>
+<li><strong>Template Name</strong>：在生成菜单中显示的名称，英文命名</li>
+<li><strong>Class Number</strong>：该模板需要的输入上下文类的数量，例如：如果为 1，,将当前的类作为输入：<code>$class0</code>；如果为 2，需要用户再选择一个类作为输入：<code>$class0, $class1</code>。</li>
+<li><strong>Class Name</strong>：生成的类的名称，支持通过 Velocity 进行配置，上下文为跟代码模板的相同。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>Java 开发过程中经常会遇到手工编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的]]>
+    </summary>
+    
+      <category term="idea-plugin" scheme="http://blog.xiaohansong.com/tags/idea-plugin/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[2016 我的校招经历与经验]]></title>
@@ -2217,123 +2265,6 @@ class Factory {
       <category term="设计" scheme="http://blog.xiaohansong.com/tags/%E8%AE%BE%E8%AE%A1/"/>
     
       <category term="编程实践" scheme="http://blog.xiaohansong.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[控制反转（IoC）与依赖注入（DI）]]></title>
-    <link href="http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/"/>
-    <id>http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/</id>
-    <published>2015-10-21T13:39:57.000Z</published>
-    <updated>2016-08-26T13:58:28.574Z</updated>
-    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Spring框架，它的核心就是IoC容器。要掌握Spring框架，就必须要理解控制反转的思想以及依赖注入的实现方式。下面，我们将围绕下面几个问题来探讨控制反转与依赖注入的关系以及在Spring中如何应用。</p>
-<ul>
-<li>什么是控制反转？</li>
-<li>什么是依赖注入？</li>
-<li>它们之间有什么关系？</li>
-<li>如何在Spring框架中应用依赖注入？</li>
-</ul>
-<h2 id="u4EC0_u4E48_u662F_u63A7_u5236_u53CD_u8F6C"><a href="#u4EC0_u4E48_u662F_u63A7_u5236_u53CD_u8F6C" class="headerlink" title="什么是控制反转"></a>什么是控制反转</h2><p>在讨论控制反转之前，我们先来看看软件系统中耦合的对象。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/%E9%BD%BF%E8%BD%AE_%E8%80%A6%E5%90%88%E5%85%B3%E7%B3%BB_full.jpg" alt="图1：软件系统中耦合的对象"><br>从图中可以看到，软件中的对象就像齿轮一样，协同工作，但是互相耦合，一个零件不能正常工作，整个系统就崩溃了。这是一个强耦合的系统。齿轮组中齿轮之间的啮合关系,与软件系统中对象之间的耦合关系非常相似。对象之间的耦合关系是无法避免的，也是必要的，这是协同工作的基础。现在，伴随着工业级应用的规模越来越庞大，对象之间的依赖关系也越来越复杂，经常会出现对象之间的多重依赖性关系，因此，架构师和设计师对于系统的分析和设计，将面临更大的挑战。对象之间耦合度过高的系统，必然会出现牵一发而动全身的情形。</p>
-<p>为了解决对象间耦合度过高的问题，软件专家Michael Mattson提出了IOC理论，用来实现对象之间的“解耦”。</p>
-<p><strong>控制反转（Inversion of Control）</strong>是一种是面向对象编程中的一种设计原则，用来减低计算机代码之间的耦合度。其基本思想是：借助于“第三方”实现具有依赖关系的对象之间的解耦。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/%E9%BD%BF%E8%BD%AE_%E8%A7%A3%E8%80%A6%E5%90%88_full.jpg" alt="图2：IOC解耦过程"><br>由于引进了中间位置的“第三方”，也就是IOC容器，使得A、B、C、D这4个对象没有了耦合关系，齿轮之间的传动全部依靠“第三方”了，全部对象的控制权全部上缴给“第三方”IOC容器，所以，IOC容器成了整个系统的关键核心，它起到了一种类似“粘合剂”的作用，把系统中的所有对象粘合在一起发挥作用，如果没有这个“粘合剂”，对象与对象之间会彼此失去联系，这就是有人把IOC容器比喻成“粘合剂”的由来。<br>我们再来看看，控制反转(IOC)到底为什么要起这么个名字？我们来对比一下：</p>
-<ol>
-<li>软件系统在没有引入IOC容器之前，如图1所示，对象A依赖于对象B，那么对象A在初始化或者运行到某一点的时候，自己必须主动去创建对象B或者使用已经创建的对象B。无论是创建还是使用对象B，控制权都在自己手上。</li>
-<li>软件系统在引入IOC容器之后，这种情形就完全改变了，如图2所示，由于IOC容器的加入，对象A与对象B之间失去了直接联系，所以，当对象A运行到需要对象B的时候，IOC容器会主动创建一个对象B注入到对象A需要的地方。</li>
-</ol>
-<p>通过前后的对比，我们不难看出来：对象A获得依赖对象B的过程,由主动行为变为了被动行为，控制权颠倒过来了，这就是“控制反转”这个名称的由来。</p>
-<p>控制反转不只是软件工程的理论，在生活中我们也有用到这种思想。再举一个现实生活的例子：<br>海尔公司作为一个电器制商需要把自己的商品分销到全国各地，但是发现，不同的分销渠道有不同的玩法，于是派出了各种销售代表玩不同的玩法，随着渠道越来越多，发现，每增加一个渠道就要新增一批人和一个新的流程，严重耦合并依赖各渠道商的玩法。实在受不了了，于是制定业务标准，开发分销信息化系统，只有符合这个标准的渠道商才能成为海尔的分销商。让各个渠道商反过来依赖自己标准。反转了控制，倒置了依赖。</p>
-<p>我们把海尔和分销商当作软件对象，分销信息化系统当作IOC容器，可以发现，在没有IOC容器之前，分销商就像图1中的齿轮一样，增加一个齿轮就要增加多种依赖在其他齿轮上，势必导致系统越来越复杂。开发分销系统之后，所有分销商只依赖分销系统，就像图2显示那样，可以很方便的增加和删除齿轮上去。</p>
-<h2 id="u4EC0_u4E48_u662F_u4F9D_u8D56_u6CE8_u5165"><a href="#u4EC0_u4E48_u662F_u4F9D_u8D56_u6CE8_u5165" class="headerlink" title="什么是依赖注入"></a>什么是依赖注入</h2><p><strong>依赖注入</strong>就是将实例变量传入到一个对象中去(Dependency injection means giving an object its instance variables)。</p>
-<h3 id="u4EC0_u4E48_u662F_u4F9D_u8D56"><a href="#u4EC0_u4E48_u662F_u4F9D_u8D56" class="headerlink" title="什么是依赖"></a>什么是依赖</h3><p>如果在 Class A 中，有 Class B 的实例，则称 Class A 对 Class B 有一个依赖。例如下面类 Human 中用到一个 Father 对象，我们就说类 Human 对类 Father 有一个依赖。</p>
-<pre><code>public class Human {
-    ...
-    Father father;
-    ...
-    public Human() {
-        father = new Father();
-    }
-}
-</code></pre><p>仔细看这段代码我们会发现存在一些问题：</p>
-<ol>
-<li>如果现在要改变 father 生成方式，如需要用new Father(String name)初始化 father，需要修改 Human 代码；</li>
-<li>如果想测试不同 Father 对象对 Human 的影响很困难，因为 father 的初始化被写死在了 Human 的构造函数中；</li>
-<li>如果new Father()过程非常缓慢，单测时我们希望用已经初始化好的 father 对象 Mock 掉这个过程也很困难。</li>
-</ol>
-<h3 id="u4F9D_u8D56_u6CE8_u5165"><a href="#u4F9D_u8D56_u6CE8_u5165" class="headerlink" title="依赖注入"></a>依赖注入</h3><p>上面将依赖在构造函数中直接初始化是一种 Hard init 方式，弊端在于两个类不够独立，不方便测试。我们还有另外一种 Init 方式，如下：</p>
-<pre><code>public class Human {
-    ...
-    Father father;
-    ...
-    public Human(Father father) {
-        this.father = father;
-    }
-}
-</code></pre><p>上面代码中，我们将 father 对象作为构造函数的一个参数传入。在调用 Human 的构造方法之前外部就已经初始化好了 Father 对象。像这种非自己主动初始化依赖，而通过外部来传入依赖的方式，我们就称为依赖注入。<br>现在我们发现上面 1 中存在的两个问题都很好解决了，简单的说依赖注入主要有两个好处：</p>
-<ol>
-<li>解耦，将依赖之间解耦。</li>
-<li>因为已经解耦，所以方便做单元测试，尤其是 Mock 测试。</li>
-</ol>
-<h2 id="u63A7_u5236_u53CD_u8F6C_u548C_u4F9D_u8D56_u6CE8_u5165_u7684_u5173_u7CFB"><a href="#u63A7_u5236_u53CD_u8F6C_u548C_u4F9D_u8D56_u6CE8_u5165_u7684_u5173_u7CFB" class="headerlink" title="控制反转和依赖注入的关系"></a>控制反转和依赖注入的关系</h2><p>我们已经分别解释了控制反转和依赖注入的概念。有些人会把控制反转和依赖注入等同，但实际上它们有着本质上的不同。</p>
-<ul>
-<li><strong>控制反转</strong>是一种思想</li>
-<li><strong>依赖注入</strong>是一种设计模式</li>
-</ul>
-<p>IoC框架使用依赖注入作为实现控制反转的方式，但是控制反转还有其他的实现方式，例如说<a href="http://martinfowler.com/articles/injection.html#UsingAServiceLocator" target="_blank" rel="external">ServiceLocator</a>，所以不能将控制反转和依赖注入等同。</p>
-<h2 id="Spring_u4E2D_u7684_u4F9D_u8D56_u6CE8_u5165"><a href="#Spring_u4E2D_u7684_u4F9D_u8D56_u6CE8_u5165" class="headerlink" title="Spring中的依赖注入"></a>Spring中的依赖注入</h2><p>上面我们提到，依赖注入是实现控制反转的一种方式。下面我们结合Spring的IoC容器，简单描述一下这个过程。</p>
-<pre><code>class MovieLister...
-    private MovieFinder finder;
-    public void setFinder(MovieFinder finder) {
-        this.finder = finder;
-    }
-
-class ColonMovieFinder...
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-</code></pre><p>我们先定义两个类，可以看到都使用了依赖注入的方式，通过外部传入依赖，而不是自己创建依赖。那么问题来了，谁把依赖传给他们，也就是说谁负责创建<code>finder</code>，并且把<code>finder</code>传给<code>MovieLister</code>。答案是Spring的IoC容器。</p>
-<p>要使用IoC容器，首先要进行配置。这里我们使用xml的配置，也可以通过代码注解方式配置。下面是<code>spring.xml</code>的内容</p>
-<pre><code>&lt;beans&gt;
-    &lt;bean id=&quot;MovieLister&quot; class=&quot;spring.MovieLister&quot;&gt;
-        &lt;property name=&quot;finder&quot;&gt;
-            &lt;ref local=&quot;MovieFinder&quot;/&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
-    &lt;bean id=&quot;MovieFinder&quot; class=&quot;spring.ColonMovieFinder&quot;&gt;
-        &lt;property name=&quot;filename&quot;&gt;
-            &lt;value&gt;movies1.txt&lt;/value&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
-&lt;/beans&gt;
-</code></pre><p>在Spring中，每个bean代表一个对象的实例，默认是单例模式，即在程序的生命周期内，所有的对象都只有一个实例，进行重复使用。通过配置bean，IoC容器在启动的时候会根据配置生成bean实例。具体的配置语法参考Spring文档。这里只要知道IoC容器会根据配置创建<code>MovieFinder</code>，在运行的时候把<code>MovieFinder</code>赋值给<code>MovieLister</code>的<code>finder</code>属性，完成依赖注入的过程。</p>
-<p>下面给出测试代码</p>
-<pre><code>public void testWithSpring() throws Exception {
-    ApplicationContext ctx = new FileSystemXmlApplicationContext(&quot;spring.xml&quot;);//1
-    MovieLister lister = (MovieLister) ctx.getBean(&quot;MovieLister&quot;);//2
-    Movie[] movies = lister.moviesDirectedBy(&quot;Sergio Leone&quot;);
-    assertEquals(&quot;Once Upon a Time in the West&quot;, movies[0].getTitle());
-}
-</code></pre><ol>
-<li>根据配置生成<code>ApplicationContext</code>，即IoC容器。</li>
-<li>从容器中获取<code>MovieLister</code>的实例。</li>
-</ol>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>控制反转是一种在软件工程中解耦合的思想，调用类只依赖接口，而不依赖具体的实现类，减少了耦合。控制权交给了容器，在运行的时候才由容器决定将具体的实现动态的“注入”到调用类的对象中。</li>
-<li>依赖注入是一种设计模式，可以作为控制反转的一种实现方式。依赖注入就是将实例变量传入到一个对象中去(Dependency injection means giving an object its instance variables)。</li>
-<li>通过IoC框架，类A依赖类B的强耦合关系可以在运行时通过容器建立，也就是说把创建B实例的工作移交给容器，类A只管使用就可以。</li>
-</ol>
-<p><em>参考文章</em><br><a href="http://coolshell.cn/articles/9949.html" target="_blank" rel="external">IoC/DIP其实是一种管理思想</a><br><a href="http://martinfowler.com/articles/injection.html" target="_blank" rel="external">Inversion of Control Containers and the Dependency Injection pattern</a><br><a href="https://github.com/android-cn/blog/tree/master/java/dependency-injectionrticles/9949.html" target="_blank" rel="external">依赖注入</a><br><a href="http://www.importnew.com/13619.html" target="_blank" rel="external">跟我一起学Spring 3(4)–深入理解IoC(控制反转)和DI(依赖注入)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在学习Spring框架，它的核心就是IoC容器。要掌握Spring框架，就必须要理解控制反转的思想以]]>
-    </summary>
-    
-      <category term="DI" scheme="http://blog.xiaohansong.com/tags/DI/"/>
-    
-      <category term="IoC" scheme="http://blog.xiaohansong.com/tags/IoC/"/>
-    
-      <category term="Java" scheme="http://blog.xiaohansong.com/tags/Java/"/>
-    
-      <category term="Java" scheme="http://blog.xiaohansong.com/categories/Java/"/>
     
   </entry>
   
