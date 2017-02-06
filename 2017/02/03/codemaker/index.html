@@ -14,42 +14,33 @@
     
 
     
-    <meta name="description" content="前言Java 开发过程中经常会遇到手工编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。所以开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。
+    <meta name="description" content="前言Java 开发过程中经常会遇到编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。类似的问题太多，却没找到可以支持自定义代码模板的插件，只能自己动手，丰衣足食，开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。
 
 项目地址：CodeMaker
 主要功能
-支持增加自定义代码模板（Velocity）
-支持选择多个类作为代码模板的上下文
-
-安装">
+支持增加自定义代">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IDEA代码生成插件CodeMaker">
 <meta property="og:url" content="http://blog.xiaohansong.com/2017/02/03/codemaker/index.html">
 <meta property="og:site_name" content="ShareHub">
-<meta property="og:description" content="前言Java 开发过程中经常会遇到手工编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。所以开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。
+<meta property="og:description" content="前言Java 开发过程中经常会遇到编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。类似的问题太多，却没找到可以支持自定义代码模板的插件，只能自己动手，丰衣足食，开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。
 
 项目地址：CodeMaker
 主要功能
-支持增加自定义代码模板（Velocity）
-支持选择多个类作为代码模板的上下文
-
-安装">
+支持增加自定义代">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker.gif">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker0.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker1.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker3.png">
 <meta property="og:image" content="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker2.png">
-<meta property="og:updated_time" content="2017-02-03T14:43:54.742Z">
+<meta property="og:updated_time" content="2017-02-06T13:52:53.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IDEA代码生成插件CodeMaker">
-<meta name="twitter:description" content="前言Java 开发过程中经常会遇到手工编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。所以开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。
+<meta name="twitter:description" content="前言Java 开发过程中经常会遇到编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。类似的问题太多，却没找到可以支持自定义代码模板的插件，只能自己动手，丰衣足食，开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。
 
 项目地址：CodeMaker
 主要功能
-支持增加自定义代码模板（Velocity）
-支持选择多个类作为代码模板的上下文
-
-安装">
+支持增加自定义代">
 <meta name="twitter:creator" content="@Yonah_x">
 
     
@@ -122,11 +113,11 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3B_u8981_u529F_u80FD"><span class="toc-number">2.</span> <span class="toc-text">主要功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B89_u88C5"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528"><span class="toc-number">4.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6A21_u677F_u914D_u7F6E"><span class="toc-number">5.</span> <span class="toc-text">模板配置</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3B_u8981_u529F_u80FD"><span class="toc-number">2.</span> <span class="toc-text">主要功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B89_u88C5"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528"><span class="toc-number">4.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6A21_u677F_u914D_u7F6E"><span class="toc-number">5.</span> <span class="toc-text">模板配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6A21_u677F_u4E0A_u4E0B_u6587"><span class="toc-number">6.</span> <span class="toc-text">模板上下文</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>Java 开发过程中经常会遇到手工编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。所以开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。</p>
+		<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>Java 开发过程中经常会遇到编写重复代码的事情，例如说：编写领域类和持久类的时候，大部分时候它们的变量名称，类型是一样的，在编写领域类的时候常常要重复写类似的代码。类似的问题太多，却没找到可以支持自定义代码模板的插件，只能自己动手，丰衣足食，开发了一个 IDEA 的代码生成插件，通过 Velocity 支持自定义代码模板来生成代码。</p>
 <p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker.gif" alt="demonstration"></p>
 <p><strong>项目地址</strong>：<a href="https://github.com/x-hansong/CodeMaker" target="_blank" rel="external">CodeMaker</a></p>
 <h2 id="u4E3B_u8981_u529F_u80FD"><a href="#u4E3B_u8981_u529F_u80FD" class="headerlink" title="主要功能"></a>主要功能</h2><ol>
@@ -140,18 +131,18 @@
 <li>选择上面下载的“CodeMaker.zip”</li>
 <li>点击“Apply”，然后重启 IDEA。</li>
 </ol>
-<h2 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h2><p>在 Java 类编辑界面右键“Generate”，选择对应模板即可自动生成代码到当前类的包，然后进行修改，并且移动到合适的位置。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker0.png" alt="codemaker0"></p>
+<h2 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h2><p>在 Java 类编辑界面右键“Generate”，选择对应模板即可自动生成代码到当前类的包，大部分情况下生成的代码已经解决了百分之八十的问题，只需稍作修改，移动到合适的包中，就能快速完成代码编写。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker0.png" alt="codemaker0"></p>
 <p>如果代码模板需要除了当前类之外的类作为上下文，可以通过类选择框进行选择。<br><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker1.png" alt="codemaker1"></p>
 <p>目前自带的两个模板：</p>
 <ol>
-<li><strong>Model</strong>：根据当前类生成一个与其拥有类似属性的类，用于自动生成持久类对应的领域类</li>
+<li><strong>Model</strong>：根据当前类生成一个与其拥有类似属性的类，用于自动生成持久类对应的领域类（在持久类拥有超过10个属性的情况下，能够节省大量时间）。</li>
 <li><strong>Converter</strong>：该模板需要两个类作为输入的上下文，用于自动生成领域类与持久类的转化类。</li>
 </ol>
-<p>上面两个模板是我自己工作中常用的模板，大家可以参考其写法，自己定义新的代码模板。</p>
+<p>上面两个模板是我自己工作中常用的模板，仅供大家参考，自带的模板可能满足不了大家的需求，<strong>所以插件支持自定义新的代码模板</strong>。</p>
 <h2 id="u6A21_u677F_u914D_u7F6E"><a href="#u6A21_u677F_u914D_u7F6E" class="headerlink" title="模板配置"></a>模板配置</h2><p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker3.png" alt="codemaker3"></p>
 <ol>
-<li><strong>增加模板</strong>：点击“Add Template”后，填写相关配置（都不能为空），点击保存后重启 IDEA 才能生效。</li>
-<li><strong>删除模板</strong>：点击“Delete Template”就能将该模板删除，同样需要重启才能生效。</li>
+<li><strong>增加模板</strong>：点击“Add Template”后，填写相关配置（都不能为空），点击保存后即可生效，无需重启。（感谢<code>khotyn</code>提醒）</li>
+<li><strong>删除模板</strong>：点击“Delete Template”就能将该模板删除</li>
 </ol>
 <p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/codemaker2.png" alt="codemaker2"></p>
 <ol>
@@ -159,6 +150,9 @@
 <li><strong>Class Number</strong>：该模板需要的输入上下文类的数量，例如：如果为 1，,将当前的类作为输入：<code>$class0</code>；如果为 2，需要用户再选择一个类作为输入：<code>$class0, $class1</code>。</li>
 <li><strong>Class Name</strong>：生成的类的名称，支持通过 Velocity 进行配置，上下文为跟代码模板的相同。</li>
 </ol>
+<h2 id="u6A21_u677F_u4E0A_u4E0B_u6587"><a href="#u6A21_u677F_u4E0A_u4E0B_u6587" class="headerlink" title="模板上下文"></a>模板上下文</h2><p>模板上下文包含了以下变量：</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">########################################################################################</span></span><br><span class="line"><span class="preprocessor">##</span></span><br><span class="line"><span class="preprocessor">## Common variables:</span></span><br><span class="line"><span class="preprocessor">##  $YEAR - yyyy</span></span><br><span class="line"><span class="preprocessor">##  $TIME - yyyy-MM-dd HH:mm:ss</span></span><br><span class="line"><span class="preprocessor">##  $USER - user.name</span></span><br><span class="line"><span class="preprocessor">##</span></span><br><span class="line"><span class="preprocessor">## Available variables:</span></span><br><span class="line"><span class="preprocessor">##  $class0 - the context class</span></span><br><span class="line"><span class="preprocessor">##  $class1 - the selected class, like $class2, $class2</span></span><br><span class="line"><span class="preprocessor">##  $ClassName - generate by the config of "Class Name", the generated class name</span></span><br><span class="line"><span class="preprocessor">##</span></span><br><span class="line"><span class="preprocessor">## Class Entry Structure:</span></span><br><span class="line"><span class="preprocessor">##  $class0.className - the class Name</span></span><br><span class="line"><span class="preprocessor">##  $class0.packageName - the packageName</span></span><br><span class="line"><span class="preprocessor">##  $class0.importList - the list of imported classes name</span></span><br><span class="line"><span class="preprocessor">##  $class0.fields - the list of the class fields</span></span><br><span class="line"><span class="preprocessor">##          - type: the field type</span></span><br><span class="line"><span class="preprocessor">##          - name: the field name</span></span><br><span class="line"><span class="preprocessor">##          - modifier: the field modifier, like "private"</span></span><br><span class="line"><span class="preprocessor">##  $class0.methods - the list of class methods</span></span><br><span class="line"><span class="preprocessor">##          - name: the method name</span></span><br><span class="line"><span class="preprocessor">##          - modifier: the method modifier, like "private static"</span></span><br><span class="line"><span class="preprocessor">##          - returnType: the method returnType</span></span><br><span class="line"><span class="preprocessor">##          - params: the method params, like "(String name)"</span></span><br><span class="line"><span class="preprocessor">##</span></span><br><span class="line"><span class="preprocessor">########################################################################################</span></span><br></pre></td></tr></table></figure>
+<p>具体用法可参考自带的代码模板，通过模板上下文提供的定制能力，可以让每个用户都定制自己的风格的代码模板。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -212,7 +206,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3B_u8981_u529F_u80FD"><span class="toc-number">2.</span> <span class="toc-text">主要功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B89_u88C5"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528"><span class="toc-number">4.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6A21_u677F_u914D_u7F6E"><span class="toc-number">5.</span> <span class="toc-text">模板配置</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3B_u8981_u529F_u80FD"><span class="toc-number">2.</span> <span class="toc-text">主要功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5B89_u88C5"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528"><span class="toc-number">4.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6A21_u677F_u914D_u7F6E"><span class="toc-number">5.</span> <span class="toc-text">模板配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6A21_u677F_u4E0A_u4E0B_u6587"><span class="toc-number">6.</span> <span class="toc-text">模板上下文</span></a></li></ol>
  
   </div>
 
