@@ -69,10 +69,11 @@
 					
 					<li>
  					
-						<form class="search">
-							<label>Search</label>
-						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:blog.xiaohansong.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -240,11 +241,17 @@
 </nav>
 
 	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/04/23/JVM-Synchronized/" data-title="【译】JVM 进行线程同步背后的原理" data-url="http://blog.xiaohansong.com/2016/04/23/JVM-Synchronized/"></div>
-</section>
 
-
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href,
+    sourceId: "",
+    productKey: "8e9da5a81373403195bf805be9aa7e09",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
@@ -421,7 +428,7 @@
 	
 	
 	<section class="info">
-		<p> Hello ,I&#39;m XiaoHanSong, a student majoring in SE. <br/>
+		<p> Hello ,I&#39;m XiaoHanSong. <br/>
 			This is my blog for sharing my ideas.</p>
 	</section>
 	 
@@ -574,25 +581,6 @@ $(document).ready(function(){
 
 
 
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"yonah"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0]
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-
-  	  <script type="text/javascript">
-  		var duoshuo_user_ID = 7607035
-  	  </script>
-<script src="/js/ua-parser.min.js"></script>
-<script src="/js/hook-duoshuo.js"></script>
-
-
 
 
 
@@ -648,23 +636,6 @@ $(document).ready(function(){
 <!-- MathJax End -->
 
 <!-- Tiny_search Begin -->
-
-<script>
-var option = {
-  engineKey: '084e2ef4b40406a66fd1'
-};
-(function(w,d,t,u,n,s,e){
-  s = d.createElement(t);
-  s.src = u;
-  s.async = 1;
-  w[n] = function(r){
-    w[n].opts = r;
-  };
-  e = d.getElementsByTagName(t)[0];
-  e.parentNode.insertBefore(s, e);
-})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
-_ts(option);
-</script>
 
 <!-- Tiny_search End -->
 
