@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title><![CDATA[ShareHub]]></title>
-  <subtitle><![CDATA[悲观的意志,乐观的头脑]]></subtitle>
+  <subtitle><![CDATA[To be a professional software engineer.]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
   <updated>2017-03-17T15:12:07.516Z</updated>
