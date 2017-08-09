@@ -4,7 +4,7 @@
   <subtitle><![CDATA[To be a professional software engineer.]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.xiaohansong.com/"/>
-  <updated>2017-03-17T15:12:07.516Z</updated>
+  <updated>2017-08-09T16:01:09.031Z</updated>
   <id>http://blog.xiaohansong.com/</id>
   
   <author>
@@ -13,6 +13,49 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[编写高质量代码的思考]]></title>
+    <link href="http://blog.xiaohansong.com/2017/08/09/high-quality-code/"/>
+    <id>http://blog.xiaohansong.com/2017/08/09/high-quality-code/</id>
+    <published>2017-08-09T15:56:52.000Z</published>
+    <updated>2017-08-09T16:01:09.031Z</updated>
+    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《代码大全》，可以说是一本软件开发的百科全书，特别厚，但是干货也很多。平时写代码，代码规范是一个最低的要求（很多老代码连最低要求都达不到），为什么要这样规定代码要这么写，而不是那么写？这是一个值得深究的问题。而不是说我照着代码规范写代码就算完了，高质量的代码是一个专业工程师的追求。要知其然知其所以然，最近写发票解析的代码，因为涉及带解析PDF的算法，复杂度比较高，所以花了很多时间在重构，学以致用的时候积累了一些心得。</p>
+<h2 id="u4FE1_u606F_u9690_u85CF_u539F_u5219"><a href="#u4FE1_u606F_u9690_u85CF_u539F_u5219" class="headerlink" title="信息隐藏原则"></a>信息隐藏原则</h2><p>信息隐藏是面向对象设计的一个原则，是对封装和模块化的一个更高维度的概括。从Java的整个访问限制设计就体现了信息隐藏的原则，各种访问修饰符：<code>public,protect,private</code>，在类设计的时候，我们就要决定什么暴露给外部，什么隐藏起来。</p>
+<p>举一个例子下面的代码表示一个有自增ID的<code>Person</code>类。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> Person &#123;</span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> G_MAX_ID = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.id = ++G_MAX_ID;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的类设计有什么问题呢？它违反了信息隐藏的原则，直接将ID分配的方式暴露了，这会给后面的维护带来很多问题：当你想给id的范围做出限制的时候怎么办？当你在所有代码中使用<code>++G_MAX_ID</code>分配ID时突然需要修改ID分配的算法怎么办？是不是需要去改所有<code>++G_MAX_ID</code>出现的地方？更好的设计是将ID的分配算法隐藏起来。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> Person &#123;</span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> G_MAX_ID = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.id = NewId();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">NewId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> ++G_MAX_ID;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>咋一看只是将<code>++G_MAX_ID</code>写到一个方法里面而已，但是它隐藏了ID分配的算法，让调用者不需要关心里面的实现，同时控制了变化，不管ID分配算法怎么变，都不会影响其他的代码。调用者了解的信息越多，受到的影响就越大，信息隐藏可以降低复杂度，控制变化的范围。</p>
+<p>上面的例子只是信息隐藏的一个简单应用，下面我们来举几个其他的应用例子：</p>
+<ul>
+<li>为什么不推荐使用魔法值（即未经定义的常量）？：这个明显违反了信息隐藏的原则，当你将字面量直接写在代码里面时，就将信息直接暴露了，后面需要修改的时候，一旦少改了某个地方的字面量，bug就出现了。</li>
+<li>循环依赖（即A调用B，B调用A的情况）：类或方法之间的循环依赖会破坏信息隐藏，一个很直接的影响就是在测试的时候，A，B都需要同时准备好才能进行测试，而无法mock任意一方。</li>
+<li>使用全局变量：这个就不用说了，所有人都可以访问你的时候信息就暴露无疑了，全局变量能不用就不用。</li>
+<li>考虑性能损失：有时候我们为了一些性能上的考虑就破坏信息隐藏原则，将一些变量全局化，这样性能提高得不多，维护成本却上升不少，完全是得不偿失。</li>
+</ul>
+<p>最后总结一下信息隐藏的好处：</p>
+<ul>
+<li>隐藏信息即隐藏了复杂度，降低了编程的负担。</li>
+<li>隐藏信息即隐藏了底层变化，以便于在局部控制变化。</li>
+</ul>
+<h2 id="u4E00_u4E9B_u4E0D_u592A_u5E38_u89C1_u7684_u7F16_u7A0B_u6280_u5DE7"><a href="#u4E00_u4E9B_u4E0D_u592A_u5E38_u89C1_u7684_u7F16_u7A0B_u6280_u5DE7" class="headerlink" title="一些不太常见的编程技巧"></a>一些不太常见的编程技巧</h2><h3 id="u51FD_u6570_28function_29_u4E0E_u8FC7_u7A0B_28procedure_29_u7684_u9009_u62E9"><a href="#u51FD_u6570_28function_29_u4E0E_u8FC7_u7A0B_28procedure_29_u7684_u9009_u62E9" class="headerlink" title="函数(function)与过程(procedure)的选择"></a>函数(function)与过程(procedure)的选择</h3><p>我们先来看看函数与过程区别：</p>
+<ul>
+<li>Function：有返回值的方法</li>
+<li>Procedure：没有返回值的方法</li>
+</ul>
+<p>平时我们编程其实没有太区别函数与过程，什么时候用函数，什么时候用过程其实没有过多的考虑，感觉都可以用。一个选择的规则就是<strong>当你的方法的目的是想返回跟你方法名称相符的值的时候用函数，否则用过程</strong></p>
+<p>举个例子，我看过很多<code>XXProcessor</code>接口里面的方法都是<code>XX process()</code>，严格来讲，这样的命名是不符合上面的规则的，<code>process</code>是一个没有含义的命名，但是却有返回值，如果没有返回值那它的命名才是合理的。</p>
+<p>当然了，上面的规则仅供参考，世事无绝对，具体情况具体分析，当你不清楚用函数还是用过程的时候，可以参考这个规则。</p>
+<h3 id="u4F7F_u7528boolean_u503C_u6765_u7ED9_u7A0B_u5E8F_u505A_u6CE8_u91CA"><a href="#u4F7F_u7528boolean_u503C_u6765_u7ED9_u7A0B_u5E8F_u505A_u6CE8_u91CA" class="headerlink" title="使用boolean值来给程序做注释"></a>使用boolean值来给程序做注释</h3><p>相信大家看到一个if语句有很多条件的时候都会特别头痛，因为很难理解。例如下面的例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( ( elementIndex &lt; <span class="number">0</span> ) || ( MAX_ELEMENTS &lt; elementIndex ) || elementIndex == lastElementIndex) &#123;</span><br><span class="line">  <span class="keyword">do</span>....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但如果换成下面的写法，用boolean值的名字来给if语句注释，看起来就很好理解了。<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">finished = ( ( elementIndex &lt; <span class="number">0</span> ) <span class="string">|| ( MAX_ELEMENTS &lt; elementIndex ) );</span></span><br><span class="line">repeatedEntry = ( elementIndex == lastElementIndex );</span><br><span class="line">if ( finished <span class="string">|| repeatedEntry ) &#123;</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>怎么写高质量的代码是一个很大的话题，这里只是抛砖引玉，其实面向对象设计的很多原则都能够给我们写代码的时候提供指导，写代码的时候要时刻记得学以致用，而不是敷衍了事，专业的软件工程师必然要能写得一手好代码。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>最近在看《代码大全》，可以说是一本软件开发的百科全书，特别厚，但是干货也很多。平时写代码，代码规范是一个]]>
+    </summary>
+    
+      <category term="编程实践" scheme="http://blog.xiaohansong.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[代码生成利器：IDEA 强大的 Live Templates]]></title>
@@ -2002,150 +2045,6 @@ Set  + AbstractCollection -&gt; AbstractSet
     <summary type="html">
     <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>之前写了一篇文章 <a href="http://blog.xiaohansong.com/2015/1]]>
     </summary>
-    
-      <category term="编程实践" scheme="http://blog.xiaohansong.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[简洁代码之道（2）：避免全局可变状态]]></title>
-    <link href="http://blog.xiaohansong.com/2015/11/30/avoid-global-state/"/>
-    <id>http://blog.xiaohansong.com/2015/11/30/avoid-global-state/</id>
-    <published>2015-11-30T07:42:41.000Z</published>
-    <updated>2016-01-02T17:39:28.897Z</updated>
-    <content type="html"><![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?list=PL693EFD059797C21E" target="_blank" rel="external">谷歌简洁代码演讲系列</a> 中的 <a href="https://www.youtube.com/watch?v=-FRm3VPhseI&amp;index=4&amp;list=PL693EFD059797C21E" target="_blank" rel="external">全局状态与单例模式</a> 之后的总结。本文的主题是：避免全局可变状态。下面我们将围绕几个问题开展讨论：</p>
-<ul>
-<li>什么是全局状态</li>
-<li>如何设计好的单例模式</li>
-<li>如何设计好的 API</li>
-</ul>
-<h2 id="u5168_u5C40_u72B6_u6001"><a href="#u5168_u5C40_u72B6_u6001" class="headerlink" title="全局状态"></a>全局状态</h2><h3 id="u4EC0_u4E48_u662F_u5168_u5C40_u72B6_u6001"><a href="#u4EC0_u4E48_u662F_u5168_u5C40_u72B6_u6001" class="headerlink" title="什么是全局状态"></a>什么是全局状态</h3><blockquote>
-<p>Talk is cheap, show me the code. – Linus</p>
-</blockquote>
-<p>我们来用一个例子说明什么是全局状态。</p>
-<pre><code>class X {
-    X() {...}
-
-    public int doSomething() {...}
-}
-
-int a = new X().doSomething()
-int b = new X().doSomething()
-</code></pre><p>现在问题来了，<code>a</code> 等于 <code>b</code> 吗？事实上有两种可能的情况。</p>
-<p>第一种情况：<code>X</code> 类不受全局状态的影响，此时 <code>a == b</code></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/global_state1.png" alt="a==b"><br>当 <code>X</code> 被实例化时，它可能会同时创建多个其它对象，当它执行 <code>doSomething()</code> 的时候，得到的结果是一样。说明它是无状态的，每次执行都像 <code>1+1=2</code> 一样有一个确定的值。</p>
-<p>第二种情况：<code>X</code> 类受到全局状态的影响，此时 <code>a != b</code></p>
-<p><img src="http://7xjtfr.com1.z0.glb.clouddn.com/global_state2.png" alt="a!=b"><br>如果 <code>X</code> 在执行 <code>doSomething()</code> 的时候，其中的 <code>Z</code> 变量受到全局状态 <code>GS</code> 的影响，此时 <code>a==b</code> 可能就不成立了。因为程序的执行依赖全局状态，同样的方法可能会得到不同的结果。</p>
-<h3 id="u5168_u5C40_u72B6_u6001_u7684_u7F3A_u70B9"><a href="#u5168_u5C40_u72B6_u6001_u7684_u7F3A_u70B9" class="headerlink" title="全局状态的缺点"></a>全局状态的缺点</h3><p>全局状态相当常见，因为写起来方便。“啊，有一个新的功能要加入，我们加一个全局变量，再加一个条件语句跳转到新的方法就行了。”然而，这种方便却让程序变得难以维护和测试。所以，有一定经验的程序员都会认为全局状态令人讨厌，会避免使用它。</p>
-<p>下面我们来列举全局状态的罪状：</p>
-<ul>
-<li>多次执行同一方法会产生不同的结果<ul>
-<li>测试无法给出一个可靠的结果</li>
-<li>测试的顺序会影响到结果</li>
-<li>不能并行进行测试</li>
-</ul>
-</li>
-<li>很难确定设置状态的位置</li>
-</ul>
-<p>总之，从测试的角度来看，全局状态是很可怕的东西。</p>
-<h3 id="u5168_u5C40_u72B6_u6001_u548C_u5168_u5C40_u53D8_u91CF_u7684_u533A_u522B"><a href="#u5168_u5C40_u72B6_u6001_u548C_u5168_u5C40_u53D8_u91CF_u7684_u533A_u522B" class="headerlink" title="全局状态和全局变量的区别"></a>全局状态和全局变量的区别</h3><ul>
-<li>全局状态不仅包括了全局变量，还包括系统的环境变量，以及人为的命令等。</li>
-<li>全局变量是在程序生命周期中全局可访问的变量，常用来表示全局状态。</li>
-</ul>
-<h2 id="u5355_u4F8B_u6A21_u5F0F"><a href="#u5355_u4F8B_u6A21_u5F0F" class="headerlink" title="单例模式"></a>单例模式</h2><p>有些程序员讨厌全局状态，却喜欢单例模式。但是，从某种意义上说，单例模式是另一种全局状态。当然我不是一棍子打死单例模式，应该说，写得不好的单例模式起到的作用就如同全局状态，让程序难以维护和测试。下面我们来讨论什么是好的单例模式，什么是坏的单例模式</p>
-<h3 id="u574F_u7684_u5355_u4F8B_u6A21_u5F0F"><a href="#u574F_u7684_u5355_u4F8B_u6A21_u5F0F" class="headerlink" title="坏的单例模式"></a>坏的单例模式</h3><p>下面是典型的单例模式实现。</p>
-<pre><code>class AppSetting {
-    private static AppSetting instance = new AppSetting();
-    private Object state1;
-    private Object state2;
-    private Object state3;
-    private AppSetting() {...}
-
-    public static AppSetting getInstance() {
-        return instance;
-    }
-}
-</code></pre><p>我们先来思考一个问题：这个类包括了多少个全局变量？你可能觉得只有一个 <code>instance</code>，事实上一共有4个。只要 <code>instance</code> 一直存在，它的成员变量也会一直存在。也就是说一共有四个全局变量：<code>state1, state2, state3, instance</code>。</p>
-<pre><code>class App {
-    int method() {
-        return AppSetting.getInstance().doX();
-    }
-}
-
-void testApp {
-    ???
-}
-</code></pre><p>想想我们怎么测试上面的代码。单例模式下，你没有缝隙进入到 <code>method()</code> 函数中测试。</p>
-<p>上面的单例模式存在一个很大的测试问题：测试无法覆盖所有的状态。因为状态是私有，同时它单例的。如果我们要测试三个状态怎么办，一个解决办法是在测试的时候把状态改为公有的。这看起来有点诡异，我们一方面又想用单例封装状态，一方面却在测试的时候要去修改代码让它的状态公有。可以说，这种单例模式给测试带来了极大的麻烦。</p>
-<h3 id="u597D_u7684_u5355_u4F8B_u6A21_u5F0F"><a href="#u597D_u7684_u5355_u4F8B_u6A21_u5F0F" class="headerlink" title="好的单例模式"></a>好的单例模式</h3><p>那么，什么是好的单例模式呢？看下面的代码。</p>
-<pre><code>class AppSetting {
-    private Object state1;
-    private Object state2;
-    private Object state3;
-    public AppSetting() {...}
-}
-</code></pre><p>第一眼看到这个代码，你可能觉得这哪里是单例模式，明明就是个普通的类。</p>
-<p>是的，它的确是个普通的类。在这里我们让它不再着重于类自身的单例。什么意思？想想单例模式的本质是什么，单例模式主要是类保证在程序的生命周期内只有一个实例，其它对象访问到的是同一个实例。我们来看看，这种模式对测试带来了怎样的便利。</p>
-<pre><code>class App {
-    AppSetting settings;
-    App(AppSetting settings) {
-        this.settings = settings;
-    }
-
-    int method() {
-        return settings.doX();
-    }
-}
-
-void testApp() {
-     new App(new AppSetting(...)).method();
-}
-</code></pre><p>每个测试我们可以提供一个不同的 <code>AppSetting</code> 来进行测试，相比上面的单例模式，测试得到了更多的控制。我们可以通过不同的 <code>AppSetting</code> 的构造函数，改变程序的状态来进行测试。</p>
-<p>看到这里，你可能有一个疑问：这样子写的代码根本就不是单例模式。的确，从类的实现上，<code>AppSetting</code> 的确不是单例模式的。这里我们强调的是逻辑上的单例，而不是代码实现上的单例。怎么理解？</p>
-<p>首先，单例模式的传统实现是由类来管理这个唯一的实例，也就是我们上面说的“坏的单例模式”，而“好的单例模式”则是由程序来控制类的唯一实例，例如说，Spring IoC 容器中的 Bean，在容器的生命周期中，Bean 默认是单例的。（详细的解释可以看这篇文章 <a href="http://blog.xiaohansong.com/2015/10/21/IoC-and-DI/">控制反转（IoC）与依赖注入（DI）</a>）简单说，就是把单例类管理唯一实例的功能转移给外部容器，当你使用了 IoC 框架之后，你会发现，单例模式的实例完全可以通过容器管理，而不用我们写“坏的单例模式”。</p>
-<h2 id="u8BBE_u8BA1_u597D_u7684_API"><a href="#u8BBE_u8BA1_u597D_u7684_API" class="headerlink" title="设计好的 API"></a>设计好的 API</h2><p>全局状态同样会影响到 API 的好坏。</p>
-<h3 id="u574F_u7684_API"><a href="#u574F_u7684_API" class="headerlink" title="坏的 API"></a>坏的 API</h3><p>我们来看一个坏的 API。</p>
-<pre><code>testCharge() {
-    Database.connect();
-    OfflineQueue.start();
-    CreditCardProcessor.init();
-    CreditCard cc = new CreditCard(&quot;123&quot;);
-    cc.charge(100);
-}
-</code></pre><p>如果你对单例模式的坏处还没完全理解，或者你也喜欢写这样的代码，那么刷新编程观的时候到了。</p>
-<p>上面是一个信用卡测试消费的例子。在实例化 <code>CreditCard</code> 之前要有三个初始化操作（明显都是单例模式）。现在问题来了：如果你是新来的测试人员，让你去测试 <code>CreditCard</code>，你看了 API 文档之后，兴冲冲地写下一些代码。</p>
-<pre><code>testCharge() {
-    CreditCard cc = new CreditCard(&quot;123&quot;);
-    cc.charge(100);
-}
-</code></pre><p>现在满怀期待的运行，结果却是熟悉的 <code>NullPointerException</code>。为什么？新来的你当然不知道创建 <code>CreditCard</code> 之前要先连接数据库，启动离线队列，初始化信用卡处理器。所以你只能去问开发人员。现在你知道问题出在哪了吗？</p>
-<p>坏的单例模式让测试人员很难测试代码，因为你看了 API 之后只知道要实例化 <code>CreditCard</code>，然后调用 <code>charge</code>，完全不知道 <code>Database</code> 之类的全局状态是什么鬼。不要以为这只会为难到测试人员，六个月之后你就能体验到测试人员的痛苦。因此，全局状态让 API 有了误导性，让你以为做了正确的操作。</p>
-<p>当然，文档写的清楚可以解决这个问题，然而好的文档可遇不可求，所以我们要有更好的解决办法。</p>
-<h3 id="u597D_u7684_API"><a href="#u597D_u7684_API" class="headerlink" title="好的 API"></a>好的 API</h3><p>设计好的 API，可以从代码层面上解决上面的问题，所谓代码就是最好的注释。</p>
-<pre><code>testCharge() {
-    db = new Database(...);
-    queue = new OfflineQueue(db);
-    ccProc = new CreditCardProcessor(queue);
-    CreditCard cc = new CreditCard(&quot;123&quot;, ccProc);
-    cc.charge(100);
-}
-</code></pre><p>上面的代码通过<strong>让依赖参数化</strong>完美地解决上面的问题。现在，我们还是那个新来的测试人员，我们开始写测试代码。API 告诉我们，实例化 <code>CreditCard</code> 需要 <code>CreditCardProcessor</code> 作为参数，<code>CreditCardProcessor</code>需要 <code>OfflineQueue</code>，<code>OfflineQueue</code> 需要 <code>Database</code>。于是我们可以很清楚的写下上面的测试代码，不需要文档的辅助，我们也知道如何正确的使用 <code>CreditCard</code>。这就是好的 API 设计。</p>
-<p>如果我们要让上面的配置类单例化，只需要使用 IoC 容器进行管理即可，通过依赖注入的方式，可以使代码更加清晰，易测试。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>全局状态是大多数测试问题的根源。</li>
-<li>全局状态无法被测试控制，无法控制意味着无法进行彻底的测试。</li>
-<li>单例模式是封装了全局状态的常用形式。这也是我们不提倡使用单例模式的原因，推荐用容器管理的单例模式。</li>
-<li>全局状态会让 API 具有误导性。</li>
-</ul>
-<p><em>参考资料</em><br><a href="https://www.youtube.com/watch?v=-FRm3VPhseI&amp;index=4&amp;list=PL693EFD059797C21E" target="_blank" rel="external">全局状态与单例模式</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>本文是我看了 <a href="https://www.youtube.com/playlist?lis]]>
-    </summary>
-    
-      <category term="编程实践" scheme="http://blog.xiaohansong.com/tags/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
-    
-      <category term="设计" scheme="http://blog.xiaohansong.com/tags/%E8%AE%BE%E8%AE%A1/"/>
     
       <category term="编程实践" scheme="http://blog.xiaohansong.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
     
